@@ -1,0 +1,28 @@
+body {
+  background-color: #FFF8E1;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+nav, .card, .container, select, input, button {
+  background-color: #FFF8E1 !important;
+}
+
+.card, .container {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+select, input, button {
+  border: 1px solid #e0cfa9;
+  color: #5a4a1b;
+}
+
+h1, h2, h3, h4, h5, h6, label, span, p, a {
+  color: #5a4a1b;
+}
