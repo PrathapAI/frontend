@@ -36,10 +36,6 @@ function MyListings() {
           <div>No listings found.</div>
         ) : (
           listings.map(listing => {
-            let imageUrl = '';
-            if (listing.ListingImages && listing.ListingImages.length > 0) {
-              imageUrl = listing.ListingImages[0].ImageURL;
-            }
             let displayPrice = (listing.ExpectedPrice !== undefined && listing.ExpectedPrice !== null && listing.ExpectedPrice !== '') ? listing.ExpectedPrice : 'N/A';
             return (
               <ListingCard
@@ -48,22 +44,21 @@ function MyListings() {
                   ListingID: listing.ListingID,
                   title: listing.Title,
                   description: listing.Description,
-                  image: imageUrl,
-                  ImageURL: listing.ImageURL || imageUrl,
+                  ListingImages: listing.ListingImages,
+                  ImageURL: listing.ImageURL,
                   owner: listing.User
                     ? {
                         name: listing.User.name
                       }
                     : undefined,
                   price: displayPrice,
-                  // subcategory and subcategoryFull removed
                   state: listing.Location?.state,
                   district: listing.Location?.district,
                   mandal: listing.Location?.mandal,
                   village: listing.Location?.village,
                   availability: listing.availability,
                   postedDate: listing.CreateDate,
-                  Category: listing.Category // Pass Category object for name
+                  Category: listing.Category
                 }}
               />
             );

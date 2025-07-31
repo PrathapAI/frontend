@@ -41,9 +41,9 @@ function ListingDetails() {
               <>
                 {(() => {
                   const images = Array.isArray(listing.ListingImages) && listing.ListingImages.length > 0
-                    ? listing.ListingImages.map(img => img.ImageURL.startsWith('http') ? img.ImageURL : `http://localhost:5000${img.ImageURL}`)
+                    ? listing.ListingImages.map(img => img.ImageURL)
                     : listing.ImageURL
-                      ? [(listing.ImageURL.startsWith('http') ? listing.ImageURL : `http://localhost:5000${listing.ImageURL}`)]
+                      ? [listing.ImageURL]
                       : ['/default-no-image.png'];
                   return (
                     <>

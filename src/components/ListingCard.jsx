@@ -13,9 +13,9 @@ function ListingCard({ listing }) {
   const title = listing.title || listing.Title || '';
   // Get all images from ListingImages array (or fallback to single ImageURL)
   const images = Array.isArray(listing.ListingImages) && listing.ListingImages.length > 0
-    ? listing.ListingImages.map(img => img.ImageURL.startsWith('http') ? img.ImageURL : `http://localhost:5000${img.ImageURL}`)
+    ? listing.ListingImages.map(img => img.ImageURL)
     : listing.ImageURL
-      ? [(listing.ImageURL.startsWith('http') ? listing.ImageURL : `http://localhost:5000${listing.ImageURL}`)]
+      ? [listing.ImageURL]
       : ['/default-no-image.png'];
   const [currentImage, setCurrentImage] = useState(0);
   const [showImages, setShowImages] = useState(true);
@@ -69,16 +69,11 @@ function ListingCard({ listing }) {
         >
           {title}
         </div>
-        {/* Description row */}
-        <div style={{ fontSize: 15, color: '#444', marginBottom: 18, textAlign: 'center', fontStyle: 'italic', minHeight: 24 }}>
-          {listing.description || listing.Description || 'No description provided.'}
-        </div>
-        {/* Price row - moved further below */}
-        <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 32, textAlign: 'center' }}>
+        <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>
           ₹ {price}
         </div>
-        {/* Address row - moved further below */}
-        <div style={{ fontSize: 15, color: '#555', marginBottom: 32, fontWeight: 500, textAlign: 'center' }}>
+        {/* Address row */}
+        <div style={{ fontSize: 15, color: '#555', marginBottom: 12, fontWeight: 500, textAlign: 'center' }}>
           {address}
         </div>
         {/* Bottom row absolutely positioned to bottom of card */}
