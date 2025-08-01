@@ -104,6 +104,12 @@ function CreateListing() {
     const { signature, timestamp, apiKey: cloudinaryApiKey, uploadUrl: cloudinaryUploadUrl } = signData;
 
     // 2. Upload images to Cloudinary
+    console.log('Cloudinary Upload Debug:');
+    console.log('cloudinaryApiKey:', cloudinaryApiKey);
+    console.log('signature:', signature);
+    console.log('timestamp:', timestamp);
+    console.log('cloudinaryUploadUrl:', cloudinaryUploadUrl);
+    console.log('folder:', 'classified_uploads');
     const imageURLs = [];
     if (form.images && form.images.length > 0) {
       for (const file of form.images) {
