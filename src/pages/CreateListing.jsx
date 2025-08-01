@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '../services/api';
+import axios from 'axios';
 import React from 'react';
 import '../page-ribbon.css';
 import '../form-theme.css';
@@ -95,24 +96,28 @@ function CreateListing() {
         userId = payload.id;
       } catch {}
     }
-    const data = new FormData();
-    data.append('UserID', userId);
-    data.append('CategoryID', Number(form.category));
-    if (form.subcategory) {
-      data.append('SubCategoryID', Number(form.subcategory));
-    }
-    data.append('Title', form.title);
-    data.append('Description', form.description);
-    data.append('ExpectedPrice', form.price);
-    data.append('IsPriceNegotiable', false);
-    data.append('IsActive', true);
-    data.append('IsSeller', true);
-    data.append('IsIndividual', true);
-    // Append multiple images if present
+
+    // 1. Get Cloudinary signature and timestamp from backend
+    const { data: signData } = await API.get('/listings/cloudinary/signature', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const { signature, timestamp, apiKey: cloudinaryApiKey, uploadUrl: cloudinaryUploadUrl } = signData;
+
+    // 2. Upload images to Cloudinary
+    const imageURLs = [];
     if (form.images && form.images.length > 0) {
-      form.images.forEach(img => {
-        data.append('images', img);
-      });
+      for (const file of form.images) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('timestamp', timestamp);
+        formData.append('api_key', cloudinaryApiKey);
+        formData.append('signature', signature);
+        formData.append('folder', 'classified_uploads');
+        const res = await axios.post(cloudinaryUploadUrl, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        imageURLs.push(res.data.secure_url);
+      }
     }
 
     // Find LocationID from locations array and ensure it is always set
@@ -127,9 +132,7 @@ function CreateListing() {
       );
       if (foundLocation) locationId = foundLocation.LocationID;
     }
-    if (locationId !== null && locationId !== undefined) {
-      data.append('LocationID', Number(locationId));
-    } else {
+    if (locationId === null || locationId === undefined) {
       alert('Please select a valid location. LocationID not found.');
       return;
     }
@@ -157,7 +160,20 @@ function CreateListing() {
     }
 
     try {
-      await API.post('/listings', data, {
+      await API.post('/listings', {
+        UserID: userId,
+        CategoryID: Number(form.category),
+        SubCategoryID: form.subcategory ? Number(form.subcategory) : undefined,
+        Title: form.title,
+        Description: form.description,
+        ExpectedPrice: form.price,
+        IsPriceNegotiable: false,
+        IsActive: true,
+        IsSeller: true,
+        IsIndividual: true,
+        LocationID: Number(locationId),
+        ImageURLs: imageURLs
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -167,7 +183,7 @@ function CreateListing() {
         title: '',
         price: '',
         description: '',
-        image: '',
+        images: [],
         category: '',
         subcategory: '',
         state: '',
@@ -176,7 +192,7 @@ function CreateListing() {
         village: ''
       });
     } catch (error) {
-      console.error("Backend Error:", error.response?.data); // <-- Add this line
+      console.error("Backend Error:", error.response?.data);
       alert(error.response?.data?.error || 'Failed to create listing');
     }
   };
