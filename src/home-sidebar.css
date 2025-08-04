@@ -1,0 +1,62 @@
+.home-main-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.home-sidebar {
+  min-width: 220px;
+  max-width: 260px;
+  background: #f5f6fa;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 2rem 1.2rem 2rem 1.2rem;
+  margin: 2rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.home-sidebar label {
+  font-weight: 500;
+  color: #5a4a1b;
+  margin-bottom: 0.3rem;
+}
+
+.home-sidebar select {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #bdbdbd;
+  font-size: 1rem;
+  background: #fff;
+  color: #5a4a1b;
+  margin-bottom: 0.5rem;
+}
+
+.home-listings-content {
+  flex: 1;
+  margin-top: 2rem;
+  margin-right: 2rem;
+}
+
+.home-action-btn {
+  width: 100%;
+  padding: 0.6rem 0;
+  border-radius: 6px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
