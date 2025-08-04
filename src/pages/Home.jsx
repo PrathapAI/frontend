@@ -46,7 +46,7 @@ function Home() {
   useEffect(() => {
     async function fetchListings() {
       try {
-        const res = await API.get('/api/classifieds');
+        const res = await API.get('/api/listings');
         setListings(res.data);
       } catch (error) {
         console.error('Error fetching listings:', error);

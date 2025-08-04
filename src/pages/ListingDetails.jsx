@@ -20,7 +20,7 @@ function ListingDetails() {
   useEffect(() => {
     async function fetchListing() {
       try {
-        const res = await API.get(`/api/classifieds/${id}`);
+        const res = await API.get(`/api/listings/${id}`);
         setListing(res.data);
       } catch (err) {
         setError('Failed to load listing details');

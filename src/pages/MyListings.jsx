@@ -23,7 +23,7 @@ function MyListings() {
       } catch {}
     }
     if (userId) {
-      API.get(`/api/classifieds/user/${userId}`, {
+      API.get(`/api/listings/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(res => setListings(res.data))

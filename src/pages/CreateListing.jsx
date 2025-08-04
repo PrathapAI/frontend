@@ -105,7 +105,7 @@ function CreateListing() {
     }
 
     // 1. Get Cloudinary signature and timestamp from backend
-    const { data: signData } = await API.get('/api/classifieds/cloudinary/signature', {
+    const { data: signData } = await API.get('/api/listings/cloudinary/signature', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const { signature, timestamp, apiKey: cloudinaryApiKey, uploadUrl: cloudinaryUploadUrl } = signData;
@@ -173,7 +173,7 @@ function CreateListing() {
     }
 
     try {
-      await API.post('/api/classifieds', {
+      await API.post('/api/listings', {
         UserID: userId,
         CategoryID: Number(form.category),
         SubCategoryID: form.subcategory ? Number(form.subcategory) : undefined,
