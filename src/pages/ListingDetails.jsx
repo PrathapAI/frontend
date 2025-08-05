@@ -9,6 +9,7 @@ import OwnerChats from '../components/OwnerChats';
 
 function ListingDetails() {
   const { id } = useParams();
+  if (!id) return <div style={{color:'red'}}>Listing ID is missing.</div>;
   const navigate = useNavigate();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
