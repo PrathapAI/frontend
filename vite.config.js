@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 export default {
   server: {
     proxy: {
-      '/api': 'http://localhost:5000'
+      '/api': 'https://backend-293l.onrender.com'
     }
   }
 }
