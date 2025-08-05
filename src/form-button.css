@@ -1,0 +1,25 @@
+.form-action-btn {
+  width: 100%;
+  padding: 0.6rem 0;
+  border-radius: 6px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
+.form-action-btn:hover {
+  background: #1251a3;
+}
+
+.form-action-btn svg {
+  font-size: 1.2rem;
+}
