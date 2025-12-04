@@ -6,7 +6,7 @@ import ListingCard from '../components/ListingCard';
 import '../home-theme.css';
 import '../form-theme.css';
 import '../home-sidebar.css';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
 
 function Home() {
   const [listings, setListings] = useState([]);
@@ -18,6 +18,16 @@ function Home() {
   const [district, setDistrict] = useState(() => localStorage.getItem('filter_district') || '');
   const [mandal, setMandal] = useState(() => localStorage.getItem('filter_mandal') || '');
   const [village, setVillage] = useState(() => localStorage.getItem('filter_village') || '');
+  const [listingType, setListingType] = useState(() => localStorage.getItem('filter_listingType') || '');
+  
+  // Accordion state
+  const [expandedCategory, setExpandedCategory] = useState(true);
+  const [expandedLocation, setExpandedLocation] = useState(true);
+  const [expandedSubcategory, setExpandedSubcategory] = useState(null);
+  const [expandedState, setExpandedState] = useState(null);
+  const [expandedDistrict, setExpandedDistrict] = useState(null);
+  const [expandedAdType, setExpandedAdType] = useState(true);
+  
   // Save filter state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('filter_category', category);
@@ -26,7 +36,8 @@ function Home() {
     localStorage.setItem('filter_district', district);
     localStorage.setItem('filter_mandal', mandal);
     localStorage.setItem('filter_village', village);
-  }, [category, subcategory, state, district, mandal, village]);
+    localStorage.setItem('filter_listingType', listingType);
+  }, [category, subcategory, state, district, mandal, village, listingType]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [locations, setLocations] = useState([]);
@@ -99,6 +110,8 @@ function Home() {
   }, [mandal, district, state, locations]);
 
   const filteredListings = listings.filter(listing => {
+    // Only show active listings on home page
+    if (!listing.IsActive) return false;
     // Category filter
     if (category && String(listing.Category?.CategoryID) !== String(category)) return false;
     // Subcategory filter (by ID for consistency)
@@ -108,67 +121,452 @@ function Home() {
     if (district && listing.Location?.district && listing.Location.district !== district) return false;
     if (mandal && listing.Location?.mandal && listing.Location.mandal !== mandal) return false;
     if (village && listing.Location?.village && listing.Location.village !== village) return false;
+    // Listing Type filter
+    if (listingType && listing.Listing_Type !== listingType) return false;
     return true;
   });
 
   return (
-    <div className="page-bg-blue-accent">
+    <div className="cred-page" style={{ paddingTop: '100px' }}>
+      {/* Header */}
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: '40px',
+        paddingBottom: '24px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <div style={{ 
+          fontSize: '32px', 
+          marginBottom: '8px',
+          color: 'var(--cred-accent)'
+        }}>
+          <FaSearch />
+        </div>
+        <h1 style={{
+          fontSize: '36px',
+          fontWeight: '900',
+          margin: '0',
+          background: 'linear-gradient(135deg, var(--cred-accent) 0%, var(--cred-blue) 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textTransform: 'lowercase'
+        }}>
+          discover listings.
+        </h1>
+      </div>
+
       <div className="home-main-container">
-        <aside className="home-sidebar sticky-sidebar">
-          <label htmlFor="search-category">Search Category</label>
-          <select id="search-category" value={category} onChange={e => setCategory(e.target.value)}>
-            <option value="">All Categories</option>
-            {categories.map(cat => (
-              <option key={cat.CategoryID} value={cat.CategoryID}>{cat.CategoryName}</option>
-            ))}
-          </select>
-          <label htmlFor="subcategory">Subcategory</label>
-          <select id="subcategory" value={subcategory} onChange={e => setSubcategory(e.target.value)} style={{marginBottom: '1rem', padding: '0.5rem 1rem', borderRadius: 6, border: '1px solid #bdbdbd', fontSize: '1rem', background: '#fff', color: '#5a4a1b'}}>
-            <option value="">All Subcategories</option>
-            {subcategories.map(sub => (
-              <option key={sub.SubCategoryID} value={sub.SubCategoryID}>{sub.SubCategoryName}</option>
-            ))}
-          </select>
-          <label htmlFor="state">State</label>
-          <select id="state" value={state} onChange={e => setState(e.target.value)}>
-            <option value="">All States</option>
-            {[...new Set(locations.map(l => l.state))].map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-          <label htmlFor="district">District</label>
-          <select id="district" value={district} onChange={e => setDistrict(e.target.value)}>
-            <option value="">All Districts</option>
-            {districts.map(d => <option key={d} value={d}>{d}</option>)}
-          </select>
-          <label htmlFor="mandal">Mandal</label>
-          <select id="mandal" value={mandal} onChange={e => setMandal(e.target.value)}>
-            <option value="">All Mandals</option>
-            {mandals.map(m => <option key={m} value={m}>{m}</option>)}
-          </select>
-          <label htmlFor="village">Village</label>
-          <select id="village" value={village} onChange={e => setVillage(e.target.value)}>
-            <option value="">All Villages</option>
-            {villages.map(v => <option key={v} value={v}>{v}</option>)}
-          </select>
-          <button className="home-action-btn" type="button">
-            <FaSearch /> Search
-          </button>
-          <button className="home-action-btn" type="button" style={{marginTop: '0.5rem', background: '#e65100', color: '#fff'}} onClick={() => {
-            setCategory('');
-            setSubcategory('');
-            setState('');
-            setDistrict('');
-            setMandal('');
-            setVillage('');
-            localStorage.removeItem('filter_category');
-            localStorage.removeItem('filter_subcategory');
-            localStorage.removeItem('filter_state');
-            localStorage.removeItem('filter_district');
-            localStorage.removeItem('filter_mandal');
-            localStorage.removeItem('filter_village');
-          }}>
-            Clear Filters
-          </button>
+        <aside className="home-sidebar sticky-sidebar" style={{ background: 'var(--cred-card)', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
+          
+          {/* AD TYPE Section */}
+          <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <button
+              onClick={() => setExpandedAdType(!expandedAdType)}
+              style={{
+                width: '100%',
+                padding: '16px 20px',
+                background: '#000',
+                border: 'none',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '700',
+                color: '#fff',
+                textAlign: 'left',
+                textTransform: 'lowercase',
+                borderRadius: '8px',
+                marginBottom: '8px'
+              }}
+            >
+              <span>ad type</span>
+              <span style={{ color: '#fff' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
+            </button>
+            
+            {expandedAdType && (
+              <div style={{ padding: '0 20px 16px' }}>
+                {['All', 'Resell', 'Business Offers', 'Business Campaign'].map(type => {
+                  const isSelected = listingType === type || (type === 'All' && !listingType);
+                  return (
+                    <div
+                      key={type}
+                      onClick={() => setListingType(type === 'All' ? '' : type)}
+                      style={{
+                        padding: '10px 12px',
+                        cursor: 'pointer',
+                        borderLeft: isSelected ? '3px solid var(--cred-accent)' : '3px solid transparent',
+                        background: isSelected ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
+                        marginBottom: '4px',
+                        fontWeight: isSelected ? '600' : '400',
+                        color: '#fff',
+                        transition: 'all 0.2s',
+                        borderRadius: '6px',
+                        textTransform: 'lowercase'
+                      }}
+                      onMouseEnter={(e) => !isSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                      onMouseLeave={(e) => !isSelected && (e.currentTarget.style.background = 'transparent')}
+                    >
+                      {type}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* CATEGORIES Section */}
+          <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <button
+              onClick={() => setExpandedCategory(!expandedCategory)}
+              style={{
+                width: '100%',
+                padding: '16px 20px',
+                background: '#000',
+                border: 'none',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '700',
+                color: '#fff',
+                textAlign: 'left',
+                textTransform: 'lowercase',
+                borderRadius: '8px',
+                marginBottom: '8px'
+              }}
+            >
+              <span>categories</span>
+              <span style={{ color: '#fff' }}>{expandedCategory ? <FaChevronUp /> : <FaChevronDown />}</span>
+            </button>
+            
+            {expandedCategory && (
+              <div style={{ padding: '0 20px 16px' }}>
+                {/* All Categories */}
+                <div
+                  onClick={() => {
+                    setCategory('');
+                    setSubcategory('');
+                  }}
+                  style={{
+                    padding: '10px 12px',
+                    cursor: 'pointer',
+                    borderLeft: category === '' ? '3px solid var(--cred-accent)' : '3px solid transparent',
+                    background: category === '' ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
+                    marginBottom: '4px',
+                    fontWeight: category === '' ? '600' : '400',
+                    color: '#fff',
+                    transition: 'all 0.2s',
+                    borderRadius: '6px',
+                    textTransform: 'lowercase'
+                  }}
+                  onMouseEnter={(e) => !category && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                  onMouseLeave={(e) => !category && (e.currentTarget.style.background = 'transparent')}
+                >
+                  all categories
+                </div>
+                
+                {/* Category List */}
+                {categories.map(cat => {
+                  const isSelected = String(category) === String(cat.CategoryID);
+                  const categorySubcategories = subcategories.filter(sub => String(sub.CategoryID) === String(cat.CategoryID));
+                  
+                  return (
+                    <div key={cat.CategoryID} style={{ marginBottom: '4px' }}>
+                      <div
+                        onClick={() => {
+                          if (isSelected) {
+                            setCategory('');
+                            setSubcategory('');
+                          } else {
+                            setCategory(cat.CategoryID);
+                            setSubcategory('');
+                          }
+                        }}
+                        style={{
+                          padding: '10px 12px',
+                          cursor: 'pointer',
+                          borderLeft: isSelected ? '3px solid var(--cred-accent)' : '3px solid transparent',
+                          background: isSelected ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
+                          fontWeight: isSelected ? '600' : '400',
+                          color: '#fff',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          borderRadius: '6px',
+                          textTransform: 'lowercase'
+                        }}
+                        onMouseEnter={(e) => !isSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                        onMouseLeave={(e) => !isSelected && (e.currentTarget.style.background = 'transparent')}
+                      >
+                        <span style={{ color: '#fff' }}>{cat.CategoryName}</span>
+                        {isSelected && categorySubcategories.length > 0 && (
+                          <span style={{ fontSize: '12px', color: '#bbb' }}>
+                            ({categorySubcategories.length})
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Subcategories - show only when category is selected */}
+                      {isSelected && categorySubcategories.length > 0 && (
+                        <div style={{ paddingLeft: '16px', marginTop: '4px' }}>
+                          {categorySubcategories.map(sub => {
+                            const isSubSelected = String(subcategory) === String(sub.SubCategoryID);
+                            return (
+                              <div
+                                key={sub.SubCategoryID}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSubcategory(isSubSelected ? '' : sub.SubCategoryID);
+                                }}
+                                style={{
+                                  padding: '8px 12px',
+                                  cursor: 'pointer',
+                                  background: isSubSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
+                                  color: '#fff',
+                                  fontSize: '13px',
+                                  borderRadius: '6px',
+                                  marginBottom: '2px',
+                                  transition: 'all 0.2s',
+                                  textTransform: 'lowercase'
+                                }}
+                                onMouseEnter={(e) => !isSubSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                                onMouseLeave={(e) => !isSubSelected && (e.currentTarget.style.background = 'transparent')}
+                              >
+                                {sub.SubCategoryName}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* LOCATIONS Section */}
+          <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <button
+              onClick={() => setExpandedLocation(!expandedLocation)}
+              style={{
+                width: '100%',
+                padding: '16px 20px',
+                background: '#000',
+                border: 'none',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '700',
+                color: '#fff',
+                textAlign: 'left',
+                textTransform: 'lowercase',
+                borderRadius: '8px',
+                marginBottom: '8px'
+              }}
+            >
+              <span>locations</span>
+              <span style={{ color: '#fff' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
+            </button>
+            
+            {expandedLocation && (
+              <div style={{ padding: '0 20px 16px' }}>
+                {/* States */}
+                {[...new Set(locations.map(l => l.state))].map(s => {
+                  const isStateSelected = state === s;
+                  const stateDistricts = [...new Set(locations.filter(l => l.state === s).map(l => l.district))];
+                  
+                  return (
+                    <div key={s} style={{ marginBottom: '4px' }}>
+                      <div
+                        onClick={() => {
+                          if (isStateSelected) {
+                            setState('');
+                            setDistrict('');
+                            setMandal('');
+                            setVillage('');
+                          } else {
+                            setState(s);
+                            setDistrict('');
+                            setMandal('');
+                            setVillage('');
+                          }
+                        }}
+                        style={{
+                          padding: '10px 12px',
+                          cursor: 'pointer',
+                          borderLeft: isStateSelected ? '3px solid var(--cred-accent)' : '3px solid transparent',
+                          background: isStateSelected ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
+                          fontWeight: isStateSelected ? '600' : '400',
+                          color: '#fff',
+                          transition: 'all 0.2s',
+                          borderRadius: '6px',
+                          textTransform: 'lowercase'
+                        }}
+                        onMouseEnter={(e) => !isStateSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                        onMouseLeave={(e) => !isStateSelected && (e.currentTarget.style.background = 'transparent')}
+                      >
+                        {s}
+                      </div>
+                      
+                      {/* Districts - show only when state is selected */}
+                      {isStateSelected && stateDistricts.length > 0 && (
+                        <div style={{ paddingLeft: '16px', marginTop: '4px' }}>
+                          {stateDistricts.map(d => {
+                            const isDistrictSelected = district === d;
+                            const districtMandals = [...new Set(locations.filter(l => l.state === s && l.district === d).map(l => l.mandal))];
+                            
+                            return (
+                              <div key={d} style={{ marginBottom: '2px' }}>
+                                <div
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isDistrictSelected) {
+                                      setDistrict('');
+                                      setMandal('');
+                                      setVillage('');
+                                    } else {
+                                      setDistrict(d);
+                                      setMandal('');
+                                      setVillage('');
+                                    }
+                                  }}
+                                  style={{
+                                    padding: '8px 12px',
+                                    cursor: 'pointer',
+                                    background: isDistrictSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
+                                    color: '#fff',
+                                    fontSize: '13px',
+                                    borderRadius: '6px',
+                                    fontWeight: isDistrictSelected ? '600' : '400',
+                                    transition: 'all 0.2s',
+                                    textTransform: 'lowercase'
+                                  }}
+                                  onMouseEnter={(e) => !isDistrictSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                                  onMouseLeave={(e) => !isDistrictSelected && (e.currentTarget.style.background = 'transparent')}
+                                >
+                                  {d}
+                                </div>
+                                
+                                {/* Mandals */}
+                                {isDistrictSelected && districtMandals.length > 0 && (
+                                  <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
+                                    {districtMandals.map(m => {
+                                      const isMandalSelected = mandal === m;
+                                      const mandalVillages = [...new Set(locations.filter(l => l.state === s && l.district === d && l.mandal === m).map(l => l.village))];
+                                      
+                                      return (
+                                        <div key={m} style={{ marginBottom: '2px' }}>
+                                          <div
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              if (isMandalSelected) {
+                                                setMandal('');
+                                                setVillage('');
+                                              } else {
+                                                setMandal(m);
+                                                setVillage('');
+                                              }
+                                            }}
+                                            style={{
+                                              padding: '6px 10px',
+                                              cursor: 'pointer',
+                                              background: isMandalSelected ? 'rgba(0, 208, 156, 0.3)' : 'transparent',
+                                              color: '#fff',
+                                              fontSize: '12px',
+                                              borderRadius: '6px',
+                                              fontWeight: isMandalSelected ? '600' : '400',
+                                              transition: 'all 0.2s',
+                                              textTransform: 'lowercase'
+                                            }}
+                                            onMouseEnter={(e) => !isMandalSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                                            onMouseLeave={(e) => !isMandalSelected && (e.currentTarget.style.background = 'transparent')}
+                                          >
+                                            {m}
+                                          </div>
+                                          
+                                          {/* Villages */}
+                                          {isMandalSelected && mandalVillages.length > 0 && (
+                                            <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
+                                              {mandalVillages.map(v => {
+                                                const isVillageSelected = village === v;
+                                                return (
+                                                  <div
+                                                    key={v}
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      setVillage(isVillageSelected ? '' : v);
+                                                    }}
+                                                    style={{
+                                                      padding: '6px 10px',
+                                                      cursor: 'pointer',
+                                                      background: isVillageSelected ? 'rgba(0, 208, 156, 0.4)' : 'transparent',
+                                                      color: '#fff',
+                                                      fontSize: '11px',
+                                                      borderRadius: '6px',
+                                                      marginBottom: '2px',
+                                                      transition: 'all 0.2s',
+                                                      textTransform: 'lowercase'
+                                                    }}
+                                                    onMouseEnter={(e) => !isVillageSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                                                    onMouseLeave={(e) => !isVillageSelected && (e.currentTarget.style.background = 'transparent')}
+                                                  >
+                                                    {v}
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div style={{ padding: '20px' }}>
+            <button
+              className="cred-btn-danger"
+              type="button"
+              onClick={() => {
+                setCategory('');
+                setSubcategory('');
+                setState('');
+                setDistrict('');
+                setMandal('');
+                setVillage('');
+                setListingType('');
+                localStorage.removeItem('filter_category');
+                localStorage.removeItem('filter_subcategory');
+                localStorage.removeItem('filter_state');
+                localStorage.removeItem('filter_district');
+                localStorage.removeItem('filter_mandal');
+                localStorage.removeItem('filter_village');
+                localStorage.removeItem('filter_listingType');
+              }}
+            >
+              <FaTimes /> clear filters
+            </button>
+          </div>
         </aside>
+
         <main className="home-listings-content">
           {filteredListings.map(listing => {
             let imageUrl = '';
@@ -187,6 +585,7 @@ function Home() {
                   ImageURL: listing.ImageURL || imageUrl,
                   owner: listing.User
                     ? {
+                        UserID: listing.User.UserID,
                         name: listing.User.name,
                         phone: listing.User.phone
                       }
@@ -199,7 +598,10 @@ function Home() {
                   village: listing.Location?.village,
                   availability: listing.availability,
                   postedDate: listing.CreateDate,
-                  Category: listing.Category // Pass Category object for name
+                  Category: listing.Category, // Pass Category object for name
+                  Listing_Type: listing.Listing_Type,
+                  CampaignStartDate: listing.CampaignStartDate,
+                  CampaignEndDate: listing.CampaignEndDate
                 }}
               />
             );

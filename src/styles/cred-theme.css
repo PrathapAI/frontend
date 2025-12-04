@@ -1,0 +1,384 @@
+/* CRED-inspired Theme - Dark, Modern, Smooth */
+
+:root {
+  /* CRED Color Palette */
+  --cred-dark: #0f0f0f;
+  --cred-darker: #050505;
+  --cred-card: #1a1a1a;
+  --cred-card-hover: #242424;
+  --cred-border: #2a2a2a;
+  --cred-accent: #00d09c;
+  --cred-accent-hover: #00fdb8;
+  --cred-purple: #9b59b6;
+  --cred-pink: #e74c3c;
+  --cred-blue: #3498db;
+  --cred-orange: #f39c12;
+  --cred-text: #ffffff;
+  --cred-text-primary: #ffffff;
+  --cred-text-secondary: #cccccc;
+  --cred-text-tertiary: #888888;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  background: var(--cred-darker);
+  color: #000;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cred-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cred-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cred-text-tertiary);
+}
+
+/* Typography - CRED Style */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 3.5rem;
+  background: linear-gradient(135deg, var(--cred-text) 0%, var(--cred-text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+/* CRED-style Cards */
+.cred-card {
+  background: var(--cred-card);
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid var(--cred-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cred-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cred-accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cred-card:hover {
+  background: var(--cred-card-hover);
+  border-color: var(--cred-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 208, 156, 0.15);
+}
+
+.cred-card:hover::before {
+  opacity: 1;
+}
+
+/* CRED Buttons */
+.cred-btn {
+  background: var(--cred-accent);
+  color: var(--cred-darker);
+  border: none;
+  border-radius: 16px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.cred-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.cred-btn:hover {
+  background: var(--cred-accent-hover);
+  transform: scale(1.02);
+  box-shadow: 0 10px 40px rgba(0, 208, 156, 0.3);
+}
+
+.cred-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.cred-btn:active {
+  transform: scale(0.98);
+}
+
+.cred-btn-secondary {
+  background: transparent;
+  color: var(--cred-accent);
+  border: 2px solid var(--cred-accent);
+}
+
+.cred-btn-secondary:hover {
+  background: var(--cred-accent);
+  color: var(--cred-darker);
+}
+
+.cred-btn-danger {
+  background: #e74c3c; /* A clearer red */
+  color: #000;
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: lowercase;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cred-btn-danger:hover {
+  background: #c0392b;
+  box-shadow: 0 10px 40px rgba(231, 76, 60, 0.3);
+}
+
+/* Input Fields - CRED Style */
+.cred-input {
+  background: #f5f5f5;
+  border: 2px solid var(--cred-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 16px;
+  color: #000;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.cred-input:focus {
+  outline: none;
+  border-color: var(--cred-accent);
+  box-shadow: 0 0 0 4px rgba(0, 208, 156, 0.1);
+  background: #fff;
+}
+
+.cred-input::placeholder {
+  color: #777;
+}
+
+.cred-input option {
+  background: #fff;
+  color: #000;
+}
+
+/* Page Container */
+.cred-page {
+  min-height: 100vh;
+  background: var(--cred-darker);
+  padding: 120px 20px 60px;
+}
+
+.cred-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--cred-accent) 0%, var(--cred-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-purple {
+  background: linear-gradient(135deg, var(--cred-purple) 0%, var(--cred-pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Loading Spinner */
+.cred-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--cred-border);
+  border-top-color: var(--cred-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Grid Layout */
+.cred-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+/* Glassmorphism Effect */
+.glass {
+  background: rgba(26, 26, 26, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Stagger animation delay */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+  
+  .cred-card {
+    padding: 24px;
+    border-radius: 20px;
+  }
+  
+  .cred-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .cred-page {
+    padding: 100px 16px 40px;
+  }
+}

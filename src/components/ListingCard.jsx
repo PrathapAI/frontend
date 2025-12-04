@@ -1,8 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa';
+import ChatWindow from './ChatWindow';
+import API from '../services/api';
 
-function ListingCard({ listing }) {
+function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, onActivate }) {
   console.log('ListingCard listing:', listing);
   console.log('ListingCard ImageURL:', listing.ImageURL);
   console.log('ListingCard image:', listing.image);
@@ -25,10 +28,92 @@ function ListingCard({ listing }) {
   const ownerName = listing.owner?.name || listing.User?.name || listing.User?.Username || 'N/A';
   // Phone number removed
   const postedDate = listing.postedDate || listing.CreateDate;
-  const price = (listing.price !== undefined && listing.price !== null && listing.price !== '') ? String(listing.price) : (listing.ExpectedPrice !== undefined && listing.ExpectedPrice !== null && listing.ExpectedPrice !== '') ? String(listing.ExpectedPrice) : 'N/A';
+  
+  const getPriceDisplay = () => {
+    // For Business Campaign, don't show price
+    if (listing.Listing_Type === 'Business Campaign') {
+      return null;
+    }
+    
+    const priceValue = (listing.price !== undefined && listing.price !== null && listing.price !== '') ? String(listing.price) : (listing.ExpectedPrice !== undefined && listing.ExpectedPrice !== null && listing.ExpectedPrice !== '') ? String(listing.ExpectedPrice) : 'N/A';
+    if (priceValue === 'N/A') {
+      return 'N/A';
+    }
+    if (listing.Listing_Type === 'Business Offers') {
+      return `${priceValue}% off`;
+    }
+    return `₹ ${priceValue}`;
+  };
+
+  const getCampaignDates = () => {
+    if (listing.Listing_Type === 'Business Campaign' && (listing.CampaignStartDate || listing.CampaignEndDate)) {
+      const startDate = listing.CampaignStartDate ? new Date(listing.CampaignStartDate).toLocaleDateString() : 'N/A';
+      const endDate = listing.CampaignEndDate ? new Date(listing.CampaignEndDate).toLocaleDateString() : 'N/A';
+      return `${startDate} - ${endDate}`;
+    }
+    return null;
+  };
+
+  const price = getPriceDisplay();
+  const campaignDates = getCampaignDates();
+  
   const address = listing.address
     || (listing.Location && (listing.Location.village || listing.Location.state || listing.Location.district || listing.Location.mandal))
     || `${listing.state || ''} ${listing.district || ''} ${listing.mandal || ''} ${listing.village || ''}`;
+
+  // Get current user ID from token
+  const getUserId = () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.id;
+    } catch {
+      return null;
+    }
+  };
+
+  const handleMessageClick = () => {
+    const userId = getUserId();
+    if (!userId) {
+      alert('Please login to send messages');
+      return;
+    }
+
+    const recipientId = listing.User?.UserID || listing.owner?.UserID || listing.UserID;
+    if (!recipientId) {
+      console.log('Listing data:', listing);
+      console.log('listing.User:', listing.User);
+      console.log('listing.owner:', listing.owner);
+      console.log('listing.UserID:', listing.UserID);
+      alert('Owner information not available. Check console for details.');
+      return;
+    }
+
+    if (userId === recipientId) {
+      alert('You cannot send a message to yourself');
+      return;
+    }
+
+    setShowChat(true);
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await API.delete(`/listings/${listing.ListingID}`);
+      alert('Listing deleted successfully');
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Failed to delete listing. Please try again.');
+    }
+  };
 
   return (
     <div style={{
@@ -53,6 +138,81 @@ function ListingCard({ listing }) {
             Posted on {postedDate ? new Date(postedDate).toLocaleDateString() : 'N/A'}
           </div>
         </div>
+        {/* Action buttons for owner - Top right */}
+        {isOwner && (
+          <div style={{ position: 'absolute', top: 20, right: 20, display: 'flex', gap: '8px', zIndex: 2 }}>
+            {listing.IsActive && onDeactivate && (
+              <button
+                onClick={() => onDeactivate(listing.ListingID)}
+                style={{
+                  background: '#f39c12',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '8px 16px',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 2px 8px rgba(243,156,18,0.3)',
+                  transition: 'background 0.2s, transform 0.1s'
+                }}
+                onMouseOver={e => e.currentTarget.style.background = '#e67e22'}
+                onMouseOut={e => e.currentTarget.style.background = '#f39c12'}
+              >
+                Deactivate
+              </button>
+            )}
+            {!listing.IsActive && onActivate && (
+              <button
+                onClick={() => onActivate(listing.ListingID)}
+                style={{
+                  background: '#27ae60',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '8px 16px',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 2px 8px rgba(39,174,96,0.3)',
+                  transition: 'background 0.2s, transform 0.1s'
+                }}
+                onMouseOver={e => e.currentTarget.style.background = '#229954'}
+                onMouseOut={e => e.currentTarget.style.background = '#27ae60'}
+              >
+                Activate
+              </button>
+            )}
+            <button
+              onClick={handleDelete}
+              style={{
+                background: '#e74c3c',
+                color: '#000',
+                border: 'none',
+                borderRadius: 8,
+                padding: '8px 16px',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                boxShadow: '0 2px 8px rgba(231,76,60,0.3)',
+                transition: 'background 0.2s, transform 0.1s'
+              }}
+              onMouseOver={e => e.currentTarget.style.background = '#c0392b'}
+              onMouseOut={e => e.currentTarget.style.background = '#e74c3c'}
+            >
+              <FaTrash /> Delete
+            </button>
+          </div>
+        )}
         {/* Title at top center */}
         <div
           style={{
@@ -69,9 +229,16 @@ function ListingCard({ listing }) {
         >
           {title}
         </div>
-        <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>
-          ₹ {price}
-        </div>
+        {price && (
+          <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>
+            {price}
+          </div>
+        )}
+        {campaignDates && (
+          <div style={{ fontSize: 18, fontWeight: 600, color: '#3498db', marginBottom: 8, textAlign: 'center' }}>
+            Campaign: {campaignDates}
+          </div>
+        )}
         {/* Address row */}
         <div style={{ fontSize: 15, color: '#555', marginBottom: 12, fontWeight: 500, textAlign: 'center' }}>
           {address}
@@ -126,22 +293,14 @@ function ListingCard({ listing }) {
                 transition: 'background 0.2s, border 0.2s',
                 opacity: 1
               }}
-              onClick={() => setShowChat(prev => !prev)}
+              onClick={handleMessageClick}
             >Message</button>
           </div>
         </div>
-        {/* Phone and chat popups */}
+        {/* Phone popup */}
         {showPhone && (
           <div style={{ marginTop: 12, textAlign: 'center', color: '#e65100', fontWeight: 600, fontSize: 18 }}>
             Phone: {listing.owner?.phone ? String(listing.owner.phone) : 'Not available'}
-          </div>
-        )}
-        {showChat && (
-          <div style={{ marginTop: 12, textAlign: 'center', border: '1px solid #eee', borderRadius: 8, padding: 12, background: '#f9f9f9', minWidth: 260 }}>
-            <div style={{ marginBottom: 8, fontWeight: 600 }}>Chat with {listing.owner?.name ? String(listing.owner.name) : 'User'}</div>
-            <textarea rows={3} style={{ width: '100%', borderRadius: 6, border: '1px solid #ccc', padding: 8, marginBottom: 8 }} placeholder="Type your message..." />
-            <button style={{ background: '#ff9800', color: '#111', border: 'none', borderRadius: 16, padding: '6px 18px', fontWeight: 600, marginBottom: 8, marginTop: 4, width: '100%' }}>Send</button>
-            <button style={{ background: '#fff', color: '#888', border: '1px solid #ccc', borderRadius: 16, padding: '6px 18px', fontWeight: 600, width: '100%' }} onClick={() => setShowChat(false)}>Close</button>
           </div>
         )}
       </div>
@@ -186,6 +345,16 @@ function ListingCard({ listing }) {
           >Show Images</button>
         )}
       </div>
+      
+      {/* Chat Window */}
+      {showChat && (
+        <ChatWindow
+          otherUserId={listing.owner?.UserID || listing.User?.UserID || listing.UserID}
+          otherUserName={listing.owner?.name || listing.User?.name || listing.User?.Username || 'User'}
+          listingId={listing.ListingID || listing.id}
+          onClose={() => setShowChat(false)}
+        />
+      )}
     </div>
   );
 }

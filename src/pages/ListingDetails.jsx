@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
+import FavoriteButton from '../components/FavoriteButton';
+import ReviewSection from '../components/ReviewSection';
 
 function ListingDetails() {
   const { id } = useParams();
@@ -8,6 +10,16 @@ function ListingDetails() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Get userId from token
+  const token = localStorage.getItem('token');
+  let userId = null;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      userId = payload.id;
+    } catch {}
+  }
 
   useEffect(() => {
     async function fetchListing() {
@@ -31,7 +43,7 @@ function ListingDetails() {
   if (!listing) return <div>Listing not found</div>;
 
   return (
-    <div className="page-bg-blue-accent">
+    <div className="page-bg-blue-accent" style={{ paddingTop: '100px' }}>
       <div className="home-main-container">
         <main className="home-listings-content" style={{ maxWidth: 900, margin: '0 auto', padding: 32 }}>
           <h2 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 700, marginBottom: 16 }}>{listing.title || listing.Title || 'No Title'}</h2>
@@ -88,13 +100,25 @@ function ListingDetails() {
             {/* Page close button */}
             <button onClick={() => navigate(-1)} style={{ position: 'absolute', top: 18, left: 18, background: '#fff', color: '#232526', border: '2px solid #232526', borderRadius: 8, padding: '8px 18px', fontWeight: 700, cursor: 'pointer', zIndex: 20 }}>Close</button>
           </div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>₹ {listing.ExpectedPrice || listing.price || 'N/A'}</div>
+          {listing.Listing_Type === 'Business Campaign' ? (
+            listing.CampaignStartDate || listing.CampaignEndDate ? (
+              <div style={{ fontSize: 18, fontWeight: 600, color: '#3498db', marginBottom: 8, textAlign: 'center' }}>
+                Campaign: {listing.CampaignStartDate ? new Date(listing.CampaignStartDate).toLocaleDateString() : 'N/A'} - {listing.CampaignEndDate ? new Date(listing.CampaignEndDate).toLocaleDateString() : 'N/A'}
+              </div>
+            ) : null
+          ) : (
+            <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>
+              {listing.Listing_Type === 'Business Offers' 
+                ? `${listing.ExpectedPrice || listing.price || 'N/A'}% off`
+                : `₹ ${listing.ExpectedPrice || listing.price || 'N/A'}`}
+            </div>
+          )}
           <div style={{ fontSize: 16, color: '#555', marginBottom: 12 }}><strong>Description:</strong> {listing.Description || listing.description || 'N/A'}</div>
           <div style={{ fontSize: 16, color: '#555', marginBottom: 12 }}>
             <strong>Address:</strong> {
               listing.address
-                || (listing.Location && (listing.Location.village || listing.Location.state || listing.Location.district || listing.Location.mandal))
-                || `${listing.state || ''} ${listing.district || ''} ${listing.mandal || ''} ${listing.village || ''}`
+                || (listing.Location && `${listing.Location.village}, ${listing.Location.mandal}, ${listing.Location.district}, ${listing.Location.state}`)
+                || `${listing.village || ''}, ${listing.mandal || ''}, ${listing.district || ''}, ${listing.state || ''}`
             }
           </div>
           <div style={{ fontSize: 16, color: '#1976d2', marginBottom: 12 }}><strong>Availability:</strong> {listing.availability ? String(listing.availability) : 'N/A'}</div>
@@ -104,6 +128,14 @@ function ListingDetails() {
               (listing.owner?.name || listing.User?.name || listing.User?.Username || 'N/A')
             }
           </div>
+          
+          {/* Favorite Button */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+            <FavoriteButton listingId={id} userId={userId} />
+          </div>
+          
+          {/* Reviews Section */}
+          <ReviewSection listingId={id} userId={userId} />
         </main>
       </div>
     </div>

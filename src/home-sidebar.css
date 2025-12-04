@@ -17,6 +17,10 @@
   flex-direction: column;
   gap: 1.2rem;
   align-items: stretch;
+  position: sticky;
+  top: 100px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
 }
 
 .home-sidebar label {
