@@ -100,15 +100,6 @@ function Navbar() {
             }}>
             <FaHome style={{ fontSize: '14px' }} /> home
           </Link>
-          <Link to="/about" style={navLinkStyle}
-            onMouseOver={e => {
-              e.currentTarget.style.background = '#3a3a3a';
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.background = 'rgba(42, 42, 42, 0.5)';
-            }}>
-            about
-          </Link>
           {user && (
             <>
               <Link to="/create" style={{
@@ -161,6 +152,15 @@ function Navbar() {
                 }}>
                 <FaBell style={{ fontSize: '14px' }} /> alerts
               </Link>
+              <Link to="/about" style={navLinkStyle}
+            onMouseOver={e => {
+              e.currentTarget.style.background = '#3a3a3a';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.background = 'rgba(42, 42, 42, 0.5)';
+            }}>
+            about
+          </Link>
               {userRole === 'admin' && (
                 <Link to="/admin-dashboard" style={{
                   ...navLinkStyle,
