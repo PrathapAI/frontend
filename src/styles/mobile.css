@@ -244,20 +244,29 @@
   
   /* Reduce text sizes in listing cards on mobile */
   /* Title */
-  .cred-card h3,
-  .cred-card div[style*="fontSize: '1.5rem'"] {
-    font-size: 12px !important;
+  .listing-title {
+    font-size: 14px !important;
+    margin-top: 10px !important;
   }
   
-  /* Price and campaign dates - 60% smaller */
-  .cred-card div[style*="fontSize: 22"],
-  .cred-card div[style*="fontSize: 18"] {
+  /* Price - 60% of original (22px * 0.4 = 8.8px) */
+  .listing-price {
     font-size: 9px !important;
   }
   
-  /* Address - 60% smaller */
-  .cred-card div[style*="fontSize: 15"] {
+  /* Address - 60% of original (15px * 0.4 = 6px) */
+  .listing-address {
     font-size: 6px !important;
+  }
+  
+  /* Posted date */
+  .listing-date {
+    font-size: 9px !important;
+  }
+  
+  /* Campaign dates */
+  .cred-card div[style*="fontSize: 18"] {
+    font-size: 11px !important;
   }
   
   .cred-card button {

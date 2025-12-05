@@ -137,9 +137,8 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
       position: 'relative'
     }}>
       <div style={{ flex: 1, padding: 20, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {/* Top left: Username and posted date */}
-        <div style={{ position: 'absolute', top: 20, left: 20, textAlign: 'left', zIndex: 2 }}>
-          <div style={{ fontWeight: 600 }}>{ownerName}</div>
+        {/* Top left: Posted date only */}
+        <div className="listing-date" style={{ position: 'absolute', top: 20, left: 20, textAlign: 'left', zIndex: 2 }}>
           <div style={{ fontSize: 12, color: '#888' }}>
             Posted on {postedDate ? new Date(postedDate).toLocaleDateString() : 'N/A'}
           </div>
@@ -221,6 +220,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
         )}
         {/* Title at top center */}
         <div
+          className="listing-title"
           style={{
             textAlign: 'center',
             fontSize: '1.5rem',
@@ -229,14 +229,14 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
             color: '#1976d2',
             cursor: 'pointer',
             textDecoration: 'underline',
-            marginTop: 20
+            marginTop: 50
           }}
           onClick={() => navigate(`/listing/${listing.ListingID || listing.id}`)}
         >
           {title}
         </div>
         {price && (
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>
+          <div className="listing-price" style={{ fontSize: 22, fontWeight: 700, color: '#e65100', marginBottom: 8, textAlign: 'center' }}>
             {price}
           </div>
         )}
@@ -246,7 +246,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
           </div>
         )}
         {/* Address row */}
-        <div style={{ fontSize: 15, color: '#555', marginBottom: 12, fontWeight: 500, textAlign: 'center' }}>
+        <div className="listing-address" style={{ fontSize: 15, color: '#555', marginBottom: 12, fontWeight: 500, textAlign: 'center' }}>
           {address}
         </div>
         {/* Bottom row absolutely positioned to bottom of card */}
@@ -303,14 +303,28 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
             >Message</button>
           </div>
         </div>
-        {/* Phone popup */}
-        {showPhone && (
-          <div style={{ marginTop: 12, textAlign: 'center', color: '#e65100', fontWeight: 600, fontSize: 18 }}>
-            Phone: {listing.owner?.phone ? String(listing.owner.phone) : 'Not available'}
-          </div>
-        )}
       </div>
       <div style={{ flex: '0 0 260px', height: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#3d1515ff', borderLeft: '1px solid #eee', position: 'relative', overflow: 'hidden' }}>
+        {/* Phone number overlay on image */}
+        {showPhone && (
+          <div style={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            background: 'rgba(0, 0, 0, 0.85)', 
+            color: '#fff', 
+            padding: '20px 30px', 
+            borderRadius: '12px', 
+            fontSize: 20, 
+            fontWeight: 700, 
+            zIndex: 10,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+            textAlign: 'center'
+          }}>
+            📞 {listing.owner?.phone ? String(listing.owner.phone) : 'Not available'}
+          </div>
+        )}
         {showImages && (
           <>
             <img
