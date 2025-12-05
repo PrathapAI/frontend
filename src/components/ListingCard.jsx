@@ -229,7 +229,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
             color: '#1976d2',
             cursor: 'pointer',
             textDecoration: 'underline',
-            marginTop: 50
+            marginTop: 40
           }}
           onClick={() => navigate(`/listing/${listing.ListingID || listing.id}`)}
         >
@@ -241,7 +241,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
           </div>
         )}
         {campaignDates && (
-          <div style={{ fontSize: 18, fontWeight: 600, color: '#3498db', marginBottom: 8, textAlign: 'center' }}>
+          <div className="listing-campaign" style={{ fontSize: 18, fontWeight: 600, color: '#3498db', marginBottom: 8, textAlign: 'center' }}>
             Campaign: {campaignDates}
           </div>
         )}

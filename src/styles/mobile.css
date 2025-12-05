@@ -254,6 +254,11 @@
     font-size: 9px !important;
   }
   
+  /* Campaign dates - 60% of original (18px * 0.4 = 7.2px) */
+  .listing-campaign {
+    font-size: 7px !important;
+  }
+  
   /* Address - 60% of original (15px * 0.4 = 6px) */
   .listing-address {
     font-size: 6px !important;
@@ -262,11 +267,6 @@
   /* Posted date */
   .listing-date {
     font-size: 9px !important;
-  }
-  
-  /* Campaign dates */
-  .cred-card div[style*="fontSize: 18"] {
-    font-size: 11px !important;
   }
   
   .cred-card button {
