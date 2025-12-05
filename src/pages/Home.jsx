@@ -6,7 +6,7 @@ import ListingCard from '../components/ListingCard';
 import '../home-theme.css';
 import '../form-theme.css';
 import '../home-sidebar.css';
-import { FaSearch, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter } from 'react-icons/fa';
 
 function Home() {
   const [listings, setListings] = useState([]);
@@ -27,6 +27,9 @@ function Home() {
   const [expandedState, setExpandedState] = useState(null);
   const [expandedDistrict, setExpandedDistrict] = useState(null);
   const [expandedAdType, setExpandedAdType] = useState(true);
+  
+  // Mobile filter toggle
+  const [showFilters, setShowFilters] = useState(false);
   
   // Save filter state to localStorage whenever it changes
   useEffect(() => {
@@ -156,8 +159,35 @@ function Home() {
         </h1>
       </div>
 
+      {/* Mobile Filter Toggle Button */}
+      <button
+        className="mobile-filter-toggle"
+        onClick={() => setShowFilters(!showFilters)}
+        style={{
+          position: 'fixed',
+          left: '12px',
+          top: '70px',
+          zIndex: 1000,
+          background: 'var(--cred-accent)',
+          border: 'none',
+          borderRadius: '50%',
+          width: '50px',
+          height: '50px',
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
+          color: '#000',
+          fontSize: '18px',
+          transition: 'all 0.3s'
+        }}
+      >
+        <FaFilter />
+      </button>
+
       <div className="home-main-container">
-        <aside className="home-sidebar sticky-sidebar" style={{ background: 'var(--cred-card)', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
+        <aside className={`home-sidebar sticky-sidebar ${showFilters ? 'show-filters' : ''}`} style={{ background: 'var(--cred-card)', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
           
           {/* AD TYPE Section */}
           <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
