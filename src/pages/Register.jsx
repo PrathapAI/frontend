@@ -364,8 +364,11 @@ function Register() {
                   marginBottom: '12px',
                   border: '1px solid var(--cred-accent)'
                 }}>
-                  <p style={{ color: '#fff', fontSize: '12px', margin: 0 }}>
-                    OTP sent to {form.email}
+                  <p style={{ color: '#fff', fontSize: '12px', margin: '0 0 8px 0' }}>
+                    ✅ OTP sent to {form.email}
+                  </p>
+                  <p style={{ color: '#ffa500', fontSize: '11px', margin: 0 }}>
+                    📧 Check your spam/junk folder if not received in inbox
                   </p>
                 </div>
                 <input

@@ -166,15 +166,17 @@ function Login() {
             {forgotPasswordStep === 2 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{
-                  background: '#f0f0f0',
-                  border: '2px solid var(--cred-accent)',
-                  borderRadius: '16px',
-                  padding: '16px',
-                  textAlign: 'center',
+                  background: 'rgba(0, 208, 156, 0.1)',
+                  border: '1px solid var(--cred-accent)',
+                  borderRadius: '12px',
+                  padding: '12px',
                   marginBottom: '8px'
                 }}>
-                  <p style={{ fontSize: '12px', color: '#fff', marginBottom: '8px' }}>
-                    OTP sent to {forgotEmail}
+                  <p style={{ fontSize: '12px', color: '#fff', margin: '0 0 8px 0' }}>
+                    ✅ OTP sent to {forgotEmail}
+                  </p>
+                  <p style={{ fontSize: '11px', color: '#ffa500', margin: 0 }}>
+                    📧 Check your spam/junk folder if not received in inbox
                   </p>
                 </div>
                 <div style={{ position: 'relative' }}>
