@@ -8,10 +8,18 @@
 
 /* Base mobile improvements */
 @media (max-width: 768px) {
-  /* Prevent horizontal scroll */
+  /* Prevent horizontal scroll and page shake */
   html, body {
     overflow-x: hidden;
     width: 100%;
+    position: relative;
+  }
+  
+  /* Prevent page shake when filters are open */
+  body.filters-open {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
   }
   
   /* Navbar mobile styles */
@@ -106,13 +114,15 @@
     max-width: 320px !important;
     min-width: auto !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 20px 0 !important;
     border-radius: 0 12px 12px 0 !important;
-    overflow-y: auto !important;
+    overflow-y: scroll !important;
     overflow-x: hidden !important;
     animation: slideIn 0.3s ease-out;
     box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3) !important;
     -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    scroll-behavior: smooth !important;
   }
   
   @keyframes slideIn {
@@ -124,13 +134,14 @@
     }
   }
   
-  /* Make filter sections very compact - no gaps */
+  /* Make filter sections very compact - no individual scrolling */
   .home-sidebar > div {
     border-radius: 0 !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
     overflow: visible !important;
     max-height: none !important;
+    height: auto !important;
     flex-shrink: 0 !important;
   }
   

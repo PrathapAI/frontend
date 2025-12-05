@@ -34,11 +34,14 @@ function Home() {
   // Prevent body scroll when filters are open
   useEffect(() => {
     if (showFilters) {
+      document.body.classList.add('filters-open');
       document.body.style.overflow = 'hidden';
     } else {
+      document.body.classList.remove('filters-open');
       document.body.style.overflow = 'unset';
     }
     return () => {
+      document.body.classList.remove('filters-open');
       document.body.style.overflow = 'unset';
     };
   }, [showFilters]);
