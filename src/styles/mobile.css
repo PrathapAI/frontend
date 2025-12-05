@@ -26,29 +26,24 @@
   }
   
   nav > div {
-    padding: 0 !important;
-    flex-wrap: wrap;
+    padding: 0 12px !important;
+    flex-wrap: nowrap !important;
     gap: 8px !important;
   }
   
-  /* Hide some nav links on mobile, show in hamburger menu instead */
-  nav a[href="/mylistings"],
-  nav a[href="/messages"],
-  nav a[href="/favorites"],
-  nav a[href="/notifications"],
-  nav a[href="/about"] {
-    display: none;
+  /* Hide desktop navigation on mobile */
+  .desktop-nav {
+    display: none !important;
   }
   
-  /* Make remaining nav items smaller */
-  nav a, nav button {
-    font-size: 11px !important;
-    padding: 6px 10px !important;
+  /* Show hamburger menu button on mobile */
+  .hamburger-btn {
+    display: block !important;
   }
   
   /* Logo smaller on mobile */
   nav a[href="/"] {
-    font-size: 18px !important;
+    font-size: 20px !important;
   }
   
   /* HOME PAGE MOBILE FIXES */

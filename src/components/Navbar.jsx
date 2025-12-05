@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { FaEnvelope, FaHeart, FaBell, FaPlus, FaList, FaHome, FaUserShield, FaClipboardCheck } from 'react-icons/fa';
+import { FaEnvelope, FaHeart, FaBell, FaPlus, FaList, FaHome, FaUserShield, FaClipboardCheck, FaBars, FaTimes } from 'react-icons/fa';
 
 function Navbar() {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   // Check token and scroll position
@@ -40,10 +41,33 @@ function Navbar() {
     };
   });
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuOpen && !event.target.closest('.mobile-menu') && !event.target.closest('.hamburger-btn')) {
+        setMobileMenuOpen(false);
+      }
+    };
+    
+    if (mobileMenuOpen) {
+      document.addEventListener('click', handleClickOutside);
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.removeEventListener('click', handleClickOutside);
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [mobileMenuOpen]);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setMobileMenuOpen(false);
     navigate('/');
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -83,8 +107,29 @@ function Navbar() {
           Campaign★
         </Link>
 
-        {/* Center Links */}
-        <div style={{
+        {/* Hamburger Menu Button - Mobile Only */}
+        <button 
+          className="hamburger-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMobileMenuOpen(!mobileMenuOpen);
+          }}
+          style={{
+            display: 'none',
+            background: 'transparent',
+            border: 'none',
+            color: '#fff',
+            fontSize: '24px',
+            cursor: 'pointer',
+            padding: '8px',
+            marginLeft: 'auto'
+          }}
+        >
+          {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {/* Desktop Navigation - Center Links */}
+        <div className="desktop-nav" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
@@ -195,8 +240,8 @@ function Navbar() {
           )}
         </div>
 
-        {/* Right Side - Auth */}
-        <div style={{
+        {/* Desktop Auth - Right Side */}
+        <div className="desktop-nav" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px'
@@ -264,6 +309,134 @@ function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Mobile Slide-in Menu */}
+      <div 
+        className="mobile-menu"
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: mobileMenuOpen ? 0 : '-100%',
+          width: '75%',
+          maxWidth: '300px',
+          height: '100vh',
+          background: '#1a1a1a',
+          transition: 'right 0.3s ease',
+          zIndex: 1100,
+          padding: '80px 20px 20px 20px',
+          overflowY: 'auto',
+          boxShadow: mobileMenuOpen ? '-4px 0 20px rgba(0, 0, 0, 0.5)' : 'none'
+        }}
+      >
+        {/* User Info */}
+        {user && (
+          <div style={{
+            padding: '16px',
+            marginBottom: '20px',
+            background: 'rgba(0, 208, 156, 0.1)',
+            borderRadius: '12px',
+            borderLeft: '4px solid var(--cred-accent)'
+          }}>
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>logged in as</div>
+            <div style={{ fontSize: '16px', color: '#fff', fontWeight: 600 }}>{user.split('@')[0]}</div>
+          </div>
+        )}
+
+        {/* Mobile Menu Links */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <Link to="/" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+            <FaHome /> Home
+          </Link>
+          
+          {user ? (
+            <>
+              <Link to="/create" onClick={closeMobileMenu} style={{
+                ...mobileMenuLinkStyle,
+                background: 'var(--cred-accent)',
+                color: '#000',
+                fontWeight: 700
+              }}>
+                <FaPlus /> Post Ad
+              </Link>
+              <Link to="/mylistings" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+                <FaList /> My Ads
+              </Link>
+              <Link to="/messages" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+                <FaEnvelope /> Messages
+              </Link>
+              <Link to="/favorites" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+                <FaHeart /> Favorites
+              </Link>
+              <Link to="/notifications" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+                <FaBell /> Alerts
+              </Link>
+              <Link to="/about" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+                About
+              </Link>
+              {userRole === 'admin' && (
+                <Link to="/admin-dashboard" onClick={closeMobileMenu} style={{
+                  ...mobileMenuLinkStyle,
+                  background: 'rgba(231, 76, 60, 0.2)',
+                  borderLeft: '4px solid #e74c3c'
+                }}>
+                  <FaUserShield /> Admin
+                </Link>
+              )}
+              {(userRole === 'admin' || userRole === 'supervisor') && (
+                <Link to="/supervisor-dashboard" onClick={closeMobileMenu} style={{
+                  ...mobileMenuLinkStyle,
+                  background: 'rgba(52, 152, 219, 0.2)',
+                  borderLeft: '4px solid #3498db'
+                }}>
+                  <FaClipboardCheck /> Supervisor
+                </Link>
+              )}
+              <button onClick={handleLogout} style={{
+                ...mobileMenuLinkStyle,
+                width: '100%',
+                textAlign: 'left',
+                marginTop: '20px',
+                background: 'transparent',
+                border: '2px solid #e74c3c',
+                color: '#e74c3c',
+                cursor: 'pointer'
+              }}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
+                Login
+              </Link>
+              <Link to="/register" onClick={closeMobileMenu} style={{
+                ...mobileMenuLinkStyle,
+                background: 'var(--cred-accent)',
+                color: '#000',
+                fontWeight: 700
+              }}>
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 1099
+          }}
+        />
+      )}
     </nav>
   );
 }
@@ -295,6 +468,20 @@ const authButtonStyle = {
   textTransform: 'lowercase',
   border: '2px solid #2a2a2a',
   background: 'rgba(42, 42, 42, 0.5)'
+};
+
+const mobileMenuLinkStyle = {
+  textDecoration: 'none',
+  color: '#fff',
+  fontSize: '16px',
+  fontWeight: 600,
+  padding: '14px 16px',
+  borderRadius: '12px',
+  background: 'rgba(42, 42, 42, 0.5)',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+  transition: 'all 0.3s ease'
 };
 
 export default Navbar;
