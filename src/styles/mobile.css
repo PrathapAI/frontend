@@ -45,6 +45,65 @@
     font-size: 20px !important;
   }
   
+  /* HOME PAGE MOBILE FIXES */
+  .home-main-container {
+    flex-direction: column !important;
+    padding: 0 !important;
+  }
+  
+  /* Collapse filters sidebar on mobile */
+  .home-sidebar {
+    position: static !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    margin: 16px 0 !important;
+    padding: 0 !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Make filter sections collapsed by default on mobile */
+  .home-sidebar > div {
+    border-radius: 0 !important;
+  }
+  
+  .home-sidebar button {
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Listing content takes full width */
+  .home-listings-content {
+    margin: 0 !important;
+    padding: 0 12px !important;
+  }
+  
+  /* Make listing cards more compact on mobile */
+  .home-listings-content > div {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  /* Individual listing card mobile styles */
+  .cred-card {
+    padding: 12px !important;
+  }
+  
+  /* Listing card images smaller on mobile */
+  .cred-card img {
+    max-height: 180px !important;
+    object-fit: cover;
+  }
+  
+  /* Listing card text smaller */
+  .cred-card h3 {
+    font-size: 16px !important;
+  }
+  
+  .cred-card p {
+    font-size: 13px !important;
+  }
+  
   /* Better tap targets */
   a, button, input[type="submit"], input[type="button"] {
     min-height: 44px;
@@ -95,6 +154,23 @@
   nav > div:last-child button {
     width: 100%;
     text-align: center;
+  }
+  
+  /* Even more compact listing cards */
+  .cred-card {
+    padding: 10px !important;
+  }
+  
+  .cred-card img {
+    max-height: 150px !important;
+  }
+  
+  .cred-card h3 {
+    font-size: 14px !important;
+  }
+  
+  .cred-card p {
+    font-size: 12px !important;
   }
 }
 
