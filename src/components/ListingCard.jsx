@@ -58,8 +58,14 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
   const campaignDates = getCampaignDates();
   
   const address = listing.address
-    || (listing.Location && (listing.Location.village || listing.Location.state || listing.Location.district || listing.Location.mandal))
-    || `${listing.state || ''} ${listing.district || ''} ${listing.mandal || ''} ${listing.village || ''}`;
+    || (listing.Location && (
+      [listing.Location.mandal, listing.Location.village]
+        .filter(Boolean)
+        .join(', ') || 'Location N/A'
+    ))
+    || [listing.mandal, listing.village]
+        .filter(Boolean)
+        .join(', ') || 'Location N/A';
 
   // Get current user ID from token
   const getUserId = () => {
