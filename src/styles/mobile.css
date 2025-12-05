@@ -22,13 +22,13 @@
   
   /* Navbar mobile styles */
   nav {
-    padding: 8px 12px !important;
+    padding: 10px 16px !important;
   }
   
   nav > div {
-    padding: 0 12px !important;
+    padding: 0 !important;
     flex-wrap: nowrap !important;
-    gap: 8px !important;
+    gap: 12px !important;
   }
   
   /* Hide desktop navigation on mobile */
@@ -38,12 +38,23 @@
   
   /* Show hamburger menu button on mobile */
   .hamburger-btn {
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    background: rgba(0, 208, 156, 0.15) !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .hamburger-btn:active {
+    background: rgba(0, 208, 156, 0.3) !important;
   }
   
   /* Logo smaller on mobile */
   nav a[href="/"] {
-    font-size: 20px !important;
+    font-size: 22px !important;
   }
   
   /* HOME PAGE MOBILE FIXES */
@@ -88,6 +99,10 @@
   /* Mobile Filter Toggle Button - Show only on mobile */
   .mobile-filter-toggle {
     display: flex !important;
+  }
+  
+  .mobile-filter-toggle:active {
+    transform: scale(0.95) !important;
   }
   
   /* Hide filters by default on mobile */

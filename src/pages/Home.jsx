@@ -197,27 +197,27 @@ function Home() {
         }}
         style={{
           position: 'fixed',
-          left: '12px',
-          top: '65px',
+          left: '16px',
+          bottom: '24px',
           zIndex: 1000,
-          background: showFilters ? '#ff4444' : 'var(--cred-accent)',
+          background: showFilters ? 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)' : 'linear-gradient(135deg, var(--cred-accent) 0%, #00b894 100%)',
           border: 'none',
-          borderRadius: '20px',
-          padding: '10px 16px',
+          borderRadius: '50px',
+          padding: '14px 20px',
           display: 'none',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '6px',
+          gap: '8px',
           cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
-          color: '#000',
-          fontSize: '12px',
-          fontWeight: '600',
-          transition: 'all 0.3s',
+          boxShadow: '0 6px 20px rgba(0, 208, 156, 0.5)',
+          color: '#fff',
+          fontSize: '14px',
+          fontWeight: '700',
+          transition: 'all 0.3s ease',
           whiteSpace: 'nowrap'
         }}
       >
-        {showFilters ? <FaTimes /> : <FaSlidersH />}
+        {showFilters ? <FaTimes style={{ fontSize: '16px' }} /> : <FaSlidersH style={{ fontSize: '16px' }} />}
         <span>{showFilters ? 'Close' : 'Filters'}</span>
       </button>
 
