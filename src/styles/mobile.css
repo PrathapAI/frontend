@@ -133,29 +133,30 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
   }
   
-  /* Filter section headers - visible and compact */
+  /* Filter section headers - visible and compact with cream background */
   .home-sidebar > div > button {
     width: 100% !important;
-    padding: 10px 12px !important;
-    font-size: 12px !important;
+    padding: 8px 12px !important;
+    font-size: 11px !important;
     margin-bottom: 0 !important;
-    background: rgba(0, 208, 156, 0.15) !important;
-    color: var(--cred-accent) !important;
+    background: #FFF8E1 !important;
+    color: #5a4a1b !important;
     border-radius: 0 !important;
     position: relative !important;
     z-index: 10 !important;
+    font-weight: 600 !important;
   }
   
   .home-sidebar > div > button span {
-    color: var(--cred-accent) !important;
+    color: #5a4a1b !important;
   }
   
-  /* Filter option containers - wrap as chips */
+  /* Filter option containers - wrap as chips with minimal spacing */
   .home-sidebar div[style*="padding: '0 20px 16px'"] {
-    padding: 8px 8px 10px 8px !important;
+    padding: 6px 8px 6px 8px !important;
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 6px !important;
+    gap: 4px !important;
     align-items: flex-start !important;
   }
   
@@ -163,12 +164,12 @@
   .home-sidebar div[style*="padding: '0 20px 16px'"] > div {
     width: auto !important;
     max-width: fit-content !important;
-    padding: 6px 12px !important;
-    font-size: 11px !important;
+    padding: 5px 10px !important;
+    font-size: 10px !important;
     display: inline-block !important;
     margin: 0 !important;
     white-space: nowrap !important;
-    border-radius: 16px !important;
+    border-radius: 12px !important;
   }
   
   /* Nested filter options (subcategories, districts, etc) */
@@ -177,16 +178,16 @@
     width: 100% !important;
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 4px !important;
-    margin-top: 4px !important;
+    gap: 3px !important;
+    margin-top: 3px !important;
   }
   
   .home-sidebar div[style*="paddingLeft: '16px'"] > div > div,
   .home-sidebar div[style*="padding: '8px 12px'"],
   .home-sidebar div[style*="padding: '6px 10px'"] {
-    padding: 5px 10px !important;
-    font-size: 10px !important;
-    border-radius: 12px !important;
+    padding: 4px 8px !important;
+    font-size: 9px !important;
+    border-radius: 10px !important;
     display: inline-block !important;
     width: auto !important;
     margin: 0 !important;
@@ -194,14 +195,14 @@
   
   /* Clear filters button - compact and centered */
   .home-sidebar > div:last-child {
-    padding: 12px !important;
+    padding: 8px !important;
     text-align: center !important;
   }
   
   .home-sidebar .cred-btn-danger {
     width: auto !important;
-    padding: 8px 16px !important;
-    font-size: 11px !important;
+    padding: 6px 14px !important;
+    font-size: 10px !important;
     margin: 0 auto !important;
     display: inline-flex !important;
   }
