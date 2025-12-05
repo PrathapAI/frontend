@@ -252,7 +252,7 @@ function Home() {
             
             {expandedAdType && (
               <div style={{ padding: '0 20px 16px' }}>
-                {['All', 'Resell', 'Business Offers', 'Business Campaign'].map(type => {
+                {['All', 'Resell', 'Business Promotions', 'Business Offers', 'Business Campaign'].map(type => {
                   const isSelected = listingType === type || (type === 'All' && !listingType);
                   return (
                     <div

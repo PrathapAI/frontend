@@ -243,7 +243,7 @@ function CreateListing() {
       alert('Please select a category.');
       return;
     }
-    if ((form.listingType === 'Resell' || form.listingType === 'Business Offers') && !form.price) {
+    if ((form.listingType === 'Resell' || form.listingType === 'Business Promotions' || form.listingType === 'Business Offers') && !form.price) {
       alert('Please enter a price or offer percentage.');
       return;
     }
@@ -265,7 +265,7 @@ function CreateListing() {
         Listing_Type: form.listingType,
         Title: form.title,
         Description: form.description,
-        ExpectedPrice: (form.listingType === 'Business Offers' || form.listingType === 'Resell') ? form.price : null,
+        ExpectedPrice: (form.listingType === 'Business Offers' || form.listingType === 'Resell' || form.listingType === 'Business Promotions') ? form.price : null,
         CampaignStartDate: form.listingType === 'Business Campaign' ? form.campaignStartDate : null,
         CampaignEndDate: form.listingType === 'Business Campaign' ? form.campaignEndDate : null,
         IsPriceNegotiable: false,
@@ -341,6 +341,7 @@ function CreateListing() {
             >
               <option value="">select listing type</option>
               <option value="Resell">Resell</option>
+              <option value="Business Promotions">Business Promotions</option>
               <option value="Business Offers">Business Offers</option>
               <option value="Business Campaign">Business Campaign</option>
             </select>
@@ -352,6 +353,15 @@ function CreateListing() {
               onChange={e => setForm({ ...form, title: e.target.value })}
             />
             {form.listingType === 'Resell' && (
+              <input
+                className="cred-input"
+                type="number"
+                placeholder="price"
+                value={form.price}
+                onChange={e => setForm({ ...form, price: e.target.value })}
+              />
+            )}
+            {form.listingType === 'Business Promotions' && (
               <input
                 className="cred-input"
                 type="number"
