@@ -66,18 +66,18 @@
     padding-top: 70px !important;
   }
   
-  /* Compact home page header */
-  .cred-page > div:first-child {
+  /* Compact home page header - only for Home page without .cred-container */
+  .cred-page > div:first-child:not(.cred-container) {
     margin-bottom: 12px !important;
     padding-bottom: 12px !important;
   }
   
-  .cred-page > div:first-child > div:first-child {
+  .cred-page > div:first-child:not(.cred-container) > div:first-child {
     font-size: 20px !important;
     margin-bottom: 4px !important;
   }
   
-  .cred-page > div:first-child h1 {
+  .cred-page > div:first-child:not(.cred-container) h1 {
     font-size: 20px !important;
     margin: 0 !important;
   }
