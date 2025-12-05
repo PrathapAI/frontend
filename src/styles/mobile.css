@@ -249,15 +249,15 @@
     font-size: 12px !important;
   }
   
-  /* Price and campaign dates */
+  /* Price and campaign dates - 60% smaller */
   .cred-card div[style*="fontSize: 22"],
   .cred-card div[style*="fontSize: 18"] {
-    font-size: 11px !important;
+    font-size: 9px !important;
   }
   
-  /* Address */
+  /* Address - 60% smaller */
   .cred-card div[style*="fontSize: 15"] {
-    font-size: 10px !important;
+    font-size: 6px !important;
   }
   
   .cred-card button {
