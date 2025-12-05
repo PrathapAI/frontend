@@ -101,7 +101,7 @@
     left: 0 !important;
     top: 60px !important;
     bottom: 0 !important;
-    z-index: 999 !important;
+    z-index: 1001 !important;
     width: 85% !important;
     max-width: 320px !important;
     min-width: auto !important;
@@ -110,6 +110,7 @@
     border-radius: 0 12px 12px 0 !important;
     overflow-y: auto !important;
     animation: slideIn 0.3s ease-out;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3) !important;
   }
   
   @keyframes slideIn {
@@ -141,6 +142,8 @@
     background: rgba(0, 208, 156, 0.15) !important;
     color: var(--cred-accent) !important;
     border-radius: 0 !important;
+    position: relative !important;
+    z-index: 10 !important;
   }
   
   .home-sidebar > div > button span {
