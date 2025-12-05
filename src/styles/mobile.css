@@ -263,12 +263,22 @@
   /* Make listing grids in .cred-container match home page */
   .cred-container > div:not(:first-child) {
     width: 100% !important;
-    padding: 0 !important;
+    padding: 0 12px !important;
   }
   
   .cred-container .animate-fade-in-up,
   .cred-container > div > div {
     margin-bottom: 16px !important;
+  }
+  
+  /* Make all listing cards full width on mobile */
+  .cred-container .animate-fade-in-up > div,
+  .home-listings-content > div > div,
+  div[style*="maxWidth: 900"],
+  div[style*="max-width: 900"] {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   
   /* Reduce text sizes in listing cards on mobile */
