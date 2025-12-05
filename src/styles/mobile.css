@@ -242,6 +242,37 @@
     padding: 12px !important;
   }
   
+  /* Reduce text sizes in listing cards on mobile */
+  .cred-card h3,
+  .cred-card div[style*="fontSize: '1.5rem'"],
+  .cred-card div[style*="fontSize: 22"],
+  .cred-card div[style*="fontSize: 18"] {
+    font-size: 14px !important;
+  }
+  
+  .cred-card div[style*="fontSize: 15"] {
+    font-size: 11px !important;
+  }
+  
+  .cred-card button {
+    font-size: 11px !important;
+    padding: 8px 16px !important;
+  }
+  
+  /* Username and date */
+  .cred-card > div > div:first-child {
+    font-size: 11px !important;
+  }
+  
+  .cred-card > div > div:first-child > div {
+    font-size: 10px !important;
+  }
+  
+  /* Phone number popup */
+  .cred-card div[style*="fontSize: 18"] {
+    font-size: 12px !important;
+  }
+  
   /* Listing card images smaller on mobile */
   .cred-card img {
     max-height: 180px !important;
