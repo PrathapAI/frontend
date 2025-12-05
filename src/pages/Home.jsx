@@ -6,7 +6,7 @@ import ListingCard from '../components/ListingCard';
 import '../home-theme.css';
 import '../form-theme.css';
 import '../home-sidebar.css';
-import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter, FaSlidersH } from 'react-icons/fa';
 
 function Home() {
   const [listings, setListings] = useState([]);
@@ -30,6 +30,20 @@ function Home() {
   
   // Mobile filter toggle
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Close filters when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showFilters && !event.target.closest('.home-sidebar') && !event.target.closest('.mobile-filter-toggle')) {
+        setShowFilters(false);
+      }
+    };
+    
+    if (showFilters) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showFilters]);
   
   // Save filter state to localStorage whenever it changes
   useEffect(() => {
@@ -162,28 +176,34 @@ function Home() {
       {/* Mobile Filter Toggle Button */}
       <button
         className="mobile-filter-toggle"
-        onClick={() => setShowFilters(!showFilters)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowFilters(!showFilters);
+        }}
         style={{
           position: 'fixed',
           left: '12px',
-          top: '70px',
+          top: '120px',
           zIndex: 1000,
-          background: 'var(--cred-accent)',
+          background: showFilters ? '#ff4444' : 'var(--cred-accent)',
           border: 'none',
-          borderRadius: '50%',
-          width: '50px',
-          height: '50px',
+          borderRadius: '20px',
+          padding: '10px 16px',
           display: 'none',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: '6px',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
           color: '#000',
-          fontSize: '18px',
-          transition: 'all 0.3s'
+          fontSize: '12px',
+          fontWeight: '600',
+          transition: 'all 0.3s',
+          whiteSpace: 'nowrap'
         }}
       >
-        <FaFilter />
+        {showFilters ? <FaTimes /> : <FaSlidersH />}
+        <span>{showFilters ? 'Close' : 'Filters'}</span>
       </button>
 
       <div className="home-main-container">
