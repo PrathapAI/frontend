@@ -63,7 +63,7 @@
   
   /* Make header super compact on Home page only */
   .cred-page {
-    padding-top: 70px !important;
+    padding-top: 80px !important;
   }
   
   /* Compact home page header - only for Home page without .cred-container */
@@ -252,6 +252,23 @@
   /* Individual listing card mobile styles */
   .cred-card {
     padding: 12px !important;
+  }
+  
+  /* Fix MyListings and other pages using .cred-container */
+  .cred-container > div:first-child {
+    margin-bottom: 20px !important;
+    padding-bottom: 16px !important;
+  }
+  
+  /* Make listing grids in .cred-container match home page */
+  .cred-container > div:not(:first-child) {
+    width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  .cred-container .animate-fade-in-up,
+  .cred-container > div > div {
+    margin-bottom: 16px !important;
   }
   
   /* Reduce text sizes in listing cards on mobile */
