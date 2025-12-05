@@ -497,13 +497,15 @@ function CreateListing() {
               onChange={e => setForm({ ...form, images: Array.from(e.target.files) })}
               style={{ padding: '12px' }}
             />
-            <button className="cred-btn" type="submit" style={{ width: '100%', marginTop: '8px', textTransform: 'lowercase' }}>
+            <button className="cred-btn" type="submit" style={{ width: '100%', marginTop: '8px', textTransform: 'lowercase', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <FaPlusCircle /> 
-              {form.listingType === 'Resell' && 'Post Ad'}
-              {form.listingType === 'Business Promotions' && 'Post Promotion'}
-              {form.listingType === 'Business Offers' && 'Post Offer'}
-              {form.listingType === 'Business Campaign' && 'Start Campaign'}
-              {!form.listingType && 'Create Listing'}
+              <span>
+                {form.listingType === 'Resell' && 'Post Ad'}
+                {form.listingType === 'Business Promotions' && 'Post Promotion'}
+                {form.listingType === 'Business Offers' && 'Post Offer'}
+                {form.listingType === 'Business Campaign' && 'Start Campaign'}
+                {!form.listingType && 'Create Listing'}
+              </span>
             </button>
           </form>
         </div>
