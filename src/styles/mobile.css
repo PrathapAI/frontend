@@ -61,9 +61,9 @@
   
   /* HOME PAGE MOBILE FIXES */
   
-  /* Make header super compact */
+  /* Make header super compact on Home page only */
   .cred-page {
-    padding-top: 60px !important;
+    padding-top: 70px !important;
   }
   
   /* Compact home page header */
