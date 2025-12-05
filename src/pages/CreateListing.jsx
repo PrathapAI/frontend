@@ -500,6 +500,7 @@ function CreateListing() {
             <button className="cred-btn" type="submit" style={{ width: '100%', marginTop: '8px', textTransform: 'lowercase' }}>
               <FaPlusCircle /> 
               {form.listingType === 'Resell' && 'Post Ad'}
+              {form.listingType === 'Business Promotions' && 'Post Promotion'}
               {form.listingType === 'Business Offers' && 'Post Offer'}
               {form.listingType === 'Business Campaign' && 'Start Campaign'}
               {!form.listingType && 'Create Listing'}
