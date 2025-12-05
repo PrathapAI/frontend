@@ -109,8 +109,10 @@
     padding: 0 !important;
     border-radius: 0 12px 12px 0 !important;
     overflow-y: auto !important;
+    overflow-x: hidden !important;
     animation: slideIn 0.3s ease-out;
     box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3) !important;
+    -webkit-overflow-scrolling: touch !important;
   }
   
   @keyframes slideIn {

@@ -31,6 +31,18 @@ function Home() {
   // Mobile filter toggle
   const [showFilters, setShowFilters] = useState(false);
   
+  // Prevent body scroll when filters are open
+  useEffect(() => {
+    if (showFilters) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showFilters]);
+  
   // Close filters when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
