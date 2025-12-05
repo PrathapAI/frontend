@@ -12,14 +12,12 @@
   html, body {
     overflow-x: hidden;
     width: 100%;
-    position: relative;
   }
   
-  /* Prevent page shake when filters are open */
+  /* Prevent background scroll when filters are open */
   body.filters-open {
-    position: fixed;
-    width: 100%;
     overflow: hidden;
+    height: 100vh;
   }
   
   /* Navbar mobile styles */
@@ -108,22 +106,21 @@
     position: fixed !important;
     left: 0 !important;
     top: 60px !important;
-    bottom: 0 !important;
+    height: calc(100vh - 60px) !important;
     z-index: 1001 !important;
     width: 85% !important;
     max-width: 320px !important;
     min-width: auto !important;
     margin: 0 !important;
     padding: 0 !important;
+    padding-bottom: 20px !important;
     border-radius: 0 12px 12px 0 !important;
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     overflow-x: hidden !important;
     animation: slideIn 0.3s ease-out;
     box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3) !important;
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior: contain !important;
-    scroll-behavior: smooth !important;
-    touch-action: pan-y !important;
   }
   
   @keyframes slideIn {
