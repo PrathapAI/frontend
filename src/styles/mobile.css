@@ -61,25 +61,36 @@
   
   /* HOME PAGE MOBILE FIXES */
   
-  /* Make header super compact on Home page only */
+  /* Make header super compact on all pages */
   .cred-page {
     padding-top: 70px !important;
   }
   
-  /* Compact home page header */
-  .cred-page > div:first-child {
-    margin-bottom: 12px !important;
-    padding-bottom: 12px !important;
+  /* Compact page headers on mobile - reduce spacing */
+  .cred-page > div:first-child,
+  .cred-container > div:first-child {
+    margin-bottom: 16px !important;
+    padding-bottom: 8px !important;
   }
   
-  .cred-page > div:first-child > div:first-child {
+  /* Make heading icons smaller on mobile */
+  .cred-page > div:first-child > div:first-child,
+  .cred-container > div:first-child > div:first-child {
     font-size: 20px !important;
     margin-bottom: 4px !important;
   }
   
-  .cred-page > div:first-child h1 {
-    font-size: 20px !important;
+  /* Responsive heading text */
+  .cred-page > div:first-child h1,
+  .cred-container > div:first-child h1 {
+    font-size: 18px !important;
     margin: 0 !important;
+  }
+  
+  /* Reduce icon size in headers */
+  .cred-page svg,
+  .cred-container svg {
+    font-size: 20px !important;
   }
   
   .home-main-container {
