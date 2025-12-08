@@ -302,9 +302,15 @@
     font-size: 6px !important;
   }
   
-  /* Posted date */
-  .listing-date {
-    font-size: 9px !important;
+  /* Posted date - hide completely on mobile */
+  .listing-date,
+  div[class*="listing-date"],
+  div[style*="Posted on"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
   }
   
   .cred-card button {

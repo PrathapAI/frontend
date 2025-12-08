@@ -288,7 +288,7 @@ function Login() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ position: 'relative' }}>
-              <FaPhone style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)' }} />
+              <FaPhone style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', opacity: '0.3' }} />
               <input
                 type="tel"
                 placeholder="phone number"
@@ -300,7 +300,7 @@ function Login() {
             </div>
 
             <div style={{ position: 'relative' }}>
-              <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)' }} />
+              <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', opacity: '0.3' }} />
               <input
                 type="password"
                 placeholder="password"
