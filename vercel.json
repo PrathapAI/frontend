@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!privacy-policy\\.html).*)",
+      "source": "/((?!delete-account|privacy-policy).*)",
       "destination": "/index.html"
     }
   ]
