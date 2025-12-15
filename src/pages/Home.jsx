@@ -17,7 +17,10 @@ function Home() {
   const [state, setState] = useState(() => localStorage.getItem('filter_state') || '');
   const [district, setDistrict] = useState(() => localStorage.getItem('filter_district') || '');
   const [mandal, setMandal] = useState(() => localStorage.getItem('filter_mandal') || '');
-  const [village, setVillage] = useState(() => localStorage.getItem('filter_village') || '');
+  const [village, setVillage] = useState(() => {
+    const saved = localStorage.getItem('filter_village');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [listingType, setListingType] = useState(() => localStorage.getItem('filter_listingType') || '');
   
   // Accordion state
@@ -67,7 +70,7 @@ function Home() {
     localStorage.setItem('filter_state', state);
     localStorage.setItem('filter_district', district);
     localStorage.setItem('filter_mandal', mandal);
-    localStorage.setItem('filter_village', village);
+    localStorage.setItem('filter_village', JSON.stringify(village));
     localStorage.setItem('filter_listingType', listingType);
   }, [category, subcategory, state, district, mandal, village, listingType]);
   const [categories, setCategories] = useState([]);
@@ -152,7 +155,8 @@ function Home() {
     if (state && listing.Location?.state && listing.Location.state !== state) return false;
     if (district && listing.Location?.district && listing.Location.district !== district) return false;
     if (mandal && listing.Location?.mandal && listing.Location.mandal !== mandal) return false;
-    if (village && listing.Location?.village && listing.Location.village !== village) return false;
+    // Village filter now handles multiple villages
+    if (village.length > 0 && listing.Location?.village && !village.includes(listing.Location.village)) return false;
     // Listing Type filter
     if (listingType && listing.Listing_Type !== listingType) return false;
     return true;
@@ -197,27 +201,27 @@ function Home() {
         }}
         style={{
           position: 'fixed',
-          left: '16px',
-          bottom: '24px',
+          left: '12px',
+          top: '120px',
           zIndex: 1000,
-          background: showFilters ? 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)' : 'linear-gradient(135deg, var(--cred-accent) 0%, #00b894 100%)',
+          background: showFilters ? '#ff4444' : 'var(--cred-accent)',
           border: 'none',
-          borderRadius: '50px',
-          padding: '14px 20px',
+          borderRadius: '20px',
+          padding: '10px 16px',
           display: 'none',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '8px',
+          gap: '6px',
           cursor: 'pointer',
-          boxShadow: '0 6px 20px rgba(0, 208, 156, 0.5)',
-          color: '#fff',
-          fontSize: '14px',
-          fontWeight: '700',
-          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
+          color: '#000',
+          fontSize: '12px',
+          fontWeight: '600',
+          transition: 'all 0.3s',
           whiteSpace: 'nowrap'
         }}
       >
-        {showFilters ? <FaTimes style={{ fontSize: '16px' }} /> : <FaSlidersH style={{ fontSize: '16px' }} />}
+        {showFilters ? <FaTimes /> : <FaSlidersH />}
         <span>{showFilters ? 'Close' : 'Filters'}</span>
       </button>
 
@@ -252,7 +256,7 @@ function Home() {
             
             {expandedAdType && (
               <div style={{ padding: '0 20px 16px' }}>
-                {['All', 'Resell', 'Business Promotions', 'Business Offers', 'Business Campaign'].map(type => {
+                {['All', 'Resell', 'Business Offers', 'Business Campaign'].map(type => {
                   const isSelected = listingType === type || (type === 'All' && !listingType);
                   return (
                     <div
@@ -560,13 +564,16 @@ function Home() {
                                           {isMandalSelected && mandalVillages.length > 0 && (
                                             <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
                                               {mandalVillages.map(v => {
-                                                const isVillageSelected = village === v;
+                                                const isVillageSelected = village.includes(v);
                                                 return (
                                                   <div
                                                     key={v}
                                                     onClick={(e) => {
                                                       e.stopPropagation();
-                                                      setVillage(isVillageSelected ? '' : v);
+                                                      setVillage(isVillageSelected 
+                                                        ? village.filter(vil => vil !== v) 
+                                                        : [...village, v]
+                                                      );
                                                     }}
                                                     style={{
                                                       padding: '6px 10px',
@@ -605,6 +612,51 @@ function Home() {
             )}
           </div>
 
+          {/* Selected Villages Display */}
+          {village.length > 0 && (
+            <div style={{ padding: '0 20px 12px 20px' }}>
+              <div style={{ 
+                fontSize: '11px', 
+                color: 'rgba(255, 255, 255, 0.6)', 
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}>
+                selected villages ({village.length})
+              </div>
+              <div style={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: '6px'
+              }}>
+                {village.map(v => (
+                  <div
+                    key={v}
+                    style={{
+                      background: 'rgba(0, 208, 156, 0.3)',
+                      color: '#fff',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      fontSize: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <span>{v}</span>
+                    <FaTimes
+                      onClick={() => setVillage(village.filter(vil => vil !== v))}
+                      style={{ 
+                        cursor: 'pointer', 
+                        fontSize: '9px',
+                        opacity: 0.7
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div style={{ padding: '20px' }}>
             <button
@@ -616,7 +668,7 @@ function Home() {
                 setState('');
                 setDistrict('');
                 setMandal('');
-                setVillage('');
+                setVillage([]);
                 setListingType('');
                 localStorage.removeItem('filter_category');
                 localStorage.removeItem('filter_subcategory');
