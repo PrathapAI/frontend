@@ -459,6 +459,16 @@ function Home() {
               <div style={{ padding: '0 20px 16px' }}>
                 {/* Location Search */}
                 <div style={{ marginBottom: '12px', position: 'relative' }}>
+                  <FaSearch style={{
+                    position: 'absolute',
+                    left: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.4)',
+                    fontSize: '14px',
+                    pointerEvents: 'none',
+                    zIndex: 1
+                  }} />
                   <input
                     type="text"
                     placeholder="search by district, mandal, or village..."
@@ -472,17 +482,11 @@ function Home() {
                       borderRadius: '8px',
                       color: '#fff',
                       fontSize: '13px',
-                      outline: 'none'
+                      outline: 'none',
+                      position: 'relative',
+                      zIndex: 0
                     }}
                   />
-                  <FaSearch style={{
-                    position: 'absolute',
-                    left: '12px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'rgba(255, 255, 255, 0.4)',
-                    fontSize: '14px'
-                  }} />
                 </div>
                 
                 {/* States */}
