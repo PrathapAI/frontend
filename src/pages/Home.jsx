@@ -477,10 +477,10 @@ function Home() {
                     style={{
                       width: '100%',
                       padding: '10px 12px 10px 38px',
-                      background: 'rgba(255, 255, 255, 0.05)',
+                      background: 'rgba(255, 255, 255, 0.9)',
                       border: '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '8px',
-                      color: '#fff',
+                      color: '#000',
                       fontSize: '13px',
                       outline: 'none',
                       position: 'relative',
@@ -706,7 +706,7 @@ function Home() {
                     key={d}
                     style={{
                       background: 'rgba(0, 208, 156, 0.3)',
-                      color: '#fff',
+                      color: '#000',
                       padding: '4px 8px',
                       borderRadius: '6px',
                       fontSize: '10px',
@@ -721,7 +721,8 @@ function Home() {
                       style={{ 
                         cursor: 'pointer', 
                         fontSize: '9px',
-                        opacity: 0.7
+                        opacity: 0.7,
+                        color: '#000'
                       }}
                     />
                   </div>
@@ -751,7 +752,7 @@ function Home() {
                     key={m}
                     style={{
                       background: 'rgba(0, 208, 156, 0.3)',
-                      color: '#fff',
+                      color: '#000',
                       padding: '4px 8px',
                       borderRadius: '6px',
                       fontSize: '10px',
@@ -766,7 +767,8 @@ function Home() {
                       style={{ 
                         cursor: 'pointer', 
                         fontSize: '9px',
-                        opacity: 0.7
+                        opacity: 0.7,
+                        color: '#000'
                       }}
                     />
                   </div>
@@ -796,7 +798,7 @@ function Home() {
                     key={v}
                     style={{
                       background: 'rgba(0, 208, 156, 0.3)',
-                      color: '#fff',
+                      color: '#000',
                       padding: '4px 8px',
                       borderRadius: '6px',
                       fontSize: '10px',
@@ -811,7 +813,8 @@ function Home() {
                       style={{ 
                         cursor: 'pointer', 
                         fontSize: '9px',
-                        opacity: 0.7
+                        opacity: 0.7,
+                        color: '#000'
                       }}
                     />
                   </div>
