@@ -15,13 +15,22 @@ function Home() {
   const [category, setCategory] = useState(() => localStorage.getItem('filter_category') || '');
   const [subcategory, setSubcategory] = useState(() => localStorage.getItem('filter_subcategory') || '');
   const [state, setState] = useState(() => localStorage.getItem('filter_state') || '');
-  const [district, setDistrict] = useState(() => localStorage.getItem('filter_district') || '');
-  const [mandal, setMandal] = useState(() => localStorage.getItem('filter_mandal') || '');
+  const [district, setDistrict] = useState(() => {
+    const saved = localStorage.getItem('filter_district');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [mandal, setMandal] = useState(() => {
+    const saved = localStorage.getItem('filter_mandal');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [village, setVillage] = useState(() => {
     const saved = localStorage.getItem('filter_village');
     return saved ? JSON.parse(saved) : [];
   });
   const [listingType, setListingType] = useState(() => localStorage.getItem('filter_listingType') || '');
+  
+  // Location search state
+  const [locationSearch, setLocationSearch] = useState('');
   
   // Accordion state
   const [expandedCategory, setExpandedCategory] = useState(true);
@@ -68,8 +77,8 @@ function Home() {
     localStorage.setItem('filter_category', category);
     localStorage.setItem('filter_subcategory', subcategory);
     localStorage.setItem('filter_state', state);
-    localStorage.setItem('filter_district', district);
-    localStorage.setItem('filter_mandal', mandal);
+    localStorage.setItem('filter_district', JSON.stringify(district));
+    localStorage.setItem('filter_mandal', JSON.stringify(mandal));
     localStorage.setItem('filter_village', JSON.stringify(village));
     localStorage.setItem('filter_listingType', listingType);
   }, [category, subcategory, state, district, mandal, village, listingType]);
@@ -153,9 +162,11 @@ function Home() {
     if (subcategory && String(listing.SubCategory?.SubCategoryID || listing.SubCategoryID) !== String(subcategory)) return false;
     // Location filters: use listing.Location fields
     if (state && listing.Location?.state && listing.Location.state !== state) return false;
-    if (district && listing.Location?.district && listing.Location.district !== district) return false;
-    if (mandal && listing.Location?.mandal && listing.Location.mandal !== mandal) return false;
-    // Village filter now handles multiple villages
+    // District filter - match any selected district
+    if (district.length > 0 && listing.Location?.district && !district.includes(listing.Location.district)) return false;
+    // Mandal filter - match any selected mandal
+    if (mandal.length > 0 && listing.Location?.mandal && !mandal.includes(listing.Location.mandal)) return false;
+    // Village filter - match any selected village
     if (village.length > 0 && listing.Location?.village && !village.includes(listing.Location.village)) return false;
     // Listing Type filter
     if (listingType && listing.Listing_Type !== listingType) return false;
@@ -446,10 +457,62 @@ function Home() {
             
             {expandedLocation && (
               <div style={{ padding: '0 20px 16px' }}>
+                {/* Location Search */}
+                <div style={{ marginBottom: '12px', position: 'relative' }}>
+                  <input
+                    type="text"
+                    placeholder="search by district, mandal, or village..."
+                    value={locationSearch}
+                    onChange={(e) => setLocationSearch(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px 10px 38px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '8px',
+                      color: '#fff',
+                      fontSize: '13px',
+                      outline: 'none'
+                    }}
+                  />
+                  <FaSearch style={{
+                    position: 'absolute',
+                    left: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'rgba(255, 255, 255, 0.4)',
+                    fontSize: '14px'
+                  }} />
+                </div>
+                
                 {/* States */}
-                {[...new Set(locations.map(l => l.state))].map(s => {
+                {[...new Set(locations.map(l => l.state))].filter(s => {
+                  if (!locationSearch) return true;
+                  const search = locationSearch.toLowerCase();
+                  // Check if state name matches
+                  if (s.toLowerCase().includes(search)) return true;
+                  // Check if any district/mandal/village in this state matches
+                  return locations.some(l => 
+                    l.state === s && (
+                      l.district.toLowerCase().includes(search) ||
+                      l.mandal.toLowerCase().includes(search) ||
+                      l.village.toLowerCase().includes(search)
+                    )
+                  );
+                }).map(s => {
                   const isStateSelected = state === s;
-                  const stateDistricts = [...new Set(locations.filter(l => l.state === s).map(l => l.district))];
+                  const stateDistricts = [...new Set(locations.filter(l => l.state === s).map(l => l.district))].filter(d => {
+                    if (!locationSearch) return true;
+                    const search = locationSearch.toLowerCase();
+                    // Check if district matches or any mandal/village in district matches
+                    if (d.toLowerCase().includes(search)) return true;
+                    return locations.some(l =>
+                      l.state === s && l.district === d && (
+                        l.mandal.toLowerCase().includes(search) ||
+                        l.village.toLowerCase().includes(search)
+                      )
+                    );
+                  });
                   
                   return (
                     <div key={s} style={{ marginBottom: '4px' }}>
@@ -457,14 +520,14 @@ function Home() {
                         onClick={() => {
                           if (isStateSelected) {
                             setState('');
-                            setDistrict('');
-                            setMandal('');
-                            setVillage('');
+                            setDistrict([]);
+                            setMandal([]);
+                            setVillage([]);
                           } else {
                             setState(s);
-                            setDistrict('');
-                            setMandal('');
-                            setVillage('');
+                            setDistrict([]);
+                            setMandal([]);
+                            setVillage([]);
                           }
                         }}
                         style={{
@@ -488,8 +551,17 @@ function Home() {
                       {isStateSelected && stateDistricts.length > 0 && (
                         <div style={{ paddingLeft: '16px', marginTop: '4px' }}>
                           {stateDistricts.map(d => {
-                            const isDistrictSelected = district === d;
-                            const districtMandals = [...new Set(locations.filter(l => l.state === s && l.district === d).map(l => l.mandal))];
+                            const isDistrictSelected = district.includes(d);
+                            const districtMandals = [...new Set(locations.filter(l => l.state === s && l.district === d).map(l => l.mandal))].filter(m => {
+                              if (!locationSearch) return true;
+                              const search = locationSearch.toLowerCase();
+                              // Check if mandal matches or any village in mandal matches
+                              if (m.toLowerCase().includes(search)) return true;
+                              return locations.some(l =>
+                                l.state === s && l.district === d && l.mandal === m &&
+                                l.village.toLowerCase().includes(search)
+                              );
+                            });
                             
                             return (
                               <div key={d} style={{ marginBottom: '2px' }}>
@@ -497,13 +569,9 @@ function Home() {
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     if (isDistrictSelected) {
-                                      setDistrict('');
-                                      setMandal('');
-                                      setVillage('');
+                                      setDistrict(district.filter(item => item !== d));
                                     } else {
-                                      setDistrict(d);
-                                      setMandal('');
-                                      setVillage('');
+                                      setDistrict([...district, d]);
                                     }
                                   }}
                                   style={{
@@ -524,11 +592,14 @@ function Home() {
                                 </div>
                                 
                                 {/* Mandals */}
-                                {isDistrictSelected && districtMandals.length > 0 && (
+                                {district.includes(d) && districtMandals.length > 0 && (
                                   <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
                                     {districtMandals.map(m => {
-                                      const isMandalSelected = mandal === m;
-                                      const mandalVillages = [...new Set(locations.filter(l => l.state === s && l.district === d && l.mandal === m).map(l => l.village))];
+                                      const isMandalSelected = mandal.includes(m);
+                                      const mandalVillages = [...new Set(locations.filter(l => l.state === s && l.district === d && l.mandal === m).map(l => l.village))].filter(v => {
+                                        if (!locationSearch) return true;
+                                        return v.toLowerCase().includes(locationSearch.toLowerCase());
+                                      });
                                       
                                       return (
                                         <div key={m} style={{ marginBottom: '2px' }}>
@@ -536,11 +607,9 @@ function Home() {
                                             onClick={(e) => {
                                               e.stopPropagation();
                                               if (isMandalSelected) {
-                                                setMandal('');
-                                                setVillage('');
+                                                setMandal(mandal.filter(item => item !== m));
                                               } else {
-                                                setMandal(m);
-                                                setVillage('');
+                                                setMandal([...mandal, m]);
                                               }
                                             }}
                                             style={{
@@ -561,7 +630,7 @@ function Home() {
                                           </div>
                                           
                                           {/* Villages */}
-                                          {isMandalSelected && mandalVillages.length > 0 && (
+                                          {mandal.includes(m) && mandalVillages.length > 0 && (
                                             <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
                                               {mandalVillages.map(v => {
                                                 const isVillageSelected = village.includes(v);
@@ -611,6 +680,96 @@ function Home() {
               </div>
             )}
           </div>
+
+          {/* Selected Districts Display */}
+          {district.length > 0 && (
+            <div style={{ padding: '0 20px 12px 20px' }}>
+              <div style={{ 
+                fontSize: '11px', 
+                color: 'rgba(255, 255, 255, 0.6)', 
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}>
+                selected districts ({district.length})
+              </div>
+              <div style={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: '6px'
+              }}>
+                {district.map(d => (
+                  <div
+                    key={d}
+                    style={{
+                      background: 'rgba(0, 208, 156, 0.3)',
+                      color: '#fff',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      fontSize: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <span>{d}</span>
+                    <FaTimes
+                      onClick={() => setDistrict(district.filter(item => item !== d))}
+                      style={{ 
+                        cursor: 'pointer', 
+                        fontSize: '9px',
+                        opacity: 0.7
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Selected Mandals Display */}
+          {mandal.length > 0 && (
+            <div style={{ padding: '0 20px 12px 20px' }}>
+              <div style={{ 
+                fontSize: '11px', 
+                color: 'rgba(255, 255, 255, 0.6)', 
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}>
+                selected mandals ({mandal.length})
+              </div>
+              <div style={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: '6px'
+              }}>
+                {mandal.map(m => (
+                  <div
+                    key={m}
+                    style={{
+                      background: 'rgba(0, 208, 156, 0.3)',
+                      color: '#fff',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      fontSize: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <span>{m}</span>
+                    <FaTimes
+                      onClick={() => setMandal(mandal.filter(item => item !== m))}
+                      style={{ 
+                        cursor: 'pointer', 
+                        fontSize: '9px',
+                        opacity: 0.7
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Selected Villages Display */}
           {village.length > 0 && (
@@ -666,10 +825,11 @@ function Home() {
                 setCategory('');
                 setSubcategory('');
                 setState('');
-                setDistrict('');
-                setMandal('');
+                setDistrict([]);
+                setMandal([]);
                 setVillage([]);
                 setListingType('');
+                setLocationSearch('');
                 localStorage.removeItem('filter_category');
                 localStorage.removeItem('filter_subcategory');
                 localStorage.removeItem('filter_state');
