@@ -715,7 +715,7 @@ function Home() {
                       gap: '4px'
                     }}
                   >
-                    <span>{d}</span>
+                    <span style={{ color: '#fff' }}>{d}</span>
                     <FaTimes
                       onClick={() => setDistrict(district.filter(item => item !== d))}
                       style={{ 
@@ -761,7 +761,7 @@ function Home() {
                       gap: '4px'
                     }}
                   >
-                    <span>{m}</span>
+                    <span style={{ color: '#fff' }}>{m}</span>
                     <FaTimes
                       onClick={() => setMandal(mandal.filter(item => item !== m))}
                       style={{ 
@@ -807,7 +807,7 @@ function Home() {
                       gap: '4px'
                     }}
                   >
-                    <span>{v}</span>
+                    <span style={{ color: '#fff' }}>{v}</span>
                     <FaTimes
                       onClick={() => setVillage(village.filter(vil => vil !== v))}
                       style={{ 
