@@ -706,7 +706,7 @@ function Home() {
                     key={d}
                     style={{
                       background: 'rgba(0, 208, 156, 0.3)',
-                      color: '#000',
+                      color: '#fff',
                       padding: '4px 8px',
                       borderRadius: '6px',
                       fontSize: '10px',
@@ -722,7 +722,7 @@ function Home() {
                         cursor: 'pointer', 
                         fontSize: '9px',
                         opacity: 0.7,
-                        color: '#000'
+                        color: '#fff'
                       }}
                     />
                   </div>
@@ -752,7 +752,7 @@ function Home() {
                     key={m}
                     style={{
                       background: 'rgba(0, 208, 156, 0.3)',
-                      color: '#000',
+                      color: '#fff',
                       padding: '4px 8px',
                       borderRadius: '6px',
                       fontSize: '10px',
@@ -768,7 +768,7 @@ function Home() {
                         cursor: 'pointer', 
                         fontSize: '9px',
                         opacity: 0.7,
-                        color: '#000'
+                        color: '#fff'
                       }}
                     />
                   </div>
@@ -798,7 +798,7 @@ function Home() {
                     key={v}
                     style={{
                       background: 'rgba(0, 208, 156, 0.3)',
-                      color: '#000',
+                      color: '#fff',
                       padding: '4px 8px',
                       borderRadius: '6px',
                       fontSize: '10px',
@@ -814,7 +814,7 @@ function Home() {
                         cursor: 'pointer', 
                         fontSize: '9px',
                         opacity: 0.7,
-                        color: '#000'
+                        color: '#fff'
                       }}
                     />
                   </div>
