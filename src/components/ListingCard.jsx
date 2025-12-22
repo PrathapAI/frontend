@@ -286,7 +286,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
         </div>
       </div>
       
-      {/* Call and Message buttons - only show on hover or when needed */}
+      {/* Call and Message buttons - always visible */}
       {!isOwner && (
         <div style={{
           position: 'absolute',
@@ -297,11 +297,9 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
           gap: '8px',
           padding: '8px',
           background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-          opacity: 0,
           transition: 'opacity 0.2s ease'
         }}
         className="card-action-buttons"
-        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
         >
           <button
             style={{

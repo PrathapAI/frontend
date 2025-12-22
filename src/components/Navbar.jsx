@@ -41,20 +41,26 @@ function Navbar() {
     };
   });
 
-  // Close mobile menu when clicking outside
+  // Listen for custom toggle event from bottom nav
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (mobileMenuOpen && !event.target.closest('.mobile-menu') && !event.target.closest('.hamburger-btn') && !event.target.closest('.mobile-hamburger-btn')) {
-        setMobileMenuOpen(false);
-      }
-    };
-    
-    // Listen for custom toggle event from Home page menu button
     const handleToggleMobileMenu = () => {
       setMobileMenuOpen(prev => !prev);
     };
     
     window.addEventListener('toggleMobileMenu', handleToggleMobileMenu);
+    
+    return () => {
+      window.removeEventListener('toggleMobileMenu', handleToggleMobileMenu);
+    };
+  }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuOpen && !event.target.closest('.mobile-menu') && !event.target.closest('.hamburger-btn') && !event.target.closest('.mobile-hamburger-btn') && !event.target.closest('.bottom-navigation')) {
+        setMobileMenuOpen(false);
+      }
+    };
     
     if (mobileMenuOpen) {
       document.addEventListener('click', handleClickOutside);
@@ -62,13 +68,8 @@ function Navbar() {
       return () => {
         document.removeEventListener('click', handleClickOutside);
         document.body.style.overflow = 'unset';
-        window.removeEventListener('toggleMobileMenu', handleToggleMobileMenu);
       };
     }
-    
-    return () => {
-      window.removeEventListener('toggleMobileMenu', handleToggleMobileMenu);
-    };
   }, [mobileMenuOpen]);
 
   const handleLogout = () => {
