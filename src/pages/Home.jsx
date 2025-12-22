@@ -1082,7 +1082,49 @@ function Home() {
             )}
           </div>
 
-          {/* Selected Districts Display */}
+          {/* Selected State Display */}
+          {state && (
+            <div style={{ padding: '0 20px 12px 20px' }}>
+              <div style={{ 
+                fontSize: '11px', 
+                color: 'rgba(255, 255, 255, 0.6)', 
+                marginBottom: '8px',
+                fontWeight: '500'
+              }}>
+                selected state
+              </div>
+              <div
+                style={{
+                  background: 'rgba(0, 208, 156, 0.3)',
+                  color: '#fff',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  fontSize: '10px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+              >
+                <span style={{ color: '#fff' }}>{state}</span>
+                <FaTimes
+                  onClick={() => {
+                    setState('');
+                    setDistrict([]);
+                    setMandal([]);
+                    setVillage([]);
+                  }}
+                  style={{ 
+                    cursor: 'pointer', 
+                    fontSize: '9px',
+                    opacity: 0.7,
+                    color: '#fff'
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Selected Districts Display */
           {district.length > 0 && (
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 

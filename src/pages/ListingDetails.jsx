@@ -134,8 +134,8 @@ function ListingDetails() {
             }
           </div>
           
-          {/* Call and Message Buttons */}
-          {userId && userId !== (listing.User?.UserID || listing.owner?.UserID || listing.UserID) && (
+          {/* Call and Message Buttons - Show for all users except the owner */}
+          {(!userId || userId !== (listing.User?.UserID || listing.owner?.UserID || listing.UserID)) && (
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '24px', marginBottom: '24px' }}>
               <button
                 style={{
