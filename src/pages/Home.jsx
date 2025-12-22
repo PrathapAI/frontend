@@ -838,10 +838,6 @@ function Home() {
                               if (!mandalSearch) return true;
                               return m.toLowerCase().includes(mandalSearch.toLowerCase());
                             });
-                                l.state === s && l.district === d && l.mandal === m &&
-                                l.village.toLowerCase().includes(search)
-                              );
-                            });
                             
                             return (
                               <div key={d} style={{ marginBottom: '2px' }}>

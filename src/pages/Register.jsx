@@ -298,11 +298,11 @@ function Register() {
         </div>
       </div>
     );
-  }BackButton />
-      <
+  }
 
   return (
     <div className="cred-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '140px 20px 40px' }}>
+      <BackButton />
       <div className="animate-fade-in-up" style={{
         maxWidth: '480px',
         width: '100%',
@@ -591,7 +591,19 @@ function Register() {
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
-                  fontWeight:create strong password"
+                  fontWeight: '600',
+                  textTransform: 'lowercase'
+                }}
+              >
+                + add new village
+              </button>
+            )}
+
+            <div style={{ position: 'relative' }}>
+              <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', fontSize: '14px' }} />
+              <input
+                type="password"
+                placeholder="create strong password"
                 value={form.password}
                 onChange={e => {
                   setForm({ ...form, password: e.target.value });
@@ -697,8 +709,6 @@ function Register() {
                   </div>
                 </div>
               </div>
-            )}add new village
-              </button>
             )}
 
             <div style={{ position: 'relative' }}>
