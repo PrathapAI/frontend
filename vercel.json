@@ -1,23 +1,20 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/((?!delete-account|privacy-policy|manifest.json|.*\\.(png|jpg|jpeg|gif|svg|ico|css|js|json)).*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
     {
-      "source": "/manifest.json",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/json"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|json))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(delete-account|privacy-policy)",
+      "dest": "/$1.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
