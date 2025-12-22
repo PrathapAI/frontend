@@ -127,10 +127,16 @@
   /* Mobile Filter Toggle Button - Show only on mobile */
   .mobile-filter-toggle {
     display: flex !important;
+    top: 220px !important;
   }
   
   .mobile-filter-toggle:active {
     transform: scale(0.95) !important;
+  }
+  
+  /* Hide hamburger menu button - we use bottom nav account button */
+  .mobile-hamburger-btn {
+    display: none !important;
   }
   
   .mobile-hamburger-btn:active {
@@ -404,6 +410,16 @@
   [style*="display: grid"][style*="grid-template-columns"] {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
+  }
+  
+  /* Show bottom navigation on mobile */
+  .bottom-navigation {
+    display: flex !important;
+  }
+  
+  /* Add padding to body for bottom nav */
+  body {
+    padding-bottom: 70px !important;
   }
 }
 

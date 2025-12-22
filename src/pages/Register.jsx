@@ -716,7 +716,7 @@ function Register() {
               <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', fontSize: '14px' }} />
               <input
                 type="password"
-                placeholder="password (min 6 chars)"
+                placeholder="confirm password"
                 value={form.password}
                 onChange={e => setForm({ ...form, password: e.target.value })}
                 className="cred-input"

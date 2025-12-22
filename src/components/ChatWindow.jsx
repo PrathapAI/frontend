@@ -166,11 +166,11 @@ const styles = {
   container: {
     position: 'fixed',
     bottom: '20px',
-    right: '20px',
-    width: '400px',
+    left: '20px',
+    width: '350px',
     maxWidth: '90vw',
-    height: '600px',
-    maxHeight: '80vh',
+    height: '500px',
+    maxHeight: '70vh',
     background: 'white',
     borderRadius: '12px',
     boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
@@ -190,7 +190,7 @@ const styles = {
   closeBtn: {
     background: 'transparent',
     border: 'none',
-    color: '#000',
+    color: '#fff',
     fontSize: '20px',
     cursor: 'pointer',
     padding: '4px 8px'

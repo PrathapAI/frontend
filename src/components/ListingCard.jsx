@@ -224,7 +224,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
               }}
               style={{
                 background: '#e74c3c',
-                color: '#fff',
+                color: '#000',
                 border: 'none',
                 borderRadius: 6,
                 padding: '4px 8px',
@@ -306,7 +306,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
           <button
             style={{
               background: '#1565c0',
-              color: '#fff',
+              color: '#000',
               border: 'none',
               borderRadius: 8,
               padding: '8px 16px',
@@ -324,7 +324,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
           <button
             style={{
               background: '#ff9800',
-              color: '#fff',
+              color: '#000',
               border: 'none',
               borderRadius: 8,
               padding: '8px 16px',

@@ -371,7 +371,7 @@ function Home() {
         style={{
           position: 'fixed',
           left: '12px',
-          top: '160px',
+          top: '220px',
           zIndex: 1000,
           background: showFilters ? '#ff4444' : 'var(--cred-accent)',
           border: 'none',
