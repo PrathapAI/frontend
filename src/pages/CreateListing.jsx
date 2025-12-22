@@ -67,33 +67,33 @@ function CreateListing() {
       setSubcategories(res.data);
     });
     
-    // Auto-populate location from user's admin data
+    // Auto-populate location from JWT token (same as Home.jsx)
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        const userId = payload.id;
+        console.log('JWT payload:', payload);
         
-        // Get admin data which has location info
-        API.get(`/crud/admins`).then(res => {
-          const adminData = res.data.find(admin => admin.userid === userId || admin.UserID === userId);
-          console.log('Admin data found:', adminData);
+        if (payload.address) {
+          // Parse address format: "village, mandal, district, state"
+          const addressParts = payload.address.split(',').map(part => part.trim());
+          console.log('Address parts:', addressParts);
           
-          if (adminData && adminData.location) {
-            console.log('Setting location from admin data:', adminData.location);
+          if (addressParts.length >= 4) {
+            const [userVillage, userMandal, userDistrict, userState] = addressParts;
+            console.log('Setting location:', { userState, userDistrict, userMandal, userVillage });
+            
             setForm(prevForm => ({
               ...prevForm,
-              state: adminData.location.state || '',
-              district: adminData.location.district || '',
-              mandal: adminData.location.mandal || '',
-              village: adminData.location.village || ''
+              state: userState || '',
+              district: userDistrict || '',
+              mandal: userMandal || '',
+              village: userVillage || ''
             }));
           }
-        }).catch(err => {
-          console.error('Error fetching admin data:', err);
-        });
+        }
       } catch (err) {
-        console.error('Error parsing token:', err);
+        console.error('Error parsing user address from token:', err);
       }
     }
   }, []);
