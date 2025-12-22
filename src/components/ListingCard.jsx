@@ -126,16 +126,16 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
       className="listing-card"
       onClick={() => navigate(`/listing/${listing.ListingID || listing.id}`)}
       style={{
-      maxWidth: '100%',
+      width: '100%',
       margin: '0',
-      borderRadius: 16,
+      borderRadius: 12,
       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
       overflow: 'hidden',
       background: '#fff',
       fontFamily: 'sans-serif',
       display: 'flex',
       flexDirection: 'column',
-      minHeight: 260,
+      minHeight: 240,
       position: 'relative',
       cursor: 'pointer',
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -150,7 +150,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
       e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
     }}>
       {/* Image Section - Top */}
-      <div style={{ width: '100%', height: '160px', position: 'relative', background: '#f5f5f5', overflow: 'hidden' }}>
+      <div style={{ width: '100%', height: '140px', position: 'relative', background: '#f5f5f5', overflow: 'hidden' }}>
         {/* Phone number overlay on image */}
         {showPhone && (
           <div style={{ 

@@ -278,25 +278,30 @@
   /* Listing content takes full width with 2 columns on mobile */
   .home-listings-content {
     margin: 0 !important;
-    padding: 0 8px !important;
+    padding: 0 6px !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
+    gap: 6px !important;
+    width: 100% !important;
   }
   
   /* Reduce listing card sizes for mobile 2-column layout */
   .listing-card {
-    min-height: 220px !important;
+    min-height: 200px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
   }
   
   /* Reduce image height in cards */
   .listing-card > div:first-child {
-    height: 120px !important;
+    height: 110px !important;
+    min-height: 110px !important;
   }
   
   /* Reduce content section padding */
   .listing-card > div:last-child {
-    padding: 6px !important;
-    gap: 4px !important;
+    padding: 5px !important;
+    gap: 3px !important;
   }
   
   /* Reduce font sizes in listing cards */
@@ -348,11 +353,18 @@
     margin: 0 0 16px 0 !important;
   }
   
-  /* Home listings keep grid layout */
+  /* Home listings keep grid layout - each card fits within grid cell */
   .home-listings-content > div {
     max-width: 100% !important;
-    width: auto !important;
+    width: 100% !important;
     margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Ensure no flex or inline-block on listing cards inside home-listings */
+  .home-listings-content .listing-card {
+    display: flex !important;
+    flex-direction: column !important;
   }
   
   /* Reduce text sizes in listing cards on mobile */
