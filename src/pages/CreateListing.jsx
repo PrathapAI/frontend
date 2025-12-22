@@ -101,38 +101,22 @@ function CreateListing() {
               // Set flag to prevent auto-reset in other useEffects
               setIsAutoPopulating(true);
               
-              // Populate dropdown lists first
-              const userDistricts = [...new Set(loadedLocations.filter(l => l.state === userState).map(l => l.district))];
-              const userMandals = [...new Set(loadedLocations.filter(l => l.state === userState && l.district === userDistrict).map(l => l.mandal))];
-              const userVillages = [...new Set(loadedLocations.filter(l => l.state === userState && l.district === userDistrict && l.mandal === userMandal).map(l => l.village))];
+              // Set all form values immediately - useEffects will populate dropdowns
+              setForm(prevForm => ({
+                ...prevForm,
+                state: userState || '',
+                district: userDistrict || '',
+                mandal: userMandal || '',
+                village: userVillage || ''
+              }));
               
-              console.log('Populated dropdowns:', {
-                districts: userDistricts,
-                mandals: userMandals,
-                villages: userVillages
-              });
+              console.log('✅ All location fields set in form');
               
-              setDistricts(userDistricts);
-              setMandals(userMandals);
-              setVillages(userVillages);
-              
-              // Then set form values
+              // Clear flag after React has processed the updates
               setTimeout(() => {
-                setForm(prevForm => ({
-                  ...prevForm,
-                  state: userState || '',
-                  district: userDistrict || '',
-                  mandal: userMandal || '',
-                  village: userVillage || ''
-                }));
-                
-                console.log('✅ Location set in form');
-                
-                // Clear flag after everything is set
-                setTimeout(() => {
-                  setIsAutoPopulating(false);
-                }, 50);
-              }, 50);
+                setIsAutoPopulating(false);
+                console.log('✅ Auto-populate complete');
+              }, 200);
             } else {
               console.log('❌ Address does not have 4 parts (village, mandal, district, state)');
             }
