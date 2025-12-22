@@ -66,6 +66,32 @@ function CreateListing() {
     API.get('/crud/subcategories').then(res => {
       setSubcategories(res.data);
     });
+    
+    // Auto-populate location from user data
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userId = payload.id;
+        
+        API.get(`/crud/users/${userId}`).then(res => {
+          const userData = res.data;
+          if (userData.state) {
+            setForm(prevForm => ({
+              ...prevForm,
+              state: userData.state || '',
+              district: userData.district || '',
+              mandal: userData.mandal || '',
+              village: userData.village || ''
+            }));
+          }
+        }).catch(err => {
+          console.error('Error fetching user data:', err);
+        });
+      } catch (err) {
+        console.error('Error parsing token:', err);
+      }
+    }
   }, []);
 
   // Fetch subcategories for selected category

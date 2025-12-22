@@ -369,7 +369,7 @@ function Home() {
           justifyContent: 'center',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
-          color: '#fff',
+          color: '#000',
           fontSize: '20px',
           fontWeight: '600',
           transition: 'all 0.3s'
@@ -401,7 +401,7 @@ function Home() {
           gap: '6px',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
-          color: '#fff',
+          color: '#000',
           fontSize: '8px',
           fontWeight: '600',
           transition: 'all 0.3s',
