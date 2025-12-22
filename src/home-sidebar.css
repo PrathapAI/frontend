@@ -46,24 +46,28 @@
   flex: 1;
   margin-top: 2rem;
   margin-right: 2rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
   gap: 16px;
   align-items: start;
   max-width: 100%;
 }
 
-/* Ensure 2 columns on desktop screens */
+/* Ensure 2 columns on all screen sizes */
 @media (min-width: 769px) {
   .home-listings-content {
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
   }
 }
 
-/* Ensure 2 columns on mobile as well */
+/* Ensure 2 columns on mobile */
 @media (max-width: 768px) {
   .home-listings-content {
+    margin: 0 !important;
+    padding: 0 8px !important;
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
   }
 }
 
