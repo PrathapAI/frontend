@@ -283,37 +283,42 @@
     gap: 8px !important;
   }
   
-  /* Individual listing card mobile styles */
+  /* Reduce listing card sizes for mobile 2-column layout */
   .listing-card {
-    padding: 8px !important;
     min-height: 220px !important;
   }
   
-  /* Further reduce sizes for 2-column mobile layout */
-  .listing-card img {
+  /* Reduce image height in cards */
+  .listing-card > div:first-child {
     height: 120px !important;
   }
   
-  .listing-card [style*="padding: '10px'"] {
+  /* Reduce content section padding */
+  .listing-card > div:last-child {
     padding: 6px !important;
+    gap: 4px !important;
   }
   
-  .listing-card [style*="fontSize: 16"] {
+  /* Reduce font sizes in listing cards */
+  .listing-card > div:last-child > div:nth-child(1) {
     font-size: 14px !important;
   }
   
-  .listing-card [style*="fontSize: 13"] {
+  .listing-card > div:last-child > div:nth-child(2) {
     font-size: 11px !important;
   }
   
-  .listing-card [style*="fontSize: 11"] {
+  .listing-card > div:last-child > div:nth-child(3),
+  .listing-card > div:last-child > div:nth-child(4) {
     font-size: 10px !important;
   }
   
-  .listing-card [style*="fontSize: 10"] {
+  .listing-card > div:last-child > div:nth-child(5) {
     font-size: 9px !important;
+    padding-top: 4px !important;
   }
   
+  /* Individual listing card mobile styles */
   .cred-card {
     padding: 12px !important;
   }
