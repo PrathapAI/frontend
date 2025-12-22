@@ -1294,7 +1294,13 @@ function Home() {
           </div>
         </aside>
 
-        <main className="home-listings-content">
+        <main
+          className="home-listings-content"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)'
+          }}
+        >
           {filteredListings.map(listing => {
             let imageUrl = '';
             if (listing.ListingImages && listing.ListingImages.length > 0) {
