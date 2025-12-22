@@ -12,6 +12,7 @@ function ListingDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [listing, setListing] = useState(null);
+  const [similarAds, setSimilarAds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -30,6 +31,23 @@ function ListingDetails() {
       try {
         const res = await API.get(`/listings/${id}`);
         setListing(res.data);
+        
+        // Fetch similar ads from same category
+        if (res.data.CategoryID) {
+          try {
+            const similarRes = await API.get('/listings', {
+              params: { 
+                category: res.data.CategoryID,
+                limit: 3 
+              }
+            });
+            // Filter out current listing and take only 2 ads
+            const filtered = similarRes.data.filter(ad => ad.ListingID !== parseInt(id)).slice(0, 2);
+            setSimilarAds(filtered);
+          } catch (err) {
+            console.error('Error fetching similar ads:', err);
+          }
+        }
       } catch (err) {
         setError('Failed to load listing details');
       } finally {
@@ -175,7 +193,12 @@ function ListingDetails() {
                   transition: 'background 0.2s'
                 }}
                 onClick={() => {
-                  navigate('/messages');
+                  if (!userId) {
+                    alert('Please login to send messages');
+                    navigate('/login');
+                  } else {
+                    navigate('/messages');
+                  }
                 }}
               >
                 💬 Message
@@ -190,6 +213,92 @@ function ListingDetails() {
           
           {/* Reviews Section */}
           <ReviewSection listingId={id} userId={userId} />
+          
+          {/* Similar Ads Section */}
+          {similarAds.length > 0 && (
+            <div style={{ marginTop: '48px', borderTop: '2px solid #e0e0e0', paddingTop: '32px' }}>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '24px', textAlign: 'center' }}>
+                Similar Ads
+              </h3>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(2, 1fr)', 
+                gap: '16px',
+                maxWidth: '800px',
+                margin: '0 auto'
+              }}>
+                {similarAds.map(ad => {
+                  const image = ad.ListingImages?.[0]?.ImageURL || ad.ImageURL || '/default-no-image.png';
+                  return (
+                    <div
+                      key={ad.ListingID}
+                      onClick={() => {
+                        window.scrollTo(0, 0);
+                        navigate(`/listing/${ad.ListingID}`);
+                      }}
+                      style={{
+                        background: '#fff',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        transition: 'transform 0.2s, box-shadow 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                      }}
+                    >
+                      <img
+                        src={image}
+                        alt={ad.Title}
+                        style={{
+                          width: '100%',
+                          height: '180px',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      <div style={{ padding: '12px' }}>
+                        <h4 style={{
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          marginBottom: '8px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {ad.Title}
+                        </h4>
+                        <div style={{
+                          fontSize: '16px',
+                          fontWeight: 700,
+                          color: '#e65100',
+                          marginBottom: '4px'
+                        }}>
+                          {ad.Listing_Type === 'Business Offers' 
+                            ? `${ad.ExpectedPrice || 'N/A'}% off`
+                            : `₹ ${ad.ExpectedPrice || 'N/A'}`}
+                        </div>
+                        <div style={{
+                          fontSize: '12px',
+                          color: '#666',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {ad.Location?.village || ad.village || ''}, {ad.Location?.district || ad.district || ''}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
