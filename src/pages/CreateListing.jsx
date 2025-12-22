@@ -67,26 +67,30 @@ function CreateListing() {
       setSubcategories(res.data);
     });
     
-    // Auto-populate location from user data
+    // Auto-populate location from user's admin data
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const userId = payload.id;
         
-        API.get(`/crud/users/${userId}`).then(res => {
-          const userData = res.data;
-          if (userData.state) {
+        // Get admin data which has location info
+        API.get(`/crud/admins`).then(res => {
+          const adminData = res.data.find(admin => admin.userid === userId || admin.UserID === userId);
+          console.log('Admin data found:', adminData);
+          
+          if (adminData && adminData.location) {
+            console.log('Setting location from admin data:', adminData.location);
             setForm(prevForm => ({
               ...prevForm,
-              state: userData.state || '',
-              district: userData.district || '',
-              mandal: userData.mandal || '',
-              village: userData.village || ''
+              state: adminData.location.state || '',
+              district: adminData.location.district || '',
+              mandal: adminData.location.mandal || '',
+              village: adminData.location.village || ''
             }));
           }
         }).catch(err => {
-          console.error('Error fetching user data:', err);
+          console.error('Error fetching admin data:', err);
         });
       } catch (err) {
         console.error('Error parsing token:', err);
