@@ -163,42 +163,59 @@ function CreateListing() {
     // eslint-disable-next-line
   }, [form.category]);
 
-  // Update districts, mandals, villages when state changes
+  // Update districts when state changes
   useEffect(() => {
     if (form.state) {
-      setDistricts([...new Set(locations.filter(l => l.state === form.state).map(l => l.district))]);
+      const newDistricts = [...new Set(locations.filter(l => l.state === form.state).map(l => l.district))];
+      setDistricts(newDistricts);
+      
+      // Only reset child fields if not auto-populating AND current district is not valid
+      if (!isAutoPopulating && form.district && !newDistricts.includes(form.district)) {
+        setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
+      }
     } else {
       setDistricts([]);
+      if (!isAutoPopulating) {
+        setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
+      }
     }
-    // Don't reset if auto-populating
-    if (!isAutoPopulating) {
-      setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
-    }
-  }, [form.state, locations, isAutoPopulating]);
+  }, [form.state, locations, isAutoPopulating, form.district]);
 
+  // Update mandals when district changes
   useEffect(() => {
     if (form.state && form.district) {
-      setMandals([...new Set(locations.filter(l => l.state === form.state && l.district === form.district).map(l => l.mandal))]);
+      const newMandals = [...new Set(locations.filter(l => l.state === form.state && l.district === form.district).map(l => l.mandal))];
+      setMandals(newMandals);
+      
+      // Only reset child fields if not auto-populating AND current mandal is not valid
+      if (!isAutoPopulating && form.mandal && !newMandals.includes(form.mandal)) {
+        setForm(f => ({ ...f, mandal: '', village: '' }));
+      }
     } else {
       setMandals([]);
+      if (!isAutoPopulating) {
+        setForm(f => ({ ...f, mandal: '', village: '' }));
+      }
     }
-    // Don't reset if auto-populating
-    if (!isAutoPopulating) {
-      setForm(f => ({ ...f, mandal: '', village: '' }));
-    }
-  }, [form.district, form.state, locations, isAutoPopulating]);
+  }, [form.district, form.state, locations, isAutoPopulating, form.mandal]);
 
+  // Update villages when mandal changes
   useEffect(() => {
     if (form.state && form.district && form.mandal) {
-      setVillages([...new Set(locations.filter(l => l.state === form.state && l.district === form.district && l.mandal === form.mandal).map(l => l.village))]);
+      const newVillages = [...new Set(locations.filter(l => l.state === form.state && l.district === form.district && l.mandal === form.mandal).map(l => l.village))];
+      setVillages(newVillages);
+      
+      // Only reset village if not auto-populating AND current village is not valid
+      if (!isAutoPopulating && form.village && !newVillages.includes(form.village)) {
+        setForm(f => ({ ...f, village: '' }));
+      }
     } else {
       setVillages([]);
+      if (!isAutoPopulating) {
+        setForm(f => ({ ...f, village: '' }));
+      }
     }
-    // Don't reset if auto-populating
-    if (!isAutoPopulating) {
-      setForm(f => ({ ...f, village: '' }));
-    }
-  }, [form.mandal, form.district, form.state, locations, isAutoPopulating]);
+  }, [form.mandal, form.district, form.state, locations, isAutoPopulating, form.village]);
 
   // Add new mandal
   const handleAddMandal = async () => {
