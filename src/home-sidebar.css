@@ -46,8 +46,8 @@
   flex: 1;
   margin-top: 2rem;
   margin-right: 2rem;
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   align-items: start;
   max-width: 100%;
@@ -60,24 +60,6 @@
   width: 100%;
   margin: 0;
   box-sizing: border-box;
-}
-
-/* Ensure 2 columns on all screen sizes */
-@media (min-width: 769px) {
-  .home-listings-content {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-  }
-}
-
-/* Ensure 2 columns on mobile */
-@media (max-width: 768px) {
-  .home-listings-content {
-    margin: 0 !important;
-    padding: 0 6px !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 6px !important;
-  }
 }
 
 .home-action-btn {
