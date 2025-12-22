@@ -17,8 +17,12 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     rollupOptions: {
+      external: ['@capacitor/app'],
       output: {
-        manualChunks: undefined
+        manualChunks: undefined,
+        globals: {
+          '@capacitor/app': 'CapacitorApp'
+        }
       }
     }
   },
