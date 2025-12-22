@@ -135,7 +135,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
       fontFamily: 'sans-serif',
       display: 'flex',
       flexDirection: 'column',
-      minHeight: 280,
+      minHeight: 260,
       position: 'relative',
       cursor: 'pointer',
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -150,7 +150,7 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
       e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
     }}>
       {/* Image Section - Top */}
-      <div style={{ width: '100%', height: '180px', position: 'relative', background: '#f5f5f5', overflow: 'hidden' }}>
+      <div style={{ width: '100%', height: '160px', position: 'relative', background: '#f5f5f5', overflow: 'hidden' }}>
         {/* Phone number overlay on image */}
         {showPhone && (
           <div style={{ 
@@ -244,20 +244,20 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
       </div>
       
       {/* Content Section - Bottom */}
-      <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+      <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
         {/* Price */}
         {price && (
-          <div style={{ fontSize: 18, fontWeight: 700, color: '#000' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#000' }}>
             {price}
           </div>
         )}
         
         {/* Title */}
         <div style={{
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 600,
             color: '#002f34',
-            lineHeight: '1.3',
+            lineHeight: '1.2',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             display: '-webkit-box',
@@ -276,12 +276,12 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
         )}
         
         {/* Location */}
-        <div style={{ fontSize: 12, color: '#7f8c8d', marginTop: 'auto' }}>
+        <div style={{ fontSize: 11, color: '#7f8c8d', marginTop: 'auto' }}>
           {address}
         </div>
         
         {/* Posted date */}
-        <div style={{ fontSize: 11, color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '8px' }}>
+        <div style={{ fontSize: 10, color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '6px' }}>
           {postedDate ? new Date(postedDate).toLocaleDateString() : 'N/A'}
         </div>
       </div>

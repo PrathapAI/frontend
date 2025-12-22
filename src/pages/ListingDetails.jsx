@@ -194,8 +194,7 @@ function ListingDetails() {
                 }}
                 onClick={() => {
                   if (!userId) {
-                    alert('Please login to send messages');
-                    navigate('/login');
+                    alert('Login to chat');
                   } else {
                     navigate('/messages');
                   }
