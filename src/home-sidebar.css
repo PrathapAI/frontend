@@ -3,6 +3,8 @@
   flex-direction: row;
   align-items: flex-start;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .home-sidebar {
@@ -44,6 +46,10 @@
   flex: 1;
   margin-top: 2rem;
   margin-right: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  align-items: start;
 }
 
 .home-action-btn {

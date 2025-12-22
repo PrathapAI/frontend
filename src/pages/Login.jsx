@@ -215,6 +215,7 @@ function Login() {
                     onChange={e => setNewPassword(e.target.value)}
                     className="cred-input"
                     style={{ paddingLeft: '50px' }}
+                    autocomplete="new-password"
                   />
                 </div>
                 <div style={{ position: 'relative' }}>
@@ -226,6 +227,7 @@ function Login() {
                     onChange={e => setConfirmPassword(e.target.value)}
                     className="cred-input"
                     style={{ paddingLeft: '50px' }}
+                    autocomplete="new-password"
                   />
                 </div>
                 <button onClick={handleResetPassword} className="cred-btn" style={{ width: '100%' }}>
@@ -313,6 +315,7 @@ function Login() {
                 onChange={e => setForm({ ...form, password: e.target.value })}
                 className="cred-input"
                 style={{ paddingLeft: '50px' }}
+                autocomplete="current-password"
               />
             </div>
 

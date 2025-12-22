@@ -613,6 +613,7 @@ function Register() {
                 onBlur={() => setTimeout(() => setShowPasswordGuidelines(false), 200)}
                 className="cred-input"
                 style={{ paddingLeft: '50px' }}
+                autocomplete="new-password"
               />
             </div>
 
@@ -720,6 +721,7 @@ function Register() {
                 onChange={e => setForm({ ...form, password: e.target.value })}
                 className="cred-input"
                 style={{ paddingLeft: '50px' }}
+                autocomplete="new-password"
               />
             </div>
 

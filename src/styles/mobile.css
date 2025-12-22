@@ -36,17 +36,43 @@
     display: none !important;
   }
   
-  /* Show hamburger menu button on mobile */
+  /* Show bottom navigation on mobile */
+  .bottom-navigation {
+    display: flex !important;
+  }
+  
+  /* Add padding to body to account for bottom nav */
+  body {
+    padding-bottom: 60px;
+  }
+  
+  /* Hide navbar hamburger menu button on mobile - relocated to filter level */
   .hamburger-btn {
+    display: none !important;
+  }
+  
+  /* New hamburger button at filter level */
+  .mobile-hamburger-btn {
+    position: fixed !important;
+    right: 12px !important;
+    top: 160px !important;
+    z-index: 1000 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 40px !important;
+    width: auto !important;
     height: 40px !important;
-    border-radius: 8px !important;
-    background: #000 !important;
+    padding: 10px 16px !important;
+    border-radius: 20px !important;
+    background: var(--cred-accent) !important;
     transition: all 0.3s ease !important;
-    border: 2px solid var(--cred-accent) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 208, 156, 0.4) !important;
+    cursor: pointer !important;
+    gap: 6px !important;
+    color: #000 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
   }
   
   .hamburger-btn:active {
@@ -107,24 +133,29 @@
     transform: scale(0.95) !important;
   }
   
+  .mobile-hamburger-btn:active {
+    transform: scale(0.95) !important;
+  }
+  
   /* Hide filters by default on mobile */
   .home-sidebar {
     display: none !important;
   }
   
-  /* Show filters when toggled */
+  /* Show filters when toggled - STICKY/FIXED position */
   .home-sidebar.show-filters {
     display: block !important;
     position: fixed !important;
     left: 0 !important;
-    top: 55px !important;
-    height: calc(100vh - 55px) !important;
+    top: 0 !important;
+    height: 100vh !important;
     z-index: 1001 !important;
     width: 85% !important;
     max-width: 320px !important;
     min-width: auto !important;
     margin: 0 !important;
     padding: 0 !important;
+    padding-top: 60px !important;
     padding-bottom: 20px !important;
     border-radius: 0 12px 12px 0 !important;
     overflow-y: auto !important;
@@ -241,12 +272,8 @@
   .home-listings-content {
     margin: 0 !important;
     padding: 0 12px !important;
-  }
-  
-  /* Make listing cards more compact on mobile */
-  .home-listings-content > div {
     grid-template-columns: 1fr !important;
-    gap: 12px !important;
+    gap: 16px !important;
   }
   
   /* Individual listing card mobile styles */

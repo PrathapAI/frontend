@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import React, { useEffect, useRef } from 'react';
 
 import Navbar from './components/Navbar';
+import BottomNav from './components/BottomNav';
 import ListingDetails from './pages/ListingDetails';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -128,6 +129,7 @@ function App() {
           <Route path="/debug-token" element={<DebugToken />} />
           <Route path="/about" element={<About />} />
         </Routes>
+        <BottomNav />
       </InactivityHandler>
     </Router>
   );

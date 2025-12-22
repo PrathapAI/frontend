@@ -1,4 +1,10 @@
 /* Main navigation/action buttons styling */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
 .main-nav-btn, .home-btn, .create-btn, .login-btn, .register-btn, .logout-btn {
   background: #111 !important;
   color: #fff !important;
@@ -131,4 +137,8 @@
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+}
+/* Listing card hover effect for action buttons */
+.listing-card:hover .card-action-buttons {
+  opacity: 1 !important;
 }

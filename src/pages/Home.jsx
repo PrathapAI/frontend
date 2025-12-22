@@ -6,7 +6,7 @@ import ListingCard from '../components/ListingCard';
 import '../home-theme.css';
 import '../form-theme.css';
 import '../home-sidebar.css';
-import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter, FaSlidersH } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter, FaSlidersH, FaBars } from 'react-icons/fa';
 
 function Home() {
   const [listings, setListings] = useState([]);
@@ -36,6 +36,10 @@ function Home() {
   const [districtSearch, setDistrictSearch] = useState('');
   const [mandalSearch, setMandalSearch] = useState('');
   const [villageSearch, setVillageSearch] = useState('');
+  
+  // Category and Ad Type search state
+  const [categorySearch, setCategorySearch] = useState('');
+  const [adTypeSearch, setAdTypeSearch] = useState('');
   
   // Accordion state
   const [expandedCategory, setExpandedCategory] = useState(true);
@@ -367,7 +371,7 @@ function Home() {
         style={{
           position: 'fixed',
           left: '12px',
-          top: '160px', // Moved down to filter level
+          top: '160px',
           zIndex: 1000,
           background: showFilters ? '#ff4444' : 'var(--cred-accent)',
           border: 'none',
@@ -388,6 +392,40 @@ function Home() {
       >
         {showFilters ? <FaTimes /> : <FaSlidersH />}
         <span>{showFilters ? 'Close' : 'Filters'}</span>
+      </button>
+
+      {/* Mobile Hamburger Menu Button - at filter level */}
+      <button
+        className="mobile-hamburger-btn"
+        onClick={(e) => {
+          e.stopPropagation();
+          // Dispatch custom event for navbar to listen to
+          window.dispatchEvent(new CustomEvent('toggleMobileMenu'));
+        }}
+        style={{
+          position: 'fixed',
+          right: '12px',
+          top: '160px',
+          zIndex: 1000,
+          background: 'var(--cred-accent)',
+          border: 'none',
+          borderRadius: '20px',
+          padding: '10px 16px',
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
+          color: '#000',
+          fontSize: '12px',
+          fontWeight: '600',
+          transition: 'all 0.3s',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        <FaBars />
+        <span>Menu</span>
       </button>
 
       <div className="home-main-container">
@@ -421,7 +459,53 @@ function Home() {
             
             {expandedAdType && (
               <div style={{ padding: '0 20px 16px' }}>
-                {['All', 'Resell', 'Business Offers', 'Business Campaign', 'New Sale'].map(type => {
+                {/* Ad Type Search Input */}
+                <div style={{ marginBottom: '12px' }}>
+                  <label style={{ 
+                    display: 'block', 
+                    fontSize: '11px', 
+                    color: 'rgba(255, 255, 255, 0.6)', 
+                    marginBottom: '6px',
+                    fontWeight: '500',
+                    textTransform: 'lowercase'
+                  }}>
+                    search ad type:
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <FaSearch style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      fontSize: '12px',
+                      pointerEvents: 'none',
+                      zIndex: 1
+                    }} />
+                    <input
+                      type="text"
+                      placeholder="type ad type..."
+                      value={adTypeSearch}
+                      onChange={(e) => setAdTypeSearch(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px 8px 36px',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px',
+                        color: '#000',
+                        fontSize: '12px',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                {/* Ad Type Options - filtered by search */}
+                {['All', 'Resell', 'Business Offers', 'Business Campaign', 'New Sale'].filter(type => {
+                  if (!adTypeSearch) return true;
+                  return type.toLowerCase().includes(adTypeSearch.toLowerCase());
+                }).map(type => {
                   const isSelected = listingType === type || (type === 'All' && !listingType);
                   return (
                     <div
@@ -478,6 +562,48 @@ function Home() {
             
             {expandedCategory && (
               <div style={{ padding: '0 20px 16px' }}>
+                {/* Category Search Input */}
+                <div style={{ marginBottom: '12px' }}>
+                  <label style={{ 
+                    display: 'block', 
+                    fontSize: '11px', 
+                    color: 'rgba(255, 255, 255, 0.6)', 
+                    marginBottom: '6px',
+                    fontWeight: '500',
+                    textTransform: 'lowercase'
+                  }}>
+                    search category:
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <FaSearch style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      fontSize: '12px',
+                      pointerEvents: 'none',
+                      zIndex: 1
+                    }} />
+                    <input
+                      type="text"
+                      placeholder="type category name..."
+                      value={categorySearch}
+                      onChange={(e) => setCategorySearch(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px 8px 36px',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px',
+                        color: '#000',
+                        fontSize: '12px',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                </div>
+                
                 {/* All Categories */}
                 <div
                   onClick={() => {
@@ -502,8 +628,11 @@ function Home() {
                   all categories
                 </div>
                 
-                {/* Category List */}
-                {categories.map(cat => {
+                {/* Category List - filtered by search */}
+                {categories.filter(cat => {
+                  if (!categorySearch) return true;
+                  return cat.CategoryName.toLowerCase().includes(categorySearch.toLowerCase());
+                }).map(cat => {
                   const isSelected = String(category) === String(cat.CategoryID);
                   const categorySubcategories = subcategories.filter(sub => String(sub.CategoryID) === String(cat.CategoryID));
                   
