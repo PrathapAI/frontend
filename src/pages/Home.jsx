@@ -737,7 +737,8 @@ function Home() {
             
             {expandedLocation && (
               <div style={{ padding: '0 20px 16px' }}>
-                {/* State Level Search */}
+                {/* State Level Search - Only show when no state selected */}
+                {!state && (
                 <div style={{ marginBottom: '12px' }}>
                   <label style={{ 
                     display: 'block', 
@@ -778,9 +779,10 @@ function Home() {
                     />
                   </div>
                 </div>
+                )}
 
-                {/* States Results - only show when searching */}
-                {stateSearch && (
+                {/* States Results - only show when searching and no state selected */}
+                {!state && stateSearch && (
                   <div style={{ marginBottom: '16px' }}>
                     {[...new Set(locations.map(l => l.state))].filter(s => {
                       return s.toLowerCase().includes(stateSearch.toLowerCase());
@@ -800,6 +802,7 @@ function Home() {
                               setDistrict([]);
                               setMandal([]);
                               setVillage([]);
+                              setStateSearch(''); // Clear search to collapse
                             }
                           }}
                           style={{
@@ -824,8 +827,8 @@ function Home() {
                   </div>
                 )}
 
-                {/* District Level Search - Only show when state is selected */}
-                {state && (
+                {/* District Level Search - Only show when state is selected and no district selected yet */}
+                {state && district.length === 0 && (
                   <div style={{ marginBottom: '12px' }}>
                     <label style={{ 
                       display: 'block', 
@@ -868,8 +871,8 @@ function Home() {
                   </div>
                 )}
 
-                {/* District Results - show only when state is selected and user is searching */}
-                {state && districtSearch && (
+                {/* District Results - show only when state is selected, no districts selected yet, and user is searching */}
+                {state && district.length === 0 && districtSearch && (
                   <div style={{ marginBottom: '16px' }}>
                     {[...new Set(locations.filter(l => l.state === state).map(l => l.district))].filter(d => {
                       return d.toLowerCase().includes(districtSearch.toLowerCase());
@@ -884,6 +887,7 @@ function Home() {
                               setDistrict(district.filter(item => item !== d));
                             } else {
                               setDistrict([...district, d]);
+                              setDistrictSearch(''); // Clear search to collapse
                             }
                           }}
                           style={{
@@ -908,8 +912,8 @@ function Home() {
                   </div>
                 )}
 
-                {/* Mandal Level Search - Only show when district is selected */}
-                {state && district.length > 0 && (
+                {/* Mandal Level Search - Only show when district is selected and no mandal selected */}
+                {state && district.length > 0 && mandal.length === 0 && (
                   <div style={{ marginBottom: '12px' }}>
                     <label style={{ 
                       display: 'block', 
@@ -968,6 +972,7 @@ function Home() {
                               setMandal(mandal.filter(item => item !== m));
                             } else {
                               setMandal([...mandal, m]);
+                              setMandalSearch(''); // Clear search to collapse
                             }
                           }}
                           style={{
@@ -992,8 +997,8 @@ function Home() {
                   </div>
                 )}
 
-                {/* Village Level Search - Only show when mandal is selected */}
-                {state && district.length > 0 && mandal.length > 0 && (
+                {/* Village Level Search - Only show when mandal is selected and no village selected */}
+                {state && district.length > 0 && mandal.length > 0 && village.length === 0 && (
                   <div style={{ marginBottom: '12px' }}>
                     <label style={{ 
                       display: 'block', 
