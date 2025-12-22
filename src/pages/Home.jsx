@@ -223,7 +223,7 @@ function Home() {
   };
 
   return (
-    <div className="cred-page" style={{ paddingTop: '100px' }}>
+    <div className="cred-page">
       {/* Header */}
       <div style={{ 
         textAlign: 'center', 
