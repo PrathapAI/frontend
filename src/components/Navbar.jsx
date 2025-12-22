@@ -357,26 +357,8 @@ function Navbar() {
 
         {/* Mobile Menu Links */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <Link to="/" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
-            <FaHome /> Home
-          </Link>
-          
           {user ? (
             <>
-              <Link to="/create" onClick={closeMobileMenu} style={{
-                ...mobileMenuLinkStyle,
-                background: 'var(--cred-accent)',
-                color: '#000',
-                fontWeight: 700
-              }}>
-                <FaPlus /> Post Ad
-              </Link>
-              <Link to="/mylistings" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
-                <FaList /> My Ads
-              </Link>
-              <Link to="/messages" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
-                <FaEnvelope /> Messages
-              </Link>
               <Link to="/favorites" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
                 <FaHeart /> Favorites
               </Link>

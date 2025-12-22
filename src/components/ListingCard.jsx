@@ -286,60 +286,6 @@ function ListingCard({ listing, isOwner = false, onDeleteSuccess, onDeactivate, 
         </div>
       </div>
       
-      {/* Call and Message buttons - always visible */}
-      {!isOwner && (
-        <div style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          display: 'flex',
-          gap: '8px',
-          padding: '8px',
-          background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-          transition: 'opacity 0.2s ease'
-        }}
-        className="card-action-buttons"
-        >
-          <button
-            style={{
-              background: '#1565c0',
-              color: '#000',
-              border: 'none',
-              borderRadius: 8,
-              padding: '8px 16px',
-              fontWeight: 600,
-              fontSize: '12px',
-              cursor: 'pointer',
-              flex: 1,
-              transition: 'background 0.2s'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowPhone(prev => !prev);
-            }}
-          >Call</button>
-          <button
-            style={{
-              background: '#ff9800',
-              color: '#000',
-              border: 'none',
-              borderRadius: 8,
-              padding: '8px 16px',
-              fontWeight: 600,
-              fontSize: '12px',
-              cursor: 'pointer',
-              flex: 1,
-              transition: 'background 0.2s'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleMessageClick();
-            }}
-          >Message</button>
-        </div>
-      )}
-      
       
       {/* Chat Window */}
       {showChat && (

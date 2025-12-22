@@ -134,6 +134,55 @@ function ListingDetails() {
             }
           </div>
           
+          {/* Call and Message Buttons */}
+          {userId && userId !== (listing.User?.UserID || listing.owner?.UserID || listing.UserID) && (
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '24px', marginBottom: '24px' }}>
+              <button
+                style={{
+                  background: '#1565c0',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: 12,
+                  padding: '12px 32px',
+                  fontWeight: 700,
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(21,101,192,0.3)',
+                  transition: 'background 0.2s'
+                }}
+                onClick={() => {
+                  const phone = listing.owner?.phone || listing.User?.phone;
+                  if (phone) {
+                    alert(`📞 ${phone}`);
+                  } else {
+                    alert('Phone number not available');
+                  }
+                }}
+              >
+                📞 Call
+              </button>
+              <button
+                style={{
+                  background: '#ff9800',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: 12,
+                  padding: '12px 32px',
+                  fontWeight: 700,
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(255,152,0,0.3)',
+                  transition: 'background 0.2s'
+                }}
+                onClick={() => {
+                  navigate('/messages');
+                }}
+              >
+                💬 Message
+              </button>
+            </div>
+          )}
+          
           {/* Favorite Button */}
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
             <FavoriteButton listingId={id} userId={userId} />
