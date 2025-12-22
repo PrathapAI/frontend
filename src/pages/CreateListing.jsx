@@ -74,7 +74,7 @@ function CreateListing() {
     // Auto-populate location from JWT token - wait for locations to load first
     const token = localStorage.getItem('token');
     if (token) {
-      locationsPromise.then(() => {
+      locationsPromise.then((loadedLocations) => {
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
           console.log('=== CREATELISTING JWT PAYLOAD ===');
@@ -101,21 +101,38 @@ function CreateListing() {
               // Set flag to prevent auto-reset in other useEffects
               setIsAutoPopulating(true);
               
-              // Set all location fields at once
-              setForm(prevForm => ({
-                ...prevForm,
-                state: userState || '',
-                district: userDistrict || '',
-                mandal: userMandal || '',
-                village: userVillage || ''
-              }));
+              // Populate dropdown lists first
+              const userDistricts = [...new Set(loadedLocations.filter(l => l.state === userState).map(l => l.district))];
+              const userMandals = [...new Set(loadedLocations.filter(l => l.state === userState && l.district === userDistrict).map(l => l.mandal))];
+              const userVillages = [...new Set(loadedLocations.filter(l => l.state === userState && l.district === userDistrict && l.mandal === userMandal).map(l => l.village))];
               
-              console.log('✅ Location set in form');
+              console.log('Populated dropdowns:', {
+                districts: userDistricts,
+                mandals: userMandals,
+                villages: userVillages
+              });
               
-              // Clear flag after a short delay
+              setDistricts(userDistricts);
+              setMandals(userMandals);
+              setVillages(userVillages);
+              
+              // Then set form values
               setTimeout(() => {
-                setIsAutoPopulating(false);
-              }, 100);
+                setForm(prevForm => ({
+                  ...prevForm,
+                  state: userState || '',
+                  district: userDistrict || '',
+                  mandal: userMandal || '',
+                  village: userVillage || ''
+                }));
+                
+                console.log('✅ Location set in form');
+                
+                // Clear flag after everything is set
+                setTimeout(() => {
+                  setIsAutoPopulating(false);
+                }, 50);
+              }, 50);
             } else {
               console.log('❌ Address does not have 4 parts (village, mandal, district, state)');
             }
