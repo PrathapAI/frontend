@@ -52,6 +52,7 @@
   align-items: start;
   max-width: 100%;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* Ensure each listing card fits within its grid cell */
