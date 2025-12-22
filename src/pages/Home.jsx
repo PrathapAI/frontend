@@ -626,9 +626,8 @@ function Home() {
                   all categories
                 </div>
                 
-                {/* Category List - filtered by search */}
-                {categories.filter(cat => {
-                  if (!categorySearch) return true;
+                {/* Category List - only show when searching */}
+                {categorySearch && categories.filter(cat => {
                   return cat.CategoryName.toLowerCase().includes(categorySearch.toLowerCase());
                 }).map(cat => {
                   const isSelected = String(category) === String(cat.CategoryID);
@@ -912,9 +911,8 @@ function Home() {
                   </div>
                 )}
                 
-                {/* States */}
-                {[...new Set(locations.map(l => l.state))].filter(s => {
-                  if (!stateSearch) return true;
+                {/* States - only show when searching */}
+                {stateSearch && [...new Set(locations.map(l => l.state))].filter(s => {
                   return s.toLowerCase().includes(stateSearch.toLowerCase());
                 }).map(s => {
                   const isStateSelected = state === s;
@@ -956,8 +954,8 @@ function Home() {
                         {s}
                       </div>
                       
-                      {/* Districts - show only when state is selected */}
-                      {isStateSelected && stateDistricts.length > 0 && (
+                      {/* Districts - show only when state is selected and user is searching */}
+                      {isStateSelected && districtSearch && stateDistricts.length > 0 && (
                         <div style={{ paddingLeft: '16px', marginTop: '4px' }}>
                           {stateDistricts.map(d => {
                             const isDistrictSelected = district.includes(d);
@@ -994,8 +992,8 @@ function Home() {
                                   {d}
                                 </div>
                                 
-                                {/* Mandals */}
-                                {district.includes(d) && districtMandals.length > 0 && (
+                                {/* Mandals - show only when user is searching */}
+                                {district.includes(d) && mandalSearch && districtMandals.length > 0 && (
                                   <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
                                     {districtMandals.map(m => {
                                       const isMandalSelected = mandal.includes(m);
@@ -1032,8 +1030,8 @@ function Home() {
                                             {m}
                                           </div>
                                           
-                                          {/* Villages */}
-                                          {mandal.includes(m) && mandalVillages.length > 0 && (
+                                          {/* Villages - show only when user is searching */}
+                                          {mandal.includes(m) && villageSearch && mandalVillages.length > 0 && (
                                             <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
                                               {mandalVillages.map(v => {
                                                 const isVillageSelected = village.includes(v);

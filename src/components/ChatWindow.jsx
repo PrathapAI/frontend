@@ -165,12 +165,12 @@ function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
 const styles = {
   container: {
     position: 'fixed',
-    bottom: '20px',
+    bottom: '90px',
     left: '20px',
-    width: '350px',
+    width: '300px',
     maxWidth: '90vw',
-    height: '500px',
-    maxHeight: '70vh',
+    height: '400px',
+    maxHeight: '60vh',
     background: 'white',
     borderRadius: '12px',
     boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
@@ -190,7 +190,7 @@ const styles = {
   closeBtn: {
     background: 'transparent',
     border: 'none',
-    color: '#fff',
+    color: '#000',
     fontSize: '20px',
     cursor: 'pointer',
     padding: '4px 8px'
