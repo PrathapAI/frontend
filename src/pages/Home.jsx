@@ -779,6 +779,51 @@ function Home() {
                   </div>
                 </div>
 
+                {/* States Results - only show when searching */}
+                {stateSearch && (
+                  <div style={{ marginBottom: '16px' }}>
+                    {[...new Set(locations.map(l => l.state))].filter(s => {
+                      return s.toLowerCase().includes(stateSearch.toLowerCase());
+                    }).map(s => {
+                      const isStateSelected = state === s;
+                      return (
+                        <div
+                          key={s}
+                          onClick={() => {
+                            if (isStateSelected) {
+                              setState('');
+                              setDistrict([]);
+                              setMandal([]);
+                              setVillage([]);
+                            } else {
+                              setState(s);
+                              setDistrict([]);
+                              setMandal([]);
+                              setVillage([]);
+                            }
+                          }}
+                          style={{
+                            padding: '10px 12px',
+                            cursor: 'pointer',
+                            borderLeft: isStateSelected ? '3px solid var(--cred-accent)' : '3px solid transparent',
+                            background: isStateSelected ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
+                            fontWeight: isStateSelected ? '600' : '400',
+                            color: '#fff',
+                            transition: 'all 0.2s',
+                            borderRadius: '6px',
+                            textTransform: 'lowercase',
+                            marginBottom: '4px'
+                          }}
+                          onMouseEnter={(e) => !isStateSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                          onMouseLeave={(e) => !isStateSelected && (e.currentTarget.style.background = 'transparent')}
+                        >
+                          {s}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
                 {/* District Level Search - Only show when state is selected */}
                 {state && (
                   <div style={{ marginBottom: '12px' }}>
@@ -820,6 +865,46 @@ function Home() {
                         }}
                       />
                     </div>
+                  </div>
+                )}
+
+                {/* District Results - show only when state is selected and user is searching */}
+                {state && districtSearch && (
+                  <div style={{ marginBottom: '16px' }}>
+                    {[...new Set(locations.filter(l => l.state === state).map(l => l.district))].filter(d => {
+                      return d.toLowerCase().includes(districtSearch.toLowerCase());
+                    }).map(d => {
+                      const isDistrictSelected = district.includes(d);
+                      return (
+                        <div
+                          key={d}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (isDistrictSelected) {
+                              setDistrict(district.filter(item => item !== d));
+                            } else {
+                              setDistrict([...district, d]);
+                            }
+                          }}
+                          style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            background: isDistrictSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
+                            color: '#fff',
+                            fontSize: '13px',
+                            borderRadius: '6px',
+                            fontWeight: isDistrictSelected ? '600' : '400',
+                            transition: 'all 0.2s',
+                            textTransform: 'lowercase',
+                            marginBottom: '4px'
+                          }}
+                          onMouseEnter={(e) => !isDistrictSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                          onMouseLeave={(e) => !isDistrictSelected && (e.currentTarget.style.background = 'transparent')}
+                        >
+                          {d}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -867,6 +952,46 @@ function Home() {
                   </div>
                 )}
 
+                {/* Mandal Results - show only when districts are selected and user is searching */}
+                {state && district.length > 0 && mandalSearch && (
+                  <div style={{ marginBottom: '16px' }}>
+                    {[...new Set(locations.filter(l => l.state === state && district.includes(l.district)).map(l => l.mandal))].filter(m => {
+                      return m.toLowerCase().includes(mandalSearch.toLowerCase());
+                    }).map(m => {
+                      const isMandalSelected = mandal.includes(m);
+                      return (
+                        <div
+                          key={m}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (isMandalSelected) {
+                              setMandal(mandal.filter(item => item !== m));
+                            } else {
+                              setMandal([...mandal, m]);
+                            }
+                          }}
+                          style={{
+                            padding: '6px 10px',
+                            cursor: 'pointer',
+                            background: isMandalSelected ? 'rgba(0, 208, 156, 0.3)' : 'transparent',
+                            color: '#fff',
+                            fontSize: '12px',
+                            borderRadius: '6px',
+                            fontWeight: isMandalSelected ? '600' : '400',
+                            transition: 'all 0.2s',
+                            textTransform: 'lowercase',
+                            marginBottom: '4px'
+                          }}
+                          onMouseEnter={(e) => !isMandalSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                          onMouseLeave={(e) => !isMandalSelected && (e.currentTarget.style.background = 'transparent')}
+                        >
+                          {m}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
                 {/* Village Level Search - Only show when mandal is selected */}
                 {state && district.length > 0 && mandal.length > 0 && (
                   <div style={{ marginBottom: '12px' }}>
@@ -910,174 +1035,44 @@ function Home() {
                     </div>
                   </div>
                 )}
-                
-                {/* States - only show when searching */}
-                {stateSearch && [...new Set(locations.map(l => l.state))].filter(s => {
-                  return s.toLowerCase().includes(stateSearch.toLowerCase());
-                }).map(s => {
-                  const isStateSelected = state === s;
-                  const stateDistricts = [...new Set(locations.filter(l => l.state === s).map(l => l.district))].filter(d => {
-                    if (!districtSearch) return true;
-                    return d.toLowerCase().includes(districtSearch.toLowerCase());
-                  });
-                  
-                  return (
-                    <div key={s} style={{ marginBottom: '4px' }}>
-                      <div
-                        onClick={() => {
-                          if (isStateSelected) {
-                            setState('');
-                            setDistrict([]);
-                            setMandal([]);
-                            setVillage([]);
-                          } else {
-                            setState(s);
-                            setDistrict([]);
-                            setMandal([]);
-                            setVillage([]);
-                          }
-                        }}
-                        style={{
-                          padding: '10px 12px',
-                          cursor: 'pointer',
-                          borderLeft: isStateSelected ? '3px solid var(--cred-accent)' : '3px solid transparent',
-                          background: isStateSelected ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
-                          fontWeight: isStateSelected ? '600' : '400',
-                          color: '#fff',
-                          transition: 'all 0.2s',
-                          borderRadius: '6px',
-                          textTransform: 'lowercase'
-                        }}
-                        onMouseEnter={(e) => !isStateSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                        onMouseLeave={(e) => !isStateSelected && (e.currentTarget.style.background = 'transparent')}
-                      >
-                        {s}
-                      </div>
-                      
-                      {/* Districts - show only when state is selected and user is searching */}
-                      {isStateSelected && districtSearch && stateDistricts.length > 0 && (
-                        <div style={{ paddingLeft: '16px', marginTop: '4px' }}>
-                          {stateDistricts.map(d => {
-                            const isDistrictSelected = district.includes(d);
-                            const districtMandals = [...new Set(locations.filter(l => l.state === s && l.district === d).map(l => l.mandal))].filter(m => {
-                              if (!mandalSearch) return true;
-                              return m.toLowerCase().includes(mandalSearch.toLowerCase());
-                            });
-                            
-                            return (
-                              <div key={d} style={{ marginBottom: '2px' }}>
-                                <div
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (isDistrictSelected) {
-                                      setDistrict(district.filter(item => item !== d));
-                                    } else {
-                                      setDistrict([...district, d]);
-                                    }
-                                  }}
-                                  style={{
-                                    padding: '8px 12px',
-                                    cursor: 'pointer',
-                                    background: isDistrictSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
-                                    color: '#fff',
-                                    fontSize: '13px',
-                                    borderRadius: '6px',
-                                    fontWeight: isDistrictSelected ? '600' : '400',
-                                    transition: 'all 0.2s',
-                                    textTransform: 'lowercase'
-                                  }}
-                                  onMouseEnter={(e) => !isDistrictSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                                  onMouseLeave={(e) => !isDistrictSelected && (e.currentTarget.style.background = 'transparent')}
-                                >
-                                  {d}
-                                </div>
-                                
-                                {/* Mandals - show only when user is searching */}
-                                {district.includes(d) && mandalSearch && districtMandals.length > 0 && (
-                                  <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
-                                    {districtMandals.map(m => {
-                                      const isMandalSelected = mandal.includes(m);
-                                      const mandalVillages = [...new Set(locations.filter(l => l.state === s && l.district === d && l.mandal === m).map(l => l.village))].filter(v => {
-                                        if (!villageSearch) return true;
-                                        return v.toLowerCase().includes(villageSearch.toLowerCase());
-                                      });
-                                      
-                                      return (
-                                        <div key={m} style={{ marginBottom: '2px' }}>
-                                          <div
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              if (isMandalSelected) {
-                                                setMandal(mandal.filter(item => item !== m));
-                                              } else {
-                                                setMandal([...mandal, m]);
-                                              }
-                                            }}
-                                            style={{
-                                              padding: '6px 10px',
-                                              cursor: 'pointer',
-                                              background: isMandalSelected ? 'rgba(0, 208, 156, 0.3)' : 'transparent',
-                                              color: '#fff',
-                                              fontSize: '12px',
-                                              borderRadius: '6px',
-                                              fontWeight: isMandalSelected ? '600' : '400',
-                                              transition: 'all 0.2s',
-                                              textTransform: 'lowercase'
-                                            }}
-                                            onMouseEnter={(e) => !isMandalSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                                            onMouseLeave={(e) => !isMandalSelected && (e.currentTarget.style.background = 'transparent')}
-                                          >
-                                            {m}
-                                          </div>
-                                          
-                                          {/* Villages - show only when user is searching */}
-                                          {mandal.includes(m) && villageSearch && mandalVillages.length > 0 && (
-                                            <div style={{ paddingLeft: '16px', marginTop: '2px' }}>
-                                              {mandalVillages.map(v => {
-                                                const isVillageSelected = village.includes(v);
-                                                return (
-                                                  <div
-                                                    key={v}
-                                                    onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setVillage(isVillageSelected 
-                                                        ? village.filter(vil => vil !== v) 
-                                                        : [...village, v]
-                                                      );
-                                                    }}
-                                                    style={{
-                                                      padding: '6px 10px',
-                                                      cursor: 'pointer',
-                                                      background: isVillageSelected ? 'rgba(0, 208, 156, 0.4)' : 'transparent',
-                                                      color: '#fff',
-                                                      fontSize: '11px',
-                                                      borderRadius: '6px',
-                                                      marginBottom: '2px',
-                                                      transition: 'all 0.2s',
-                                                      textTransform: 'lowercase'
-                                                    }}
-                                                    onMouseEnter={(e) => !isVillageSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                                                    onMouseLeave={(e) => !isVillageSelected && (e.currentTarget.style.background = 'transparent')}
-                                                  >
-                                                    {v}
-                                                  </div>
-                                                );
-                                              })}
-                                            </div>
-                                          )}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
+
+                {/* Village Results - show only when mandals are selected and user is searching */}
+                {state && district.length > 0 && mandal.length > 0 && villageSearch && (
+                  <div style={{ marginBottom: '16px' }}>
+                    {[...new Set(locations.filter(l => l.state === state && district.includes(l.district) && mandal.includes(l.mandal)).map(l => l.village))].filter(v => {
+                      return v.toLowerCase().includes(villageSearch.toLowerCase());
+                    }).map(v => {
+                      const isVillageSelected = village.includes(v);
+                      return (
+                        <div
+                          key={v}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setVillage(isVillageSelected 
+                              ? village.filter(vil => vil !== v) 
+                              : [...village, v]
                             );
-                          })}
+                          }}
+                          style={{
+                            padding: '6px 10px',
+                            cursor: 'pointer',
+                            background: isVillageSelected ? 'rgba(0, 208, 156, 0.4)' : 'transparent',
+                            color: '#fff',
+                            fontSize: '11px',
+                            borderRadius: '6px',
+                            marginBottom: '4px',
+                            transition: 'all 0.2s',
+                            textTransform: 'lowercase'
+                          }}
+                          onMouseEnter={(e) => !isVillageSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+                          onMouseLeave={(e) => !isVillageSelected && (e.currentTarget.style.background = 'transparent')}
+                        >
+                          {v}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
           </div>
