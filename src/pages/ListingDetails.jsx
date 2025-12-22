@@ -5,6 +5,7 @@ import FavoriteButton from '../components/FavoriteButton';
 import ReviewSection from '../components/ReviewSection';
 import BackButton from '../components/BackButton';
 import useAndroidBackButton from '../hooks/useAndroidBackButton';
+import ChatWindow from '../components/ChatWindow';
 
 function ListingDetails() {
   // Sync with Android back button
@@ -15,6 +16,7 @@ function ListingDetails() {
   const [similarAds, setSimilarAds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showChat, setShowChat] = useState(false);
   
   // Get userId from token
   const token = localStorage.getItem('token');
@@ -192,11 +194,17 @@ function ListingDetails() {
                   boxShadow: '0 2px 8px rgba(255,152,0,0.3)',
                   transition: 'background 0.2s'
                 }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (!userId) {
                     alert('Login to chat');
                   } else {
-                    navigate('/messages');
+                    const recipientId = listing.User?.UserID || listing.owner?.UserID || listing.UserID;
+                    if (!recipientId) {
+                      alert('Owner information not available');
+                      return;
+                    }
+                    setShowChat(true);
                   }
                 }}
               >
@@ -300,6 +308,62 @@ function ListingDetails() {
           )}
         </main>
       </div>
+      
+      {/* Chat Window */}
+      {showChat && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{
+            background: '#fff',
+            borderRadius: '12px',
+            width: '100%',
+            maxWidth: '500px',
+            height: '80vh',
+            maxHeight: '600px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <button
+              onClick={() => setShowChat(false)}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                background: '#ff5252',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '30px',
+                height: '30px',
+                cursor: 'pointer',
+                zIndex: 10000,
+                fontSize: '18px',
+                fontWeight: 'bold'
+              }}
+            >
+              ×
+            </button>
+            <ChatWindow
+              recipientId={listing.User?.UserID || listing.owner?.UserID || listing.UserID}
+              recipientName={listing.owner?.name || listing.User?.name || listing.User?.Username || 'User'}
+              listingId={listing.ListingID}
+              listingTitle={listing.Title || listing.title}
+              onClose={() => setShowChat(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
