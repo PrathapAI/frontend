@@ -285,7 +285,7 @@ function Home() {
               borderRadius: '20px',
               cursor: 'pointer',
               textAlign: 'center',
-              fontSize: '13px',
+              fontSize: '8px',
               fontWeight: category === '' ? '700' : '500',
               color: category === '' ? '#000' : '#fff',
               transition: 'all 0.3s',
@@ -332,7 +332,7 @@ function Home() {
                   borderRadius: '20px',
                   cursor: 'pointer',
                   textAlign: 'center',
-                  fontSize: '13px',
+                  fontSize: '8px',
                   fontWeight: isSelected ? '700' : '500',
                   color: isSelected ? '#000' : '#fff',
                   transition: 'all 0.3s',
@@ -383,7 +383,7 @@ function Home() {
           justifyContent: 'center',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
-          color: '#000',
+          color: '#fff',
           fontSize: '20px',
           fontWeight: '600',
           transition: 'all 0.3s'
@@ -415,8 +415,8 @@ function Home() {
           gap: '6px',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
-          color: '#000',
-          fontSize: '12px',
+          color: '#fff',
+          fontSize: '8px',
           fontWeight: '600',
           transition: 'all 0.3s',
           whiteSpace: 'nowrap'
@@ -434,15 +434,15 @@ function Home() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            padding: '12px 16px',
+            padding: '8px 10px',
             borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            marginBottom: '8px'
+            marginBottom: '6px'
           }}>
             <h3 style={{
               margin: 0,
-              fontSize: '16px',
+              fontSize: '9px',
               fontWeight: '700',
-              color: '#000',
+              color: '#fff',
               textTransform: 'lowercase'
             }}>filters</h3>
             <button
@@ -450,17 +450,17 @@ function Home() {
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#000',
-                fontSize: '20px',
+                color: '#fff',
+                fontSize: '14px',
                 cursor: 'pointer',
-                padding: '4px 8px',
+                padding: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '4px',
                 transition: 'background 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.1)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             >
               <FaTimes />
@@ -473,16 +473,16 @@ function Home() {
               onClick={() => setExpandedAdType(!expandedAdType)}
               style={{
                 width: '100%',
-                padding: '14px 16px',
-                background: '#e8e8e8',
+                padding: '8px 10px',
+                background: 'rgba(0,0,0,0.3)',
                 border: 'none',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 cursor: 'pointer',
-                fontSize: '13px',
+                fontSize: '8px',
                 fontWeight: '700',
-                color: '#000',
+                color: '#fff',
                 textAlign: 'left',
                 textTransform: 'lowercase',
                 borderRadius: '8px',
@@ -490,7 +490,7 @@ function Home() {
               }}
             >
               <span>ad type</span>
-              <span style={{ color: '#000' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#fff' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedAdType && (
@@ -499,8 +499,8 @@ function Home() {
                 <div style={{ marginBottom: '12px' }}>
                   <label style={{ 
                     display: 'block', 
-                    fontSize: '11px', 
-                    color: '#333', 
+                    fontSize: '9px', 
+                    color: '#fff', 
                     marginBottom: '6px',
                     fontWeight: '500',
                     textTransform: 'lowercase'
@@ -513,8 +513,8 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: '#666',
-                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.7)',
+                      fontSize: '8px',
                       pointerEvents: 'none',
                       zIndex: 1
                     }} />
@@ -529,8 +529,8 @@ function Home() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
-                        color: '#000',
-                        fontSize: '12px',
+                        color: '#fff',
+                        fontSize: '8px',
                         outline: 'none'
                       }}
                     />
@@ -576,16 +576,16 @@ function Home() {
               onClick={() => setExpandedCategory(!expandedCategory)}
               style={{
                 width: '100%',
-                padding: '14px 16px',
-                background: '#e8e8e8',
+                padding: '8px 10px',
+                background: 'rgba(0,0,0,0.3)',
                 border: 'none',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 cursor: 'pointer',
-                fontSize: '13px',
+                fontSize: '8px',
                 fontWeight: '700',
-                color: '#000',
+                color: '#fff',
                 textAlign: 'left',
                 textTransform: 'lowercase',
                 borderRadius: '8px',
@@ -593,7 +593,7 @@ function Home() {
               }}
             >
               <span>categories</span>
-              <span style={{ color: '#000' }}>{expandedCategory ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#fff' }}>{expandedCategory ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedCategory && (
@@ -602,8 +602,8 @@ function Home() {
                 <div style={{ marginBottom: '12px' }}>
                   <label style={{ 
                     display: 'block', 
-                    fontSize: '11px', 
-                    color: '#333', 
+                    fontSize: '9px', 
+                    color: '#fff', 
                     marginBottom: '6px',
                     fontWeight: '500',
                     textTransform: 'lowercase'
@@ -616,8 +616,8 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: '#666',
-                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.7)',
+                      fontSize: '8px',
                       pointerEvents: 'none',
                       zIndex: 1
                     }} />
@@ -632,8 +632,8 @@ function Home() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
-                        color: '#000',
-                        fontSize: '12px',
+                        color: '#fff',
+                        fontSize: '8px',
                         outline: 'none'
                       }}
                     />
@@ -702,7 +702,7 @@ function Home() {
                       >
                         <span style={{ color: '#fff' }}>{cat.CategoryName}</span>
                         {isSelected && categorySubcategories.length > 0 && (
-                          <span style={{ fontSize: '12px', color: '#bbb' }}>
+                          <span style={{ fontSize: '8px', color: '#bbb' }}>
                             ({categorySubcategories.length})
                           </span>
                         )}
@@ -725,7 +725,7 @@ function Home() {
                                   cursor: 'pointer',
                                   background: isSubSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
                                   color: '#fff',
-                                  fontSize: '13px',
+                                  fontSize: '8px',
                                   borderRadius: '6px',
                                   marginBottom: '2px',
                                   transition: 'all 0.2s',
@@ -753,16 +753,16 @@ function Home() {
               onClick={() => setExpandedLocation(!expandedLocation)}
               style={{
                 width: '100%',
-                padding: '14px 16px',
-                background: '#e8e8e8',
+                padding: '8px 10px',
+                background: 'rgba(0,0,0,0.3)',
                 border: 'none',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 cursor: 'pointer',
-                fontSize: '13px',
+                fontSize: '8px',
                 fontWeight: '700',
-                color: '#000',
+                color: '#fff',
                 textAlign: 'left',
                 textTransform: 'lowercase',
                 borderRadius: '8px',
@@ -770,7 +770,7 @@ function Home() {
               }}
             >
               <span>locations</span>
-              <span style={{ color: '#000' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#fff' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedLocation && (
@@ -780,8 +780,8 @@ function Home() {
                 <div style={{ marginBottom: '12px' }}>
                   <label style={{ 
                     display: 'block', 
-                    fontSize: '11px', 
-                    color: '#333', 
+                    fontSize: '9px', 
+                    color: '#fff', 
                     marginBottom: '6px',
                     fontWeight: '500',
                     textTransform: 'lowercase'
@@ -794,8 +794,8 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: '#666',
-                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.7)',
+                      fontSize: '8px',
                       pointerEvents: 'none',
                       zIndex: 1
                     }} />
@@ -810,8 +810,8 @@ function Home() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
-                        color: '#000',
-                        fontSize: '12px',
+                        color: '#fff',
+                        fontSize: '8px',
                         outline: 'none'
                       }}
                     />
@@ -870,8 +870,8 @@ function Home() {
                   <div style={{ marginBottom: '12px' }}>
                     <label style={{ 
                       display: 'block', 
-                      fontSize: '11px', 
-                      color: '#333', 
+                      fontSize: '9px', 
+                      color: '#fff', 
                       marginBottom: '6px',
                       fontWeight: '500',
                       textTransform: 'lowercase'
@@ -884,8 +884,8 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '#666',
-                        fontSize: '12px',
+                        color: 'rgba(255,255,255,0.7)',
+                        fontSize: '8px',
                         pointerEvents: 'none',
                         zIndex: 1
                       }} />
@@ -900,8 +900,8 @@ function Home() {
                           background: 'rgba(255, 255, 255, 0.9)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: '8px',
-                          color: '#000',
-                          fontSize: '12px',
+                          color: '#fff',
+                          fontSize: '8px',
                           outline: 'none'
                         }}
                       />
@@ -933,7 +933,7 @@ function Home() {
                             cursor: 'pointer',
                             background: isDistrictSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
                             color: '#fff',
-                            fontSize: '13px',
+                            fontSize: '8px',
                             borderRadius: '6px',
                             fontWeight: isDistrictSelected ? '600' : '400',
                             transition: 'all 0.2s',
@@ -955,8 +955,8 @@ function Home() {
                   <div style={{ marginBottom: '12px' }}>
                     <label style={{ 
                       display: 'block', 
-                      fontSize: '11px', 
-                      color: '#333', 
+                      fontSize: '9px', 
+                      color: '#fff', 
                       marginBottom: '6px',
                       fontWeight: '500',
                       textTransform: 'lowercase'
@@ -969,8 +969,8 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '#666',
-                        fontSize: '12px',
+                        color: 'rgba(255,255,255,0.7)',
+                        fontSize: '8px',
                         pointerEvents: 'none',
                         zIndex: 1
                       }} />
@@ -985,8 +985,8 @@ function Home() {
                           background: 'rgba(255, 255, 255, 0.9)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: '8px',
-                          color: '#000',
-                          fontSize: '12px',
+                          color: '#fff',
+                          fontSize: '8px',
                           outline: 'none'
                         }}
                       />
@@ -1018,7 +1018,7 @@ function Home() {
                             cursor: 'pointer',
                             background: isMandalSelected ? 'rgba(0, 208, 156, 0.3)' : 'transparent',
                             color: '#fff',
-                            fontSize: '12px',
+                            fontSize: '8px',
                             borderRadius: '6px',
                             fontWeight: isMandalSelected ? '600' : '400',
                             transition: 'all 0.2s',
@@ -1040,8 +1040,8 @@ function Home() {
                   <div style={{ marginBottom: '12px' }}>
                     <label style={{ 
                       display: 'block', 
-                      fontSize: '11px', 
-                      color: '#333', 
+                      fontSize: '9px', 
+                      color: '#fff', 
                       marginBottom: '6px',
                       fontWeight: '500',
                       textTransform: 'lowercase'
@@ -1054,8 +1054,8 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '#666',
-                        fontSize: '12px',
+                        color: 'rgba(255,255,255,0.7)',
+                        fontSize: '8px',
                         pointerEvents: 'none',
                         zIndex: 1
                       }} />
@@ -1070,8 +1070,8 @@ function Home() {
                           background: 'rgba(255, 255, 255, 0.9)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: '8px',
-                          color: '#000',
-                          fontSize: '12px',
+                          color: '#fff',
+                          fontSize: '8px',
                           outline: 'none'
                         }}
                       />
@@ -1101,7 +1101,7 @@ function Home() {
                             cursor: 'pointer',
                             background: isVillageSelected ? 'rgba(0, 208, 156, 0.4)' : 'transparent',
                             color: '#fff',
-                            fontSize: '11px',
+                            fontSize: '9px',
                             borderRadius: '6px',
                             marginBottom: '4px',
                             transition: 'all 0.2s',
@@ -1124,8 +1124,8 @@ function Home() {
           {state && (
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
-                fontSize: '11px', 
-                color: '#333', 
+                fontSize: '9px', 
+                color: '#fff', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1137,7 +1137,7 @@ function Home() {
                   color: '#fff',
                   padding: '4px 8px',
                   borderRadius: '6px',
-                  fontSize: '10px',
+                  fontSize: '8px',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px'
@@ -1166,8 +1166,8 @@ function Home() {
           {district.length > 0 && (
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
-                fontSize: '11px', 
-                color: '#333', 
+                fontSize: '9px', 
+                color: '#fff', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1186,7 +1186,7 @@ function Home() {
                       color: '#fff',
                       padding: '4px 8px',
                       borderRadius: '6px',
-                      fontSize: '10px',
+                      fontSize: '8px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px'
@@ -1212,8 +1212,8 @@ function Home() {
           {mandal.length > 0 && (
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
-                fontSize: '11px', 
-                color: '#333', 
+                fontSize: '9px', 
+                color: '#fff', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1232,7 +1232,7 @@ function Home() {
                       color: '#fff',
                       padding: '4px 8px',
                       borderRadius: '6px',
-                      fontSize: '10px',
+                      fontSize: '8px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px'
@@ -1258,8 +1258,8 @@ function Home() {
           {village.length > 0 && (
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
-                fontSize: '11px', 
-                color: '#333', 
+                fontSize: '9px', 
+                color: '#fff', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1278,7 +1278,7 @@ function Home() {
                       color: '#fff',
                       padding: '4px 8px',
                       borderRadius: '6px',
-                      fontSize: '10px',
+                      fontSize: '8px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px'
@@ -1380,4 +1380,5 @@ function Home() {
 }
 
 export default Home;
+
 
