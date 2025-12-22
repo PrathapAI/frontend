@@ -127,7 +127,8 @@
   /* Mobile Filter Toggle Button - Show only on mobile */
   .mobile-filter-toggle {
     display: flex !important;
-    top: 220px !important;
+    right: 12px !important;
+    bottom: 80px !important;
   }
   
   .mobile-filter-toggle:active {

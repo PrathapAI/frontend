@@ -87,8 +87,9 @@ function BottomNav() {
           </Link>
 
           <button 
-            onClick={() => {
-              const event = new Event('toggleMobileMenu');
+            onClick={(e) => {
+              e.preventDefault();
+              const event = new CustomEvent('toggleMobileMenu');
               window.dispatchEvent(event);
             }}
             style={{

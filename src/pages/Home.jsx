@@ -370,28 +370,26 @@ function Home() {
         }}
         style={{
           position: 'fixed',
-          left: '12px',
-          top: '220px',
+          right: '12px',
+          bottom: '80px',
           zIndex: 1000,
           background: showFilters ? '#ff4444' : 'var(--cred-accent)',
           border: 'none',
-          borderRadius: '20px',
-          padding: '10px 16px',
+          borderRadius: '50%',
+          width: '56px',
+          height: '56px',
           display: 'none',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '6px',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0, 208, 156, 0.4)',
           color: '#000',
-          fontSize: '12px',
+          fontSize: '20px',
           fontWeight: '600',
-          transition: 'all 0.3s',
-          whiteSpace: 'nowrap'
+          transition: 'all 0.3s'
         }}
       >
         {showFilters ? <FaTimes /> : <FaSlidersH />}
-        <span>{showFilters ? 'Close' : 'Filters'}</span>
       </button>
 
       {/* Mobile Hamburger Menu Button - at filter level */}
