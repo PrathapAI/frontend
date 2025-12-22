@@ -72,16 +72,26 @@ function CreateListing() {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('JWT payload:', payload);
+        console.log('=== CREATELISTING JWT PAYLOAD ===');
+        console.log('Full payload:', payload);
+        console.log('Address field:', payload.address);
+        console.log('Address type:', typeof payload.address);
+        console.log('================================');
         
-        if (payload.address) {
+        if (payload.address && typeof payload.address === 'string') {
           // Parse address format: "village, mandal, district, state"
           const addressParts = payload.address.split(',').map(part => part.trim());
-          console.log('Address parts:', addressParts);
+          console.log('Address parts after split:', addressParts);
+          console.log('Number of parts:', addressParts.length);
           
           if (addressParts.length >= 4) {
             const [userVillage, userMandal, userDistrict, userState] = addressParts;
-            console.log('Setting location:', { userState, userDistrict, userMandal, userVillage });
+            console.log('Parsed location:', { 
+              village: userVillage, 
+              mandal: userMandal, 
+              district: userDistrict, 
+              state: userState 
+            });
             
             setForm(prevForm => ({
               ...prevForm,
@@ -90,11 +100,18 @@ function CreateListing() {
               mandal: userMandal || '',
               village: userVillage || ''
             }));
+            console.log('✅ Location set in form');
+          } else {
+            console.log('❌ Address does not have 4 parts (village, mandal, district, state)');
           }
+        } else {
+          console.log('❌ No address in JWT token or invalid format');
         }
       } catch (err) {
-        console.error('Error parsing user address from token:', err);
+        console.error('❌ Error parsing user address from token:', err);
       }
+    } else {
+      console.log('❌ No JWT token found in localStorage');
     }
   }, []);
 
