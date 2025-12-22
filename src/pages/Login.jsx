@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import { FaSignInAlt, FaLock, FaPhone, FaKey, FaEnvelope } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
 function Login() {
+  // Sync with Android back button
+  useAndroidBackButton();
   const [form, setForm] = useState({ phone: '', password: '' });
   const [error, setError] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -271,6 +275,7 @@ function Login() {
 
   return (
     <div className="cred-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <BackButton />
       <div className="animate-fade-in-up" style={{
         maxWidth: '480px',
         width: '100%',

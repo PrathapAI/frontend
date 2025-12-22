@@ -28,9 +28,14 @@ function Home() {
     return saved ? JSON.parse(saved) : [];
   });
   const [listingType, setListingType] = useState(() => localStorage.getItem('filter_listingType') || '');
+  const [userLocationSet, setUserLocationSet] = useState(false);
   
   // Location search state
   const [locationSearch, setLocationSearch] = useState('');
+  const [stateSearch, setStateSearch] = useState('');
+  const [districtSearch, setDistrictSearch] = useState('');
+  const [mandalSearch, setMandalSearch] = useState('');
+  const [villageSearch, setVillageSearch] = useState('');
   
   // Accordion state
   const [expandedCategory, setExpandedCategory] = useState(true);
@@ -109,7 +114,33 @@ function Home() {
     API.get('/crud/subcategories').then(res => {
       setSubcategories(res.data);
     });
-  }, []);
+
+    // Set user location as default if logged in and not already set
+    const token = localStorage.getItem('token');
+    if (token && !userLocationSet) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.address) {
+          // Parse address format: "village, mandal, district, state"
+          const addressParts = payload.address.split(',').map(part => part.trim());
+          if (addressParts.length >= 4) {
+            const [userVillage, userMandal, userDistrict, userState] = addressParts;
+            
+            // Only set if filters are not already set
+            if (!state && !district.length && !mandal.length && !village.length) {
+              setState(userState);
+              setDistrict([userDistrict]);
+              setMandal([userMandal]);
+              setVillage([userVillage]);
+              setUserLocationSet(true);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error parsing user address:', err);
+      }
+    }
+  }, [userLocationSet, state, district, mandal, village]);
 
   // Fetch subcategories for selected category
   useEffect(() => {
@@ -173,13 +204,27 @@ function Home() {
     return true;
   });
 
+  // Get dynamic banner text based on mandal selection
+  const getBannerText = () => {
+    if (mandal.length === 1) {
+      return `${mandal[0]} Online`;
+    } else if (mandal.length > 1) {
+      return `${mandal[0]} & More Online`;
+    } else if (district.length === 1) {
+      return `${district[0]} Online`;
+    } else if (state) {
+      return `${state} Online`;
+    }
+    return 'discover listings.';
+  };
+
   return (
     <div className="cred-page" style={{ paddingTop: '100px' }}>
       {/* Header */}
       <div style={{ 
         textAlign: 'center', 
-        marginBottom: '40px',
-        paddingBottom: '24px',
+        marginBottom: '20px',
+        paddingBottom: '12px',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
         <div style={{ 
@@ -199,8 +244,117 @@ function Home() {
           backgroundClip: 'text',
           textTransform: 'lowercase'
         }}>
-          discover listings.
+          {getBannerText()}
         </h1>
+      </div>
+
+      {/* Horizontal Scrolling Category Menu - Flipkart Style */}
+      <div style={{
+        marginBottom: '24px',
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        padding: '0 0 12px 0'
+      }}>
+        <style>{`
+          .category-scroll-container::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+        <div className="category-scroll-container" style={{
+          display: 'flex',
+          gap: '12px',
+          padding: '0 8px',
+          minWidth: 'min-content'
+        }}>
+          {/* All Categories Chip */}
+          <div
+            onClick={() => {
+              setCategory('');
+              setSubcategory('');
+            }}
+            style={{
+              minWidth: '100px',
+              padding: '12px 20px',
+              background: category === '' ? 'var(--cred-accent)' : 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '20px',
+              cursor: 'pointer',
+              textAlign: 'center',
+              fontSize: '13px',
+              fontWeight: category === '' ? '700' : '500',
+              color: category === '' ? '#000' : '#fff',
+              transition: 'all 0.3s',
+              border: category === '' ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
+              whiteSpace: 'nowrap',
+              textTransform: 'lowercase',
+              boxShadow: category === '' ? '0 4px 12px rgba(0, 208, 156, 0.3)' : 'none'
+            }}
+            onMouseEnter={(e) => {
+              if (category !== '') {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (category !== '') {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }
+            }}
+          >
+            All Categories
+          </div>
+
+          {/* Category Chips */}
+          {categories.map(cat => {
+            const isSelected = String(category) === String(cat.CategoryID);
+            return (
+              <div
+                key={cat.CategoryID}
+                onClick={() => {
+                  if (isSelected) {
+                    setCategory('');
+                    setSubcategory('');
+                  } else {
+                    setCategory(cat.CategoryID);
+                    setSubcategory('');
+                  }
+                }}
+                style={{
+                  minWidth: '120px',
+                  padding: '12px 20px',
+                  background: isSelected ? 'var(--cred-accent)' : 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  fontSize: '13px',
+                  fontWeight: isSelected ? '700' : '500',
+                  color: isSelected ? '#000' : '#fff',
+                  transition: 'all 0.3s',
+                  border: isSelected ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
+                  whiteSpace: 'nowrap',
+                  textTransform: 'lowercase',
+                  boxShadow: isSelected ? '0 4px 12px rgba(0, 208, 156, 0.3)' : 'none'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
+              >
+                {cat.CategoryName}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Mobile Filter Toggle Button */}
@@ -213,7 +367,7 @@ function Home() {
         style={{
           position: 'fixed',
           left: '12px',
-          top: '120px',
+          top: '160px', // Moved down to filter level
           zIndex: 1000,
           background: showFilters ? '#ff4444' : 'var(--cred-accent)',
           border: 'none',
@@ -267,7 +421,7 @@ function Home() {
             
             {expandedAdType && (
               <div style={{ padding: '0 20px 16px' }}>
-                {['All', 'Resell', 'Business Offers', 'Business Campaign'].map(type => {
+                {['All', 'Resell', 'Business Offers', 'Business Campaign', 'New Sale'].map(type => {
                   const isSelected = listingType === type || (type === 'All' && !listingType);
                   return (
                     <div
@@ -457,65 +611,189 @@ function Home() {
             
             {expandedLocation && (
               <div style={{ padding: '0 20px 16px' }}>
-                {/* Location Search */}
-                <div style={{ marginBottom: '12px', position: 'relative' }}>
-                  <FaSearch style={{
-                    position: 'absolute',
-                    left: '12px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'rgba(255, 255, 255, 0.4)',
-                    fontSize: '14px',
-                    pointerEvents: 'none',
-                    zIndex: 1
-                  }} />
-                  <input
-                    type="text"
-                    placeholder="search by district, mandal, or village..."
-                    value={locationSearch}
-                    onChange={(e) => setLocationSearch(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px 10px 38px',
-                      background: 'rgba(255, 255, 255, 0.9)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '8px',
-                      color: '#000',
-                      fontSize: '13px',
-                      outline: 'none',
-                      position: 'relative',
-                      zIndex: 0
-                    }}
-                  />
+                {/* State Level Search */}
+                <div style={{ marginBottom: '12px' }}>
+                  <label style={{ 
+                    display: 'block', 
+                    fontSize: '11px', 
+                    color: 'rgba(255, 255, 255, 0.6)', 
+                    marginBottom: '6px',
+                    fontWeight: '500',
+                    textTransform: 'lowercase'
+                  }}>
+                    search state:
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <FaSearch style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      fontSize: '12px',
+                      pointerEvents: 'none',
+                      zIndex: 1
+                    }} />
+                    <input
+                      type="text"
+                      placeholder="type state name..."
+                      value={stateSearch}
+                      onChange={(e) => setStateSearch(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px 8px 36px',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px',
+                        color: '#000',
+                        fontSize: '12px',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
                 </div>
+
+                {/* District Level Search - Only show when state is selected */}
+                {state && (
+                  <div style={{ marginBottom: '12px' }}>
+                    <label style={{ 
+                      display: 'block', 
+                      fontSize: '11px', 
+                      color: 'rgba(255, 255, 255, 0.6)', 
+                      marginBottom: '6px',
+                      fontWeight: '500',
+                      textTransform: 'lowercase'
+                    }}>
+                      search district:
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                      <FaSearch style={{
+                        position: 'absolute',
+                        left: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        fontSize: '12px',
+                        pointerEvents: 'none',
+                        zIndex: 1
+                      }} />
+                      <input
+                        type="text"
+                        placeholder="type district name..."
+                        value={districtSearch}
+                        onChange={(e) => setDistrictSearch(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px 8px 36px',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '8px',
+                          color: '#000',
+                          fontSize: '12px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Mandal Level Search - Only show when district is selected */}
+                {state && district.length > 0 && (
+                  <div style={{ marginBottom: '12px' }}>
+                    <label style={{ 
+                      display: 'block', 
+                      fontSize: '11px', 
+                      color: 'rgba(255, 255, 255, 0.6)', 
+                      marginBottom: '6px',
+                      fontWeight: '500',
+                      textTransform: 'lowercase'
+                    }}>
+                      search mandal:
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                      <FaSearch style={{
+                        position: 'absolute',
+                        left: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        fontSize: '12px',
+                        pointerEvents: 'none',
+                        zIndex: 1
+                      }} />
+                      <input
+                        type="text"
+                        placeholder="type mandal name..."
+                        value={mandalSearch}
+                        onChange={(e) => setMandalSearch(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px 8px 36px',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '8px',
+                          color: '#000',
+                          fontSize: '12px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Village Level Search - Only show when mandal is selected */}
+                {state && district.length > 0 && mandal.length > 0 && (
+                  <div style={{ marginBottom: '12px' }}>
+                    <label style={{ 
+                      display: 'block', 
+                      fontSize: '11px', 
+                      color: 'rgba(255, 255, 255, 0.6)', 
+                      marginBottom: '6px',
+                      fontWeight: '500',
+                      textTransform: 'lowercase'
+                    }}>
+                      search village:
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                      <FaSearch style={{
+                        position: 'absolute',
+                        left: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: 'rgba(255, 255, 255, 0.4)',
+                        fontSize: '12px',
+                        pointerEvents: 'none',
+                        zIndex: 1
+                      }} />
+                      <input
+                        type="text"
+                        placeholder="type village name..."
+                        value={villageSearch}
+                        onChange={(e) => setVillageSearch(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px 8px 36px',
+                          background: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '8px',
+                          color: '#000',
+                          fontSize: '12px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
                 
                 {/* States */}
                 {[...new Set(locations.map(l => l.state))].filter(s => {
-                  if (!locationSearch) return true;
-                  const search = locationSearch.toLowerCase();
-                  // Check if state name matches
-                  if (s.toLowerCase().includes(search)) return true;
-                  // Check if any district/mandal/village in this state matches
-                  return locations.some(l => 
-                    l.state === s && (
-                      l.district.toLowerCase().includes(search) ||
-                      l.mandal.toLowerCase().includes(search) ||
-                      l.village.toLowerCase().includes(search)
-                    )
-                  );
+                  if (!stateSearch) return true;
+                  return s.toLowerCase().includes(stateSearch.toLowerCase());
                 }).map(s => {
                   const isStateSelected = state === s;
                   const stateDistricts = [...new Set(locations.filter(l => l.state === s).map(l => l.district))].filter(d => {
-                    if (!locationSearch) return true;
-                    const search = locationSearch.toLowerCase();
-                    // Check if district matches or any mandal/village in district matches
-                    if (d.toLowerCase().includes(search)) return true;
-                    return locations.some(l =>
-                      l.state === s && l.district === d && (
-                        l.mandal.toLowerCase().includes(search) ||
-                        l.village.toLowerCase().includes(search)
-                      )
-                    );
+                    if (!districtSearch) return true;
+                    return d.toLowerCase().includes(districtSearch.toLowerCase());
                   });
                   
                   return (
@@ -557,11 +835,9 @@ function Home() {
                           {stateDistricts.map(d => {
                             const isDistrictSelected = district.includes(d);
                             const districtMandals = [...new Set(locations.filter(l => l.state === s && l.district === d).map(l => l.mandal))].filter(m => {
-                              if (!locationSearch) return true;
-                              const search = locationSearch.toLowerCase();
-                              // Check if mandal matches or any village in mandal matches
-                              if (m.toLowerCase().includes(search)) return true;
-                              return locations.some(l =>
+                              if (!mandalSearch) return true;
+                              return m.toLowerCase().includes(mandalSearch.toLowerCase());
+                            });
                                 l.state === s && l.district === d && l.mandal === m &&
                                 l.village.toLowerCase().includes(search)
                               );
@@ -601,8 +877,8 @@ function Home() {
                                     {districtMandals.map(m => {
                                       const isMandalSelected = mandal.includes(m);
                                       const mandalVillages = [...new Set(locations.filter(l => l.state === s && l.district === d && l.mandal === m).map(l => l.village))].filter(v => {
-                                        if (!locationSearch) return true;
-                                        return v.toLowerCase().includes(locationSearch.toLowerCase());
+                                        if (!villageSearch) return true;
+                                        return v.toLowerCase().includes(villageSearch.toLowerCase());
                                       });
                                       
                                       return (
@@ -837,6 +1113,10 @@ function Home() {
                 setVillage([]);
                 setListingType('');
                 setLocationSearch('');
+                setStateSearch('');
+                setDistrictSearch('');
+                setMandalSearch('');
+                setVillageSearch('');
                 localStorage.removeItem('filter_category');
                 localStorage.removeItem('filter_subcategory');
                 localStorage.removeItem('filter_state');

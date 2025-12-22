@@ -3,8 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import FavoriteButton from '../components/FavoriteButton';
 import ReviewSection from '../components/ReviewSection';
+import BackButton from '../components/BackButton';
+import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
 function ListingDetails() {
+  // Sync with Android back button
+  useAndroidBackButton();
   const { id } = useParams();
   const navigate = useNavigate();
   const [listing, setListing] = useState(null);
@@ -44,6 +48,7 @@ function ListingDetails() {
 
   return (
     <div className="page-bg-blue-accent" style={{ paddingTop: '100px' }}>
+      <BackButton />
       <div className="home-main-container">
         <main className="home-listings-content" style={{ maxWidth: 900, margin: '0 auto', padding: 32 }}>
           <h2 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 700, marginBottom: 16 }}>{listing.title || listing.Title || 'No Title'}</h2>

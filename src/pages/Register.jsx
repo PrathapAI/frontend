@@ -4,8 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import axios from 'axios';
 import { FaUserPlus, FaUser, FaEnvelope, FaPhone, FaLock, FaMapMarkerAlt } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
 function Register() {
+  // Sync with Android back button
+  useAndroidBackButton();
   const [form, setForm] = useState({ 
     username: '', 
     name: '', 
@@ -41,6 +45,16 @@ function Register() {
   const [otp, setOtp] = useState('');
   const [generatedOtp, setGeneratedOtp] = useState('');
   const [otpVerified, setOtpVerified] = useState(false);
+  
+  // Password strength states
+  const [passwordStrength, setPasswordStrength] = useState({
+    hasMinLength: false,
+    hasUpperCase: false,
+    hasLowerCase: false,
+    hasNumber: false,
+    hasSpecialChar: false
+  });
+  const [showPasswordGuidelines, setShowPasswordGuidelines] = useState(false);
 
   // Fetch locations on mount
   useEffect(() => {
@@ -181,6 +195,17 @@ function Register() {
     }
   };
 
+  // Check password strength on change
+  const checkPasswordStrength = (password) => {
+    setPasswordStrength({
+      hasMinLength: password.length >= 8,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasLowerCase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -206,8 +231,11 @@ function Register() {
       return;
     }
 
-    if (form.password.length < 6) {
-      setError('password must be at least 6 characters');
+    // Strong password validation
+    if (!passwordStrength.hasMinLength || !passwordStrength.hasUpperCase || 
+        !passwordStrength.hasLowerCase || !passwordStrength.hasNumber || 
+        !passwordStrength.hasSpecialChar) {
+      setError('password must meet all security requirements');
       return;
     }
 
@@ -270,7 +298,8 @@ function Register() {
         </div>
       </div>
     );
-  }
+  }BackButton />
+      <
 
   return (
     <div className="cred-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '140px 20px 40px' }}>
@@ -562,13 +591,113 @@ function Register() {
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
-                  fontWeight: '600',
-                  textTransform: 'lowercase',
-                  marginTop: '-12px',
-                  marginBottom: '12px'
+                  fontWeight:create strong password"
+                value={form.password}
+                onChange={e => {
+                  setForm({ ...form, password: e.target.value });
+                  checkPasswordStrength(e.target.value);
                 }}
-              >
-                + add new village
+                onFocus={() => setShowPasswordGuidelines(true)}
+                onBlur={() => setTimeout(() => setShowPasswordGuidelines(false), 200)}
+                className="cred-input"
+                style={{ paddingLeft: '50px' }}
+              />
+            </div>
+
+            {/* Password Strength Guidelines */}
+            {showPasswordGuidelines && (
+              <div style={{
+                padding: '16px',
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '12px',
+                marginTop: '-12px',
+                marginBottom: '12px',
+                border: '2px solid var(--cred-accent)',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+              }}>
+                <h4 style={{ 
+                  margin: '0 0 12px 0', 
+                  color: '#000', 
+                  fontSize: '13px', 
+                  fontWeight: '700',
+                  textTransform: 'lowercase'
+                }}>
+                  password requirements:
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    fontSize: '12px'
+                  }}>
+                    <span style={{ 
+                      color: passwordStrength.hasMinLength ? '#27ae60' : '#e74c3c',
+                      fontWeight: 'bold'
+                    }}>
+                      {passwordStrength.hasMinLength ? '✓' : '✗'}
+                    </span>
+                    <span style={{ color: '#333' }}>At least 8 characters</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    fontSize: '12px'
+                  }}>
+                    <span style={{ 
+                      color: passwordStrength.hasUpperCase ? '#27ae60' : '#e74c3c',
+                      fontWeight: 'bold'
+                    }}>
+                      {passwordStrength.hasUpperCase ? '✓' : '✗'}
+                    </span>
+                    <span style={{ color: '#333' }}>One uppercase letter (A-Z)</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    fontSize: '12px'
+                  }}>
+                    <span style={{ 
+                      color: passwordStrength.hasLowerCase ? '#27ae60' : '#e74c3c',
+                      fontWeight: 'bold'
+                    }}>
+                      {passwordStrength.hasLowerCase ? '✓' : '✗'}
+                    </span>
+                    <span style={{ color: '#333' }}>One lowercase letter (a-z)</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    fontSize: '12px'
+                  }}>
+                    <span style={{ 
+                      color: passwordStrength.hasNumber ? '#27ae60' : '#e74c3c',
+                      fontWeight: 'bold'
+                    }}>
+                      {passwordStrength.hasNumber ? '✓' : '✗'}
+                    </span>
+                    <span style={{ color: '#333' }}>One number (0-9)</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    fontSize: '12px'
+                  }}>
+                    <span style={{ 
+                      color: passwordStrength.hasSpecialChar ? '#27ae60' : '#e74c3c',
+                      fontWeight: 'bold'
+                    }}>
+                      {passwordStrength.hasSpecialChar ? '✓' : '✗'}
+                    </span>
+                    <span style={{ color: '#333' }}>One special character (!@#$%^&*)</span>
+                  </div>
+                </div>
+              </div>
+            )}add new village
               </button>
             )}
 

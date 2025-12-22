@@ -3,8 +3,12 @@ import { messagesAPI } from '../services/features';
 import { useNavigate } from 'react-router-dom';
 import ChatWindow from '../components/ChatWindow';
 import { FaEnvelope, FaEnvelopeOpen, FaComments } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
 function Messages() {
+  // Sync with Android back button
+  useAndroidBackButton();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChat, setSelectedChat] = useState(null);
@@ -99,6 +103,7 @@ function Messages() {
 
   return (
     <div className="cred-page" style={{ paddingTop: '100px', minHeight: '100vh' }}>
+      <BackButton />
       <div className="cred-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
         {/* Page Header */}
         <div style={{ 

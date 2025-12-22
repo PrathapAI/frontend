@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import API from '../services/api';
 import ListingCard from '../components/ListingCard';
 import { FaList } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
 function MyListings() {
+  // Sync with Android back button
+  useAndroidBackButton();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -72,6 +76,7 @@ function MyListings() {
 
   return (
     <div className="cred-page" style={{ paddingTop: '100px', minHeight: '100vh' }}>
+      <BackButton />
       <div className="cred-container">
         {/* Page Header */}
         <div style={{ 

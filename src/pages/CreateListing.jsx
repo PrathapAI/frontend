@@ -7,8 +7,12 @@ import '../form-theme.css';
 import '../home-theme.css';
 import '../form-button.css';
 import { FaPlusCircle } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
 function CreateListing() {
+  // Sync with Android back button
+  useAndroidBackButton();
   const [form, setForm] = useState({
     listingType: '',
     title: '',
@@ -243,7 +247,7 @@ function CreateListing() {
       alert('Please select a category.');
       return;
     }
-    if ((form.listingType === 'Resell' || form.listingType === 'Business Promotions' || form.listingType === 'Business Offers') && !form.price) {
+    if ((form.listingType === 'Resell' || form.listingType === 'Business Promotions' || form.listingType === 'Business Offers' || form.listingType === 'New Sale') && !form.price) {
       alert('Please enter a price or offer percentage.');
       return;
     }
@@ -265,7 +269,7 @@ function CreateListing() {
         Listing_Type: form.listingType,
         Title: form.title,
         Description: form.description,
-        ExpectedPrice: (form.listingType === 'Business Offers' || form.listingType === 'Resell' || form.listingType === 'Business Promotions') ? form.price : null,
+        ExpectedPrice: (form.listingType === 'Business Offers' || form.listingType === 'Resell' || form.listingType === 'Business Promotions' || form.listingType === 'New Sale') ? form.price : null,
         CampaignStartDate: form.listingType === 'Business Campaign' ? form.campaignStartDate : null,
         CampaignEndDate: form.listingType === 'Business Campaign' ? form.campaignEndDate : null,
         IsPriceNegotiable: false,
@@ -303,6 +307,7 @@ function CreateListing() {
 
   return (
     <div className="cred-page" style={{ paddingTop: '100px' }}>
+      <BackButton />
       {/* Header */}
       <div style={{ 
         textAlign: 'center', 
@@ -344,6 +349,7 @@ function CreateListing() {
               <option value="Business Promotions">Business Promotions</option>
               <option value="Business Offers">Business Offers</option>
               <option value="Business Campaign">Business Campaign</option>
+              <option value="New Sale">New Sale</option>
             </select>
             <input
               className="cred-input"
@@ -375,6 +381,15 @@ function CreateListing() {
                 className="cred-input"
                 type="number"
                 placeholder="Offer Percentage (%)"
+                value={form.price}
+                onChange={e => setForm({ ...form, price: e.target.value })}
+              />
+            )}
+            {form.listingType === 'New Sale' && (
+              <input
+                className="cred-input"
+                type="number"
+                placeholder="price"
                 value={form.price}
                 onChange={e => setForm({ ...form, price: e.target.value })}
               />
