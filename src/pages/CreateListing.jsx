@@ -34,6 +34,7 @@ function CreateListing() {
   const [districts, setDistricts] = useState([]);
   const [mandals, setMandals] = useState([]);
   const [villages, setVillages] = useState([]);
+  const [isAutoPopulating, setIsAutoPopulating] = useState(false);
   
   // Modal states for adding new items
   const [showNewMandalModal, setShowNewMandalModal] = useState(false);
@@ -60,56 +61,71 @@ function CreateListing() {
     API.get('/crud/categories').then(res => {
       setCategories(res.data);
     });
-    API.get('/crud/locations').then(res => {
+    
+    const locationsPromise = API.get('/crud/locations').then(res => {
       setLocations(res.data);
+      return res.data;
     });
+    
     API.get('/crud/subcategories').then(res => {
       setSubcategories(res.data);
     });
     
-    // Auto-populate location from JWT token (same as Home.jsx)
+    // Auto-populate location from JWT token - wait for locations to load first
     const token = localStorage.getItem('token');
     if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('=== CREATELISTING JWT PAYLOAD ===');
-        console.log('Full payload:', payload);
-        console.log('Address field:', payload.address);
-        console.log('Address type:', typeof payload.address);
-        console.log('================================');
-        
-        if (payload.address && typeof payload.address === 'string') {
-          // Parse address format: "village, mandal, district, state"
-          const addressParts = payload.address.split(',').map(part => part.trim());
-          console.log('Address parts after split:', addressParts);
-          console.log('Number of parts:', addressParts.length);
+      locationsPromise.then(() => {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          console.log('=== CREATELISTING JWT PAYLOAD ===');
+          console.log('Full payload:', payload);
+          console.log('Address field:', payload.address);
+          console.log('Address type:', typeof payload.address);
+          console.log('================================');
           
-          if (addressParts.length >= 4) {
-            const [userVillage, userMandal, userDistrict, userState] = addressParts;
-            console.log('Parsed location:', { 
-              village: userVillage, 
-              mandal: userMandal, 
-              district: userDistrict, 
-              state: userState 
-            });
+          if (payload.address && typeof payload.address === 'string') {
+            // Parse address format: "village, mandal, district, state"
+            const addressParts = payload.address.split(',').map(part => part.trim());
+            console.log('Address parts after split:', addressParts);
+            console.log('Number of parts:', addressParts.length);
             
-            setForm(prevForm => ({
-              ...prevForm,
-              state: userState || '',
-              district: userDistrict || '',
-              mandal: userMandal || '',
-              village: userVillage || ''
-            }));
-            console.log('✅ Location set in form');
+            if (addressParts.length >= 4) {
+              const [userVillage, userMandal, userDistrict, userState] = addressParts;
+              console.log('Parsed location:', { 
+                village: userVillage, 
+                mandal: userMandal, 
+                district: userDistrict, 
+                state: userState 
+              });
+              
+              // Set flag to prevent auto-reset in other useEffects
+              setIsAutoPopulating(true);
+              
+              // Set all location fields at once
+              setForm(prevForm => ({
+                ...prevForm,
+                state: userState || '',
+                district: userDistrict || '',
+                mandal: userMandal || '',
+                village: userVillage || ''
+              }));
+              
+              console.log('✅ Location set in form');
+              
+              // Clear flag after a short delay
+              setTimeout(() => {
+                setIsAutoPopulating(false);
+              }, 100);
+            } else {
+              console.log('❌ Address does not have 4 parts (village, mandal, district, state)');
+            }
           } else {
-            console.log('❌ Address does not have 4 parts (village, mandal, district, state)');
+            console.log('❌ No address in JWT token or invalid format');
           }
-        } else {
-          console.log('❌ No address in JWT token or invalid format');
+        } catch (err) {
+          console.error('❌ Error parsing user address from token:', err);
         }
-      } catch (err) {
-        console.error('❌ Error parsing user address from token:', err);
-      }
+      });
     } else {
       console.log('❌ No JWT token found in localStorage');
     }
@@ -137,8 +153,11 @@ function CreateListing() {
     } else {
       setDistricts([]);
     }
-    setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
-  }, [form.state, locations]);
+    // Don't reset if auto-populating
+    if (!isAutoPopulating) {
+      setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
+    }
+  }, [form.state, locations, isAutoPopulating]);
 
   useEffect(() => {
     if (form.state && form.district) {
@@ -146,8 +165,11 @@ function CreateListing() {
     } else {
       setMandals([]);
     }
-    setForm(f => ({ ...f, mandal: '', village: '' }));
-  }, [form.district, form.state, locations]);
+    // Don't reset if auto-populating
+    if (!isAutoPopulating) {
+      setForm(f => ({ ...f, mandal: '', village: '' }));
+    }
+  }, [form.district, form.state, locations, isAutoPopulating]);
 
   useEffect(() => {
     if (form.state && form.district && form.mandal) {
@@ -155,8 +177,11 @@ function CreateListing() {
     } else {
       setVillages([]);
     }
-    setForm(f => ({ ...f, village: '' }));
-  }, [form.mandal, form.district, form.state, locations]);
+    // Don't reset if auto-populating
+    if (!isAutoPopulating) {
+      setForm(f => ({ ...f, village: '' }));
+    }
+  }, [form.mandal, form.district, form.state, locations, isAutoPopulating]);
 
   // Add new mandal
   const handleAddMandal = async () => {
