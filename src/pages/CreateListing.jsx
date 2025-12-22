@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import API from '../services/api';
 import axios from 'axios';
 import React from 'react';
@@ -13,6 +13,8 @@ import useAndroidBackButton from '../hooks/useAndroidBackButton';
 function CreateListing() {
   // Sync with Android back button
   useAndroidBackButton();
+  const isAutoPopulatingRef = useRef(false);
+  
   const [form, setForm] = useState({
     listingType: '',
     title: '',
@@ -34,7 +36,6 @@ function CreateListing() {
   const [districts, setDistricts] = useState([]);
   const [mandals, setMandals] = useState([]);
   const [villages, setVillages] = useState([]);
-  const [isAutoPopulating, setIsAutoPopulating] = useState(false);
   
   // Modal states for adding new items
   const [showNewMandalModal, setShowNewMandalModal] = useState(false);
@@ -99,7 +100,7 @@ function CreateListing() {
               });
               
               // Set flag to prevent auto-reset in other useEffects
-              setIsAutoPopulating(true);
+              isAutoPopulatingRef.current = true;
               
               // Set all form values immediately - useEffects will populate dropdowns
               setForm(prevForm => ({
@@ -114,9 +115,9 @@ function CreateListing() {
               
               // Clear flag after React has processed the updates
               setTimeout(() => {
-                setIsAutoPopulating(false);
+                isAutoPopulatingRef.current = false;
                 console.log('✅ Auto-populate complete');
-              }, 200);
+              }, 300);
             } else {
               console.log('❌ Address does not have 4 parts (village, mandal, district, state)');
             }
@@ -154,16 +155,16 @@ function CreateListing() {
       setDistricts(newDistricts);
       
       // Only reset child fields if not auto-populating AND current district is not valid
-      if (!isAutoPopulating && form.district && !newDistricts.includes(form.district)) {
+      if (!isAutoPopulatingRef.current && form.district && !newDistricts.includes(form.district)) {
         setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
       }
     } else {
       setDistricts([]);
-      if (!isAutoPopulating) {
+      if (!isAutoPopulatingRef.current) {
         setForm(f => ({ ...f, district: '', mandal: '', village: '' }));
       }
     }
-  }, [form.state, locations, isAutoPopulating, form.district]);
+  }, [form.state, locations, form.district]);
 
   // Update mandals when district changes
   useEffect(() => {
@@ -172,16 +173,16 @@ function CreateListing() {
       setMandals(newMandals);
       
       // Only reset child fields if not auto-populating AND current mandal is not valid
-      if (!isAutoPopulating && form.mandal && !newMandals.includes(form.mandal)) {
+      if (!isAutoPopulatingRef.current && form.mandal && !newMandals.includes(form.mandal)) {
         setForm(f => ({ ...f, mandal: '', village: '' }));
       }
     } else {
       setMandals([]);
-      if (!isAutoPopulating) {
+      if (!isAutoPopulatingRef.current) {
         setForm(f => ({ ...f, mandal: '', village: '' }));
       }
     }
-  }, [form.district, form.state, locations, isAutoPopulating, form.mandal]);
+  }, [form.district, form.state, locations, form.mandal]);
 
   // Update villages when mandal changes
   useEffect(() => {
@@ -190,16 +191,16 @@ function CreateListing() {
       setVillages(newVillages);
       
       // Only reset village if not auto-populating AND current village is not valid
-      if (!isAutoPopulating && form.village && !newVillages.includes(form.village)) {
+      if (!isAutoPopulatingRef.current && form.village && !newVillages.includes(form.village)) {
         setForm(f => ({ ...f, village: '' }));
       }
     } else {
       setVillages([]);
-      if (!isAutoPopulating) {
+      if (!isAutoPopulatingRef.current) {
         setForm(f => ({ ...f, village: '' }));
       }
     }
-  }, [form.mandal, form.district, form.state, locations, isAutoPopulating, form.village]);
+  }, [form.mandal, form.district, form.state, locations, form.village]);
 
   // Add new mandal
   const handleAddMandal = async () => {
