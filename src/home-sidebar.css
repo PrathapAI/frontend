@@ -53,6 +53,20 @@
   max-width: 100%;
 }
 
+/* Ensure 2 columns on desktop screens */
+@media (min-width: 769px) {
+  .home-listings-content {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Ensure 2 columns on mobile as well */
+@media (max-width: 768px) {
+  .home-listings-content {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
 .home-action-btn {
   width: 100%;
   padding: 0.6rem 0;
