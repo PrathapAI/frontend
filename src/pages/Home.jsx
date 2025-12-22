@@ -42,12 +42,12 @@ function Home() {
   const [adTypeSearch, setAdTypeSearch] = useState('');
   
   // Accordion state
-  const [expandedCategory, setExpandedCategory] = useState(true);
-  const [expandedLocation, setExpandedLocation] = useState(true);
+  const [expandedCategory, setExpandedCategory] = useState(false);
+  const [expandedLocation, setExpandedLocation] = useState(false);
   const [expandedSubcategory, setExpandedSubcategory] = useState(null);
   const [expandedState, setExpandedState] = useState(null);
   const [expandedDistrict, setExpandedDistrict] = useState(null);
-  const [expandedAdType, setExpandedAdType] = useState(true);
+  const [expandedAdType, setExpandedAdType] = useState(false);
   
   // Mobile filter toggle
   const [showFilters, setShowFilters] = useState(false);
