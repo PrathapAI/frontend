@@ -1124,7 +1124,7 @@ function Home() {
             </div>
           )}
 
-          {/* Selected Districts Display */
+          {/* Selected Districts Display */}
           {district.length > 0 && (
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
