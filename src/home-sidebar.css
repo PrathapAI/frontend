@@ -8,16 +8,16 @@
 }
 
 .home-sidebar {
-  min-width: 220px;
-  max-width: 260px;
+  min-width: 200px;
+  max-width: 220px;
   background: #f5f6fa;
   border-radius: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  padding: 2rem 1.2rem 2rem 1.2rem;
-  margin: 2rem 2rem 2rem 2rem;
+  padding: 1.5rem 1rem 1.5rem 1rem;
+  margin: 2rem 1.5rem 2rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
   align-items: stretch;
   position: sticky;
   top: 100px;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 // Prevent unwanted navigation to login page
 // Home page should always be accessible
 import API from '../services/api';
@@ -429,22 +429,60 @@ function Home() {
       <div className="home-main-container">
         <aside className={`home-sidebar sticky-sidebar ${showFilters ? 'show-filters' : ''}`} style={{ background: 'var(--cred-card)', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
           
+          {/* Filter Header with Close Button */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '12px 16px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            marginBottom: '8px'
+          }}>
+            <h3 style={{
+              margin: 0,
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#000',
+              textTransform: 'lowercase'
+            }}>filters</h3>
+            <button
+              onClick={() => setShowFilters(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#000',
+                fontSize: '20px',
+                cursor: 'pointer',
+                padding: '4px 8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '4px',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              <FaTimes />
+            </button>
+          </div>
+          
           {/* AD TYPE Section */}
           <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <button
               onClick={() => setExpandedAdType(!expandedAdType)}
               style={{
                 width: '100%',
-                padding: '16px 20px',
-                background: '#000',
+                padding: '14px 16px',
+                background: '#e8e8e8',
                 border: 'none',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: '700',
-                color: '#fff',
+                color: '#000',
                 textAlign: 'left',
                 textTransform: 'lowercase',
                 borderRadius: '8px',
@@ -452,7 +490,7 @@ function Home() {
               }}
             >
               <span>ad type</span>
-              <span style={{ color: '#fff' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#000' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedAdType && (
@@ -462,7 +500,7 @@ function Home() {
                   <label style={{ 
                     display: 'block', 
                     fontSize: '11px', 
-                    color: 'rgba(255, 255, 255, 0.6)', 
+                    color: '#333', 
                     marginBottom: '6px',
                     fontWeight: '500',
                     textTransform: 'lowercase'
@@ -475,7 +513,7 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: 'rgba(255, 255, 255, 0.4)',
+                      color: '#666',
                       fontSize: '12px',
                       pointerEvents: 'none',
                       zIndex: 1
@@ -538,16 +576,16 @@ function Home() {
               onClick={() => setExpandedCategory(!expandedCategory)}
               style={{
                 width: '100%',
-                padding: '16px 20px',
-                background: '#000',
+                padding: '14px 16px',
+                background: '#e8e8e8',
                 border: 'none',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: '700',
-                color: '#fff',
+                color: '#000',
                 textAlign: 'left',
                 textTransform: 'lowercase',
                 borderRadius: '8px',
@@ -555,7 +593,7 @@ function Home() {
               }}
             >
               <span>categories</span>
-              <span style={{ color: '#fff' }}>{expandedCategory ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#000' }}>{expandedCategory ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedCategory && (
@@ -565,7 +603,7 @@ function Home() {
                   <label style={{ 
                     display: 'block', 
                     fontSize: '11px', 
-                    color: 'rgba(255, 255, 255, 0.6)', 
+                    color: '#333', 
                     marginBottom: '6px',
                     fontWeight: '500',
                     textTransform: 'lowercase'
@@ -578,7 +616,7 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: 'rgba(255, 255, 255, 0.4)',
+                      color: '#666',
                       fontSize: '12px',
                       pointerEvents: 'none',
                       zIndex: 1
@@ -715,16 +753,16 @@ function Home() {
               onClick={() => setExpandedLocation(!expandedLocation)}
               style={{
                 width: '100%',
-                padding: '16px 20px',
-                background: '#000',
+                padding: '14px 16px',
+                background: '#e8e8e8',
                 border: 'none',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: '700',
-                color: '#fff',
+                color: '#000',
                 textAlign: 'left',
                 textTransform: 'lowercase',
                 borderRadius: '8px',
@@ -732,7 +770,7 @@ function Home() {
               }}
             >
               <span>locations</span>
-              <span style={{ color: '#fff' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#000' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedLocation && (
@@ -743,7 +781,7 @@ function Home() {
                   <label style={{ 
                     display: 'block', 
                     fontSize: '11px', 
-                    color: 'rgba(255, 255, 255, 0.6)', 
+                    color: '#333', 
                     marginBottom: '6px',
                     fontWeight: '500',
                     textTransform: 'lowercase'
@@ -756,7 +794,7 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: 'rgba(255, 255, 255, 0.4)',
+                      color: '#666',
                       fontSize: '12px',
                       pointerEvents: 'none',
                       zIndex: 1
@@ -833,7 +871,7 @@ function Home() {
                     <label style={{ 
                       display: 'block', 
                       fontSize: '11px', 
-                      color: 'rgba(255, 255, 255, 0.6)', 
+                      color: '#333', 
                       marginBottom: '6px',
                       fontWeight: '500',
                       textTransform: 'lowercase'
@@ -846,7 +884,7 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: 'rgba(255, 255, 255, 0.4)',
+                        color: '#666',
                         fontSize: '12px',
                         pointerEvents: 'none',
                         zIndex: 1
@@ -918,7 +956,7 @@ function Home() {
                     <label style={{ 
                       display: 'block', 
                       fontSize: '11px', 
-                      color: 'rgba(255, 255, 255, 0.6)', 
+                      color: '#333', 
                       marginBottom: '6px',
                       fontWeight: '500',
                       textTransform: 'lowercase'
@@ -931,7 +969,7 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: 'rgba(255, 255, 255, 0.4)',
+                        color: '#666',
                         fontSize: '12px',
                         pointerEvents: 'none',
                         zIndex: 1
@@ -1003,7 +1041,7 @@ function Home() {
                     <label style={{ 
                       display: 'block', 
                       fontSize: '11px', 
-                      color: 'rgba(255, 255, 255, 0.6)', 
+                      color: '#333', 
                       marginBottom: '6px',
                       fontWeight: '500',
                       textTransform: 'lowercase'
@@ -1016,7 +1054,7 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: 'rgba(255, 255, 255, 0.4)',
+                        color: '#666',
                         fontSize: '12px',
                         pointerEvents: 'none',
                         zIndex: 1
@@ -1087,7 +1125,7 @@ function Home() {
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
                 fontSize: '11px', 
-                color: 'rgba(255, 255, 255, 0.6)', 
+                color: '#333', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1129,7 +1167,7 @@ function Home() {
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
                 fontSize: '11px', 
-                color: 'rgba(255, 255, 255, 0.6)', 
+                color: '#333', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1175,7 +1213,7 @@ function Home() {
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
                 fontSize: '11px', 
-                color: 'rgba(255, 255, 255, 0.6)', 
+                color: '#333', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1221,7 +1259,7 @@ function Home() {
             <div style={{ padding: '0 20px 12px 20px' }}>
               <div style={{ 
                 fontSize: '11px', 
-                color: 'rgba(255, 255, 255, 0.6)', 
+                color: '#333', 
                 marginBottom: '8px',
                 fontWeight: '500'
               }}>
@@ -1342,3 +1380,4 @@ function Home() {
 }
 
 export default Home;
+
