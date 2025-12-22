@@ -67,20 +67,6 @@ function Home() {
     };
   }, [showFilters]);
   
-  // Close filters when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showFilters && !event.target.closest('.home-sidebar') && !event.target.closest('.mobile-filter-toggle')) {
-        setShowFilters(false);
-      }
-    };
-    
-    if (showFilters) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [showFilters]);
-  
   // Save filter state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('filter_category', category);
@@ -513,7 +499,7 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: 'rgba(255,255,255,0.7)',
+                      color: '#000',
                       fontSize: '8px',
                       pointerEvents: 'none',
                       zIndex: 1
@@ -529,9 +515,9 @@ function Home() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
-                        color: '#fff',
-                        fontSize: '8px',
-                        outline: 'none'
+        color: '#000',
+        fontSize: '8px',
+        outline: 'none'
                       }}
                     />
                   </div>
@@ -616,7 +602,7 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: 'rgba(255,255,255,0.7)',
+                      color: '#000',
                       fontSize: '8px',
                       pointerEvents: 'none',
                       zIndex: 1
@@ -632,9 +618,9 @@ function Home() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
-                        color: '#fff',
-                        fontSize: '8px',
-                        outline: 'none'
+        color: '#000',
+        fontSize: '8px',
+        outline: 'none'
                       }}
                     />
                   </div>
@@ -794,7 +780,7 @@ function Home() {
                       left: '12px',
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      color: 'rgba(255,255,255,0.7)',
+                      color: '#000',
                       fontSize: '8px',
                       pointerEvents: 'none',
                       zIndex: 1
@@ -810,9 +796,9 @@ function Home() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
-                        color: '#fff',
-                        fontSize: '8px',
-                        outline: 'none'
+        color: '#000',
+        fontSize: '8px',
+        outline: 'none'
                       }}
                     />
                   </div>
@@ -884,7 +870,7 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: 'rgba(255,255,255,0.7)',
+                        color: '#000',
                         fontSize: '8px',
                         pointerEvents: 'none',
                         zIndex: 1
@@ -900,9 +886,9 @@ function Home() {
                           background: 'rgba(255, 255, 255, 0.9)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: '8px',
-                          color: '#fff',
-                          fontSize: '8px',
-                          outline: 'none'
+        color: '#000',
+        fontSize: '8px',
+        outline: 'none'
                         }}
                       />
                     </div>
@@ -969,7 +955,7 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: 'rgba(255,255,255,0.7)',
+                        color: '#000',
                         fontSize: '8px',
                         pointerEvents: 'none',
                         zIndex: 1
@@ -985,9 +971,9 @@ function Home() {
                           background: 'rgba(255, 255, 255, 0.9)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: '8px',
-                          color: '#fff',
-                          fontSize: '8px',
-                          outline: 'none'
+        color: '#000',
+        fontSize: '8px',
+        outline: 'none'
                         }}
                       />
                     </div>
@@ -1054,7 +1040,7 @@ function Home() {
                         left: '12px',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: 'rgba(255,255,255,0.7)',
+                        color: '#000',
                         fontSize: '8px',
                         pointerEvents: 'none',
                         zIndex: 1
@@ -1070,9 +1056,9 @@ function Home() {
                           background: 'rgba(255, 255, 255, 0.9)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: '8px',
-                          color: '#fff',
-                          fontSize: '8px',
-                          outline: 'none'
+        color: '#000',
+        fontSize: '8px',
+        outline: 'none'
                         }}
                       />
                     </div>
@@ -1380,5 +1366,6 @@ function Home() {
 }
 
 export default Home;
+
 
 
