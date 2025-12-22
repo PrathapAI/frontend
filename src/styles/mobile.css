@@ -276,12 +276,15 @@
   }
   
   /* Listing content takes full width with 2 columns on mobile */
-  .home-listings-content {
+  .home-listings-content,
+  main.home-listings-content {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     margin: 0 !important;
     padding: 0 6px !important;
-    grid-template-columns: repeat(2, 1fr) !important;
     gap: 6px !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
   
   /* Reduce listing card sizes for mobile 2-column layout */

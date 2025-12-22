@@ -1298,7 +1298,12 @@ function Home() {
           className="home-listings-content"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)'
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: window.innerWidth <= 768 ? '6px' : '16px',
+            padding: window.innerWidth <= 768 ? '0 6px' : '0',
+            margin: window.innerWidth <= 768 ? '0' : '2rem 2rem 0 0',
+            width: '100%',
+            boxSizing: 'border-box'
           }}
         >
           {filteredListings.map(listing => {
