@@ -275,15 +275,45 @@
     display: inline-flex !important;
   }
   
-  /* Listing content takes full width */
+  /* Listing content takes full width with 2 columns on mobile */
   .home-listings-content {
     margin: 0 !important;
-    padding: 0 12px !important;
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    padding: 0 8px !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
   }
   
   /* Individual listing card mobile styles */
+  .listing-card {
+    padding: 8px !important;
+    min-height: 220px !important;
+  }
+  
+  /* Further reduce sizes for 2-column mobile layout */
+  .listing-card img {
+    height: 120px !important;
+  }
+  
+  .listing-card [style*="padding: '10px'"] {
+    padding: 6px !important;
+  }
+  
+  .listing-card [style*="fontSize: 16"] {
+    font-size: 14px !important;
+  }
+  
+  .listing-card [style*="fontSize: 13"] {
+    font-size: 11px !important;
+  }
+  
+  .listing-card [style*="fontSize: 11"] {
+    font-size: 10px !important;
+  }
+  
+  .listing-card [style*="fontSize: 10"] {
+    font-size: 9px !important;
+  }
+  
   .cred-card {
     padding: 12px !important;
   }
@@ -305,13 +335,19 @@
     margin-bottom: 16px !important;
   }
   
-  /* Make all listing cards full width on mobile - override inline styles */
+  /* Make all listing cards full width on mobile - override inline styles, except home page 2-column */
   .cred-container > div > div > div,
-  .animate-fade-in-up > div,
-  .home-listings-content > div {
+  .animate-fade-in-up > div {
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 0 16px 0 !important;
+  }
+  
+  /* Home listings keep grid layout */
+  .home-listings-content > div {
+    max-width: 100% !important;
+    width: auto !important;
+    margin: 0 !important;
   }
   
   /* Reduce text sizes in listing cards on mobile */
@@ -402,13 +438,13 @@
     margin: 0 !important;
   }
   
-  /* Grid layouts become single column */
-  .cred-grid, [style*="grid"] {
+  /* Grid layouts become single column except home listings */
+  .cred-grid:not(.home-listings-content) {
     grid-template-columns: 1fr !important;
   }
   
-  /* Listing cards */
-  [style*="display: grid"][style*="grid-template-columns"] {
+  /* Listing cards - except home-listings-content */
+  [style*="display: grid"][style*="grid-template-columns"]:not(.home-listings-content) {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
