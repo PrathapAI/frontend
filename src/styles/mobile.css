@@ -518,13 +518,20 @@
   
   /* LISTING DETAILS PAGE MOBILE STYLES */
   
+  /* Force single column layout on detail pages */
+  .page-bg-blue-accent .home-listings-content {
+    display: block !important;
+    grid-template-columns: unset !important;
+    gap: 0 !important;
+  }
+  
   /* Main container */
   .page-bg-blue-accent {
     padding-top: 80px !important;
   }
   
   /* Content wrapper */
-  .home-main-container main {
+  .page-bg-blue-accent .home-main-container main {
     padding: 16px !important;
     max-width: 100% !important;
   }
