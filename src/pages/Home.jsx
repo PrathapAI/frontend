@@ -476,7 +476,7 @@ function Home() {
               }}
             >
               <span>ad type</span>
-              <span style={{ color: '#fff' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#000' }}>{expandedAdType ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedAdType && (
@@ -556,183 +556,6 @@ function Home() {
             )}
           </div>
 
-          {/* CATEGORIES Section */}
-          <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            <button
-              onClick={() => setExpandedCategory(!expandedCategory)}
-              style={{
-                width: '100%',
-                padding: '8px 10px',
-                background: 'rgba(0,0,0,0.3)',
-                border: 'none',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-                fontSize: '8px',
-                fontWeight: '700',
-                color: '#fff',
-                textAlign: 'left',
-                textTransform: 'lowercase',
-                borderRadius: '8px',
-                marginBottom: '8px'
-              }}
-            >
-              <span>categories</span>
-              <span style={{ color: '#fff' }}>{expandedCategory ? <FaChevronUp /> : <FaChevronDown />}</span>
-            </button>
-            
-            {expandedCategory && (
-              <div style={{ padding: '0 20px 16px' }}>
-                {/* Category Search Input */}
-                <div style={{ marginBottom: '12px' }}>
-                  <label style={{ 
-                    display: 'block', 
-                    fontSize: '9px', 
-                    color: '#fff', 
-                    marginBottom: '6px',
-                    fontWeight: '500',
-                    textTransform: 'lowercase'
-                  }}>
-                    search category:
-                  </label>
-                  <div style={{ position: 'relative' }}>
-                    <FaSearch style={{
-                      position: 'absolute',
-                      left: '12px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: '#000',
-                      fontSize: '8px',
-                      pointerEvents: 'none',
-                      zIndex: 1
-                    }} />
-                    <input
-                      type="text"
-                      placeholder="type category name..."
-                      value={categorySearch}
-                      onChange={(e) => setCategorySearch(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '8px 12px 8px 36px',
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '8px',
-        color: '#000',
-        fontSize: '8px',
-        outline: 'none'
-                      }}
-                    />
-                  </div>
-                </div>
-                
-                {/* All Categories */}
-                <div
-                  onClick={() => {
-                    setCategory('');
-                    setSubcategory('');
-                  }}
-                  style={{
-                    padding: '10px 12px',
-                    cursor: 'pointer',
-                    borderLeft: category === '' ? '3px solid var(--cred-accent)' : '3px solid transparent',
-                    background: category === '' ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
-                    marginBottom: '4px',
-                    fontWeight: category === '' ? '600' : '400',
-                    color: '#fff',
-                    transition: 'all 0.2s',
-                    borderRadius: '6px',
-                    textTransform: 'lowercase'
-                  }}
-                  onMouseEnter={(e) => !category && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                  onMouseLeave={(e) => !category && (e.currentTarget.style.background = 'transparent')}
-                >
-                  all categories
-                </div>
-                
-                {/* Category List - only show when searching */}
-                {categorySearch && categories.filter(cat => {
-                  return cat.CategoryName.toLowerCase().includes(categorySearch.toLowerCase());
-                }).map(cat => {
-                  const isSelected = String(category) === String(cat.CategoryID);
-                  const categorySubcategories = subcategories.filter(sub => String(sub.CategoryID) === String(cat.CategoryID));
-                  
-                  return (
-                    <div key={cat.CategoryID} style={{ marginBottom: '4px' }}>
-                      <div
-                        onClick={() => {
-                          if (isSelected) {
-                            setCategory('');
-                            setSubcategory('');
-                          } else {
-                            setCategory(cat.CategoryID);
-                            setSubcategory('');
-                          }
-                        }}
-                        style={{
-                          padding: '10px 12px',
-                          cursor: 'pointer',
-                          borderLeft: isSelected ? '3px solid var(--cred-accent)' : '3px solid transparent',
-                          background: isSelected ? 'rgba(0, 208, 156, 0.1)' : 'transparent',
-                          fontWeight: isSelected ? '600' : '400',
-                          color: '#fff',
-                          transition: 'all 0.2s',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          borderRadius: '6px',
-                          textTransform: 'lowercase'
-                        }}
-                        onMouseEnter={(e) => !isSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                        onMouseLeave={(e) => !isSelected && (e.currentTarget.style.background = 'transparent')}
-                      >
-                        <span style={{ color: '#fff' }}>{cat.CategoryName}</span>
-                        {isSelected && categorySubcategories.length > 0 && (
-                          <span style={{ fontSize: '8px', color: '#bbb' }}>
-                            ({categorySubcategories.length})
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* Subcategories - show only when category is selected */}
-                      {isSelected && categorySubcategories.length > 0 && (
-                        <div style={{ paddingLeft: '16px', marginTop: '4px' }}>
-                          {categorySubcategories.map(sub => {
-                            const isSubSelected = String(subcategory) === String(sub.SubCategoryID);
-                            return (
-                              <div
-                                key={sub.SubCategoryID}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSubcategory(isSubSelected ? '' : sub.SubCategoryID);
-                                }}
-                                style={{
-                                  padding: '8px 12px',
-                                  cursor: 'pointer',
-                                  background: isSubSelected ? 'rgba(0, 208, 156, 0.2)' : 'transparent',
-                                  color: '#fff',
-                                  fontSize: '8px',
-                                  borderRadius: '6px',
-                                  marginBottom: '2px',
-                                  transition: 'all 0.2s',
-                                  textTransform: 'lowercase'
-                                }}
-                                onMouseEnter={(e) => !isSubSelected && (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-                                onMouseLeave={(e) => !isSubSelected && (e.currentTarget.style.background = 'transparent')}
-                              >
-                                {sub.SubCategoryName}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
           {/* LOCATIONS Section */}
           <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <button
@@ -756,7 +579,7 @@ function Home() {
               }}
             >
               <span>locations</span>
-              <span style={{ color: '#fff' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
+              <span style={{ color: '#000' }}>{expandedLocation ? <FaChevronUp /> : <FaChevronDown />}</span>
             </button>
             
             {expandedLocation && (
@@ -1288,6 +1111,33 @@ function Home() {
 
           {/* Action Buttons */}
           <div style={{ padding: '20px' }}>
+            {/* Add Another Location Button - only show when location is selected */}
+            {state && (
+              <button
+                className="cred-btn-primary"
+                type="button"
+                onClick={() => {
+                  // Just expand the location section to allow adding more
+                  setExpandedLocation(true);
+                }}
+                style={{
+                  width: '100%',
+                  marginBottom: '10px',
+                  background: 'var(--cred-accent)',
+                  color: '#000',
+                  border: 'none',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  fontSize: '10px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  textTransform: 'lowercase'
+                }}
+              >
+                + add location
+              </button>
+            )}
+            
             <button
               className="cred-btn-danger"
               type="button"
