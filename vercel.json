@@ -1,8 +1,23 @@
 {
   "rewrites": [
     {
-      "source": "/((?!delete-account|privacy-policy|manifest.json).*)",
+      "source": "/((?!delete-account|privacy-policy|manifest.json|.*\\.(png|jpg|jpeg|gif|svg|ico|css|js|json)).*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }
