@@ -2,12 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { messagesAPI } from '../services/features';
 import { FaPaperPlane, FaTimes } from 'react-icons/fa';
 
-function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
+function ChatWindow({ recipientId, recipientName, listingId, listingTitle, onClose, otherUserId, otherUserName }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  
+  // Support both prop name conventions
+  const targetUserId = recipientId || otherUserId;
+  const targetUserName = recipientName || otherUserName || 'User';
   
   const token = localStorage.getItem('token');
   let userId = null;
@@ -19,13 +24,16 @@ function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
   }
 
   useEffect(() => {
-    if (userId && otherUserId) {
+    if (userId && targetUserId) {
       fetchConversation();
       // Poll for new messages every 5 seconds
       const interval = setInterval(fetchConversation, 5000);
       return () => clearInterval(interval);
+    } else {
+      setLoading(false);
+      setError('Missing user information');
     }
-  }, [userId, otherUserId]);
+  }, [userId, targetUserId]);
 
   useEffect(() => {
     scrollToBottom();
@@ -37,10 +45,13 @@ function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
 
   const fetchConversation = async () => {
     try {
-      const { data } = await messagesAPI.getConversation(userId, otherUserId);
-      setMessages(data);
+      setError(null);
+      const { data } = await messagesAPI.getConversation(userId, targetUserId);
+      setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error fetching conversation:', err);
+      console.error('Error details:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'Failed to load messages');
     } finally {
       setLoading(false);
     }
@@ -52,17 +63,20 @@ function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
 
     try {
       setSending(true);
-      await messagesAPI.sendMessage({
+      const payload = {
         SenderID: userId,
-        RecipientID: otherUserId,
+        RecipientID: targetUserId,
         ListingID: listingId,
         MessageContent: newMessage.trim()
-      });
+      };
+      console.log('Sending message:', payload);
+      await messagesAPI.sendMessage(payload);
       setNewMessage('');
       await fetchConversation();
     } catch (err) {
       console.error('Error sending message:', err);
-      alert('Failed to send message');
+      console.error('Error details:', err.response?.data || err.message);
+      alert(err.response?.data?.message || 'Failed to send message');
     } finally {
       setSending(false);
     }
@@ -72,7 +86,7 @@ function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h3 style={{ margin: 0 }}>Chat with {otherUserName}</h3>
+          <h3 style={{ margin: 0 }}>Chat with {targetUserName}</h3>
           <button onClick={onClose} style={styles.closeBtn}>
             <FaTimes />
           </button>
@@ -81,15 +95,36 @@ function ChatWindow({ otherUserId, otherUserName, listingId, onClose }) {
       </div>
     );
   }
+  
+  if (error && !userId) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h3 style={{ margin: 0 }}>Chat</h3>
+          <button onClick={onClose} style={styles.closeBtn}>
+            <FaTimes />
+          </button>
+        </div>
+        <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
+          Please login to send messages
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h3 style={{ margin: 0, fontSize: '18px' }}>Chat with {otherUserName}</h3>
+        <h3 style={{ margin: 0, fontSize: '18px' }}>Chat with {targetUserName}</h3>
         <button onClick={onClose} style={styles.closeBtn}>
           <FaTimes />
         </button>
       </div>
+      {error && (
+        <div style={{ padding: '8px 16px', background: '#ffebee', color: '#c62828', fontSize: '12px', textAlign: 'center' }}>
+          {error}
+        </div>
+      )}
 
       <div style={styles.messagesContainer}>
         {messages.length === 0 ? (
