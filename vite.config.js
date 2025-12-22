@@ -1,10 +1,26 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default {
+export default defineConfig({
+  plugins: [react()],
   server: {
+    port: 5173,
     proxy: {
-      '/api': 'http://localhost:5748',
+      '/api': {
+        target: 'http://localhost:5748',
+        changeOrigin: true,
+        secure: false
+      }
     }
-  }
-}
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+  base: '/'
+})
