@@ -17,6 +17,10 @@ import Favorites from './pages/Favorites';
 import Notifications from './pages/Notifications';
 import DebugToken from './pages/DebugToken';
 import About from './pages/About';
+import ExpertRegister from './pages/ExpertRegister';
+import ExpertLogin from './pages/ExpertLogin';
+import ExpertDashboard from './pages/ExpertDashboard';
+import ListingBids from './pages/ListingBids';
 
 
 // Inactivity handler component
@@ -128,6 +132,14 @@ function App() {
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/debug-token" element={<DebugToken />} />
           <Route path="/about" element={<About />} />
+          
+          {/* Expert Routes */}
+          <Route path="/expert/register" element={<ExpertRegister />} />
+          <Route path="/expert/login" element={<ExpertLogin />} />
+          <Route path="/expert/dashboard" element={<ExpertDashboard />} />
+          
+          {/* Listing Bids Management */}
+          <Route path="/listing/:listingId/bids" element={<ListingBids />} />
         </Routes>
         <BottomNav />
       </InactivityHandler>
