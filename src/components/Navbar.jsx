@@ -318,6 +318,21 @@ function Navbar() {
               }}>
                 sign up
               </Link>
+              <Link to="/expert/login" style={{
+                ...authButtonStyle,
+                background: 'transparent',
+                color: 'var(--cred-accent)',
+                border: '1px solid var(--cred-accent)',
+                marginLeft: '8px'
+              }}
+              onMouseOver={e => {
+                e.currentTarget.style.background = 'rgba(0, 208, 156, 0.1)';
+              }}
+              onMouseOut={e => {
+                e.currentTarget.style.background = 'transparent';
+              }}>
+                expert
+              </Link>
             </>
           )}
         </div>
@@ -411,6 +426,15 @@ function Navbar() {
                 fontWeight: 700
               }}>
                 Sign Up
+              </Link>
+              <Link to="/expert/login" onClick={closeMobileMenu} style={{
+                ...mobileMenuLinkStyle,
+                background: 'transparent',
+                border: '2px solid var(--cred-accent)',
+                color: 'var(--cred-accent)',
+                marginTop: '12px'
+              }}>
+                Expert Login
               </Link>
             </>
           )}
