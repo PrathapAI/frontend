@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaUserTie, FaEnvelope, FaLock, FaUser, FaPhone, FaBriefcase } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import '../styles/cred-theme.css';
+import '../styles/mobile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -78,198 +82,206 @@ function ExpertRegister() {
   };
 
   return (
-    <div className="expert-register-container" style={{ maxWidth: '600px', margin: '50px auto', padding: '20px' }}>
-      <h1>Expert Registration</h1>
-      <p>Join as an expert to help clients sell their properties, find matches, or secure jobs</p>
-
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div>
-          <label>Username *</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Email *</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Password *</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Confirm Password *</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <div style={{ flex: 1 }}>
-            <label>First Name *</label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              style={{ width: '100%', padding: '8px' }}
-            />
+    <div className="cred-page" style={{ padding: '40px 20px', minHeight: '100vh' }}>
+      <div className="animate-fade-in-up" style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <BackButton />
+        
+        <div className="cred-card glass" style={{ padding: '40px 32px', marginTop: '20px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <FaUserTie style={{ fontSize: '48px', color: 'var(--cred-accent)', marginBottom: '16px' }} />
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '8px', color: '#fff' }}>
+              Expert Registration
+            </h2>
+            <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px' }}>
+              Join as an expert to help clients sell their properties, find matches, or secure jobs
+            </p>
           </div>
 
-          <div style={{ flex: 1 }}>
-            <label>Last Name *</label>
+          {error && (
+            <div className="error-message" style={{ marginBottom: '20px', padding: '12px', backgroundColor: 'rgba(231, 76, 60, 0.1)', border: '1px solid rgba(231, 76, 60, 0.3)', borderRadius: '12px', color: '#e74c3c', fontSize: '14px' }}>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ position: 'relative' }}>
+              <FaUser style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Username *"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <FaEnvelope style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email *"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password * (min 8 characters)"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm Password *"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="First Name *"
+                required
+                className="cred-input"
+              />
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Last Name *"
+                required
+                className="cred-input"
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <FaPhone style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                placeholder="Phone Number *"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <FaBriefcase style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <select
+                name="expertiseArea"
+                value={formData.expertiseArea}
+                onChange={handleChange}
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%', appearance: 'none' }}
+              >
+                <option value="Real Estate">Real Estate</option>
+                <option value="Marriage Bureau">Marriage Bureau</option>
+                <option value="Job Assistance">Job Assistance</option>
+              </select>
+            </div>
+
             <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
+              type="number"
+              name="locationID"
+              value={formData.locationID}
               onChange={handleChange}
+              placeholder="Location ID * (Get from locations list)"
               required
-              style={{ width: '100%', padding: '8px' }}
+              className="cred-input"
             />
-          </div>
+
+            <input
+              type="number"
+              name="yearsOfExperience"
+              value={formData.yearsOfExperience}
+              onChange={handleChange}
+              placeholder="Years of Experience"
+              className="cred-input"
+            />
+
+            <textarea
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              rows="4"
+              placeholder="Bio / About Yourself (Tell clients about your expertise...)"
+              className="cred-input"
+              style={{ resize: 'vertical', fontFamily: 'inherit' }}
+            />
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <input
+                type="number"
+                step="0.01"
+                name="commissionRate"
+                value={formData.commissionRate}
+                onChange={handleChange}
+                placeholder="Commission Rate (%)"
+                className="cred-input"
+              />
+              <input
+                type="number"
+                step="0.01"
+                name="minimumBidAmount"
+                value={formData.minimumBidAmount}
+                onChange={handleChange}
+                placeholder="Minimum Bid Amount"
+                className="cred-input"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="cred-btn"
+              style={{ width: '100%', marginTop: '8px' }}
+            >
+              {loading ? 'Registering...' : 'Register as Expert'}
+            </button>
+          </form>
+
+          <p style={{ textAlign: 'center', marginTop: '24px', color: 'var(--cred-text-secondary)', fontSize: '14px' }}>
+            Already have an account?{' '}
+            <span
+              onClick={() => navigate('/expert/login')}
+              style={{ color: 'var(--cred-accent)', cursor: 'pointer', fontWeight: 600 }}
+            >
+              Login here
+            </span>
+          </p>
         </div>
-
-        <div>
-          <label>Phone Number *</label>
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Expertise Area *</label>
-          <select
-            name="expertiseArea"
-            value={formData.expertiseArea}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          >
-            <option value="Real Estate">Real Estate</option>
-            <option value="Marriage Bureau">Marriage Bureau</option>
-            <option value="Job Assistance">Job Assistance</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Location ID * (Get from locations list)</label>
-          <input
-            type="number"
-            name="locationID"
-            value={formData.locationID}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Years of Experience</label>
-          <input
-            type="number"
-            name="yearsOfExperience"
-            value={formData.yearsOfExperience}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Bio / About Yourself</label>
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            rows="4"
-            style={{ width: '100%', padding: '8px' }}
-            placeholder="Tell clients about your expertise and experience..."
-          />
-        </div>
-
-        <div>
-          <label>Commission Rate (%)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="commissionRate"
-            value={formData.commissionRate}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <div>
-          <label>Minimum Bid Amount</label>
-          <input
-            type="number"
-            step="0.01"
-            name="minimumBidAmount"
-            value={formData.minimumBidAmount}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: '12px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
-        >
-          {loading ? 'Registering...' : 'Register as Expert'}
-        </button>
-      </form>
-
-      <p style={{ marginTop: '20px' }}>
-        Already have an account?{' '}
-        <span
-          onClick={() => navigate('/expert/login')}
-          style={{ color: '#007bff', cursor: 'pointer' }}
-        >
-          Login here
-        </span>
-      </p>
+      </div>
     </div>
   );
 }

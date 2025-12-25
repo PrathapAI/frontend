@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaSignOutAlt, FaClipboardList, FaGavel, FaUser, FaTimes, FaDollarSign, FaPercent, FaClock, FaStar, FaCheckCircle } from 'react-icons/fa';
+import '../styles/cred-theme.css';
+import '../styles/mobile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -9,7 +12,7 @@ function ExpertDashboard() {
   const [expertData, setExpertData] = useState(null);
   const [availableListings, setAvailableListings] = useState([]);
   const [myBids, setMyBids] = useState([]);
-  const [activeTab, setActiveTab] = useState('listings'); // listings, bids, profile
+  const [activeTab, setActiveTab] = useState('listings');
   const [loading, setLoading] = useState(true);
   const [bidForm, setBidForm] = useState({
     listingId: null,
@@ -35,13 +38,11 @@ function ExpertDashboard() {
 
   const fetchData = async (token) => {
     try {
-      // Fetch available listings
       const listingsRes = await axios.get(`${API_URL}/api/experts/listings/available`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAvailableListings(listingsRes.data.listings);
 
-      // Fetch expert's bids
       const bidsRes = await axios.get(`${API_URL}/api/experts/bids`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -97,7 +98,7 @@ function ExpertDashboard() {
 
       alert('Bid placed successfully!');
       setShowBidModal(false);
-      fetchData(token); // Refresh data
+      fetchData(token);
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to place bid');
     }
@@ -124,158 +125,227 @@ function ExpertDashboard() {
   };
 
   if (loading) {
-    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading...</div>;
+    return (
+      <div className="cred-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center', color: 'var(--cred-text-secondary)' }}>Loading...</div>
+      </div>
+    );
   }
 
   return (
-    <div className="expert-dashboard" style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <div>
-          <h1>Expert Dashboard</h1>
-          {expertData && (
-            <p>
-              Welcome, {expertData.firstName} {expertData.lastName} - {expertData.expertiseArea} Expert
-              {expertData.isVerified && <span style={{ color: 'green', marginLeft: '10px' }}>✓ Verified</span>}
-            </p>
-          )}
+    <div className="cred-page" style={{ padding: '20px', minHeight: '100vh' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        {/* Header */}
+        <div className="cred-card glass" style={{ padding: '24px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '8px', color: '#fff' }}>
+              Expert Dashboard
+            </h1>
+            {expertData && (
+              <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px' }}>
+                Welcome, {expertData.firstName} {expertData.lastName} - {expertData.expertiseArea} Expert
+                {expertData.isVerified && (
+                  <FaCheckCircle style={{ color: 'var(--cred-success)', marginLeft: '8px', verticalAlign: 'middle' }} />
+                )}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={handleLogout}
+            className="cred-btn"
+            style={{ backgroundColor: 'rgba(231, 76, 60, 0.2)', border: '1px solid rgba(231, 76, 60, 0.3)', display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            <FaSignOutAlt /> Logout
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          style={{ padding: '10px 20px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Logout
-        </button>
-      </div>
 
-      {/* Stats */}
-      {expertData && (
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '30px' }}>
-          <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <h3>Rating</h3>
-            <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{expertData.rating || 0}/5.0</p>
-          </div>
-          <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <h3>Successful Sales</h3>
-            <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{expertData.successfulSales || 0}</p>
-          </div>
-          <div style={{ flex: 1, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <h3>Active Bids</h3>
-            <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{myBids.filter(b => b.Status === 'pending').length}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Tabs */}
-      <div style={{ borderBottom: '2px solid #ddd', marginBottom: '20px' }}>
-        <button
-          onClick={() => setActiveTab('listings')}
-          style={{
-            padding: '10px 20px',
-            border: 'none',
-            borderBottom: activeTab === 'listings' ? '3px solid #007bff' : 'none',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            fontWeight: activeTab === 'listings' ? 'bold' : 'normal'
-          }}
-        >
-          Available Listings ({availableListings.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('bids')}
-          style={{
-            padding: '10px 20px',
-            border: 'none',
-            borderBottom: activeTab === 'bids' ? '3px solid #007bff' : 'none',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            fontWeight: activeTab === 'bids' ? 'bold' : 'normal'
-          }}
-        >
-          My Bids ({myBids.length})
-        </button>
-      </div>
-
-      {/* Content */}
-      {activeTab === 'listings' && (
-        <div>
-          <h2>Available Listings in Your Area</h2>
-          {availableListings.length === 0 ? (
-            <p>No available listings at the moment.</p>
-          ) : (
-            <div style={{ display: 'grid', gap: '20px' }}>
-              {availableListings.map((listing) => (
-                <div key={listing.ListingID} style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
-                  <h3>{listing.Title}</h3>
-                  <p>{listing.Description}</p>
-                  <p><strong>Price:</strong> ${listing.ExpectedPrice}</p>
-                  <p><strong>Location:</strong> {listing.Location?.village}, {listing.Location?.district}</p>
-                  <p><strong>Posted by:</strong> {listing.User?.Username}</p>
-                  
-                  {listing.ExpertBids && listing.ExpertBids.length > 0 ? (
-                    <p style={{ color: 'orange' }}>You already bid on this listing</p>
-                  ) : (
-                    <button
-                      onClick={() => openBidModal(listing)}
-                      style={{
-                        padding: '10px 20px',
-                        backgroundColor: '#28a745',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        marginTop: '10px'
-                      }}
-                    >
-                      Place Bid
-                    </button>
-                  )}
-                </div>
-              ))}
+        {/* Stats */}
+        {expertData && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+            <div className="cred-card glass" style={{ padding: '20px', textAlign: 'center' }}>
+              <FaStar style={{ fontSize: '32px', color: 'var(--cred-accent)', marginBottom: '12px' }} />
+              <h3 style={{ fontSize: '0.875rem', color: 'var(--cred-text-secondary)', fontWeight: 600, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rating</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 800, color: '#fff' }}>{expertData.rating || 0}/5.0</p>
             </div>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'bids' && (
-        <div>
-          <h2>My Bids</h2>
-          {myBids.length === 0 ? (
-            <p>You haven't placed any bids yet.</p>
-          ) : (
-            <div style={{ display: 'grid', gap: '20px' }}>
-              {myBids.map((bid) => (
-                <div key={bid.BidID} style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
-                  <h3>{bid.Listing?.Title}</h3>
-                  <p><strong>Your Bid:</strong> ${bid.BidAmount}</p>
-                  <p><strong>Proposal:</strong> {bid.Proposal}</p>
-                  <p><strong>Status:</strong> <span style={{
-                    color: bid.Status === 'accepted' ? 'green' : bid.Status === 'rejected' ? 'red' : 'orange'
-                  }}>{bid.Status.toUpperCase()}</span></p>
-                  <p><strong>Submitted:</strong> {new Date(bid.CreatedAt).toLocaleDateString()}</p>
-                  
-                  {bid.Status === 'pending' && (
-                    <button
-                      onClick={() => withdrawBid(bid.BidID)}
-                      style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        marginTop: '10px'
-                      }}
-                    >
-                      Withdraw Bid
-                    </button>
-                  )}
-                </div>
-              ))}
+            <div className="cred-card glass" style={{ padding: '20px', textAlign: 'center' }}>
+              <FaCheckCircle style={{ fontSize: '32px', color: 'var(--cred-success)', marginBottom: '12px' }} />
+              <h3 style={{ fontSize: '0.875rem', color: 'var(--cred-text-secondary)', fontWeight: 600, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Successful Sales</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 800, color: '#fff' }}>{expertData.successfulSales || 0}</p>
             </div>
-          )}
+            <div className="cred-card glass" style={{ padding: '20px', textAlign: 'center' }}>
+              <FaGavel style={{ fontSize: '32px', color: 'var(--cred-accent)', marginBottom: '12px' }} />
+              <h3 style={{ fontSize: '0.875rem', color: 'var(--cred-text-secondary)', fontWeight: 600, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Active Bids</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 800, color: '#fff' }}>{myBids.filter(b => b.Status === 'pending').length}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Tabs */}
+        <div className="cred-card glass" style={{ marginBottom: '24px' }}>
+          <div style={{ display: 'flex', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <button
+              onClick={() => setActiveTab('listings')}
+              style={{
+                flex: 1,
+                padding: '16px',
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: activeTab === 'listings' ? 'var(--cred-accent)' : 'var(--cred-text-secondary)',
+                borderBottom: activeTab === 'listings' ? '2px solid var(--cred-accent)' : 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <FaClipboardList /> Available Listings ({availableListings.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('bids')}
+              style={{
+                flex: 1,
+                padding: '16px',
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: activeTab === 'bids' ? 'var(--cred-accent)' : 'var(--cred-text-secondary)',
+                borderBottom: activeTab === 'bids' ? '2px solid var(--cred-accent)' : 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <FaGavel /> My Bids ({myBids.length})
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div style={{ padding: '24px' }}>
+            {activeTab === 'listings' && (
+              <div>
+                {availableListings.length === 0 ? (
+                  <p style={{ textAlign: 'center', color: 'var(--cred-text-secondary)', padding: '40px' }}>
+                    No available listings in your area and expertise.
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {availableListings.map((listing) => (
+                      <div key={listing.ListingID} className="cred-card" style={{ padding: '20px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px', flexWrap: 'wrap', gap: '12px' }}>
+                          <div>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px', color: '#fff' }}>{listing.Title}</h3>
+                            <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px' }}>
+                              {listing.Category?.CategoryName} - {listing.Subcategory?.SubcategoryName}
+                            </p>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--cred-accent)', marginBottom: '4px' }}>
+                              ${listing.Price}
+                            </div>
+                            <div style={{ fontSize: '12px', color: 'var(--cred-text-tertiary)' }}>
+                              {new Date(listing.CreatedAt).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </div>
+                        <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px', marginBottom: '16px', lineHeight: '1.6' }}>
+                          {listing.Description?.substring(0, 150)}...
+                        </p>
+                        <button
+                          onClick={() => openBidModal(listing)}
+                          className="cred-btn"
+                          style={{ width: '100%' }}
+                        >
+                          Place Bid
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'bids' && (
+              <div>
+                {myBids.length === 0 ? (
+                  <p style={{ textAlign: 'center', color: 'var(--cred-text-secondary)', padding: '40px' }}>
+                    You haven't placed any bids yet.
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {myBids.map((bid) => (
+                      <div key={bid.BidID} className="cred-card" style={{ padding: '20px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px', flexWrap: 'wrap', gap: '12px' }}>
+                          <div>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px', color: '#fff' }}>
+                              {bid.Listing?.Title}
+                            </h3>
+                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                              <span style={{ fontSize: '14px', color: 'var(--cred-text-secondary)' }}>
+                                <FaDollarSign style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+                                Bid: ${bid.BidAmount}
+                              </span>
+                              {bid.CommissionPercentage && (
+                                <span style={{ fontSize: '14px', color: 'var(--cred-text-secondary)' }}>
+                                  <FaPercent style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+                                  {bid.CommissionPercentage}%
+                                </span>
+                              )}
+                              {bid.EstimatedCompletionDays && (
+                                <span style={{ fontSize: '14px', color: 'var(--cred-text-secondary)' }}>
+                                  <FaClock style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+                                  {bid.EstimatedCompletionDays} days
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <span style={{
+                            padding: '6px 12px',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            backgroundColor: bid.Status === 'accepted' ? 'rgba(46, 204, 113, 0.2)' :
+                                           bid.Status === 'rejected' ? 'rgba(231, 76, 60, 0.2)' :
+                                           bid.Status === 'withdrawn' ? 'rgba(149, 165, 166, 0.2)' :
+                                           'rgba(255, 193, 7, 0.2)',
+                            color: bid.Status === 'accepted' ? 'var(--cred-success)' :
+                                   bid.Status === 'rejected' ? '#e74c3c' :
+                                   bid.Status === 'withdrawn' ? '#95a5a6' :
+                                   '#f39c12'
+                          }}>
+                            {bid.Status.toUpperCase()}
+                          </span>
+                        </div>
+                        {bid.Proposal && (
+                          <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px', marginBottom: '16px', lineHeight: '1.6' }}>
+                            {bid.Proposal}
+                          </p>
+                        )}
+                        {bid.Status === 'pending' && (
+                          <button
+                            onClick={() => withdrawBid(bid.BidID)}
+                            className="cred-btn"
+                            style={{ width: '100%', backgroundColor: 'rgba(231, 76, 60, 0.2)', border: '1px solid rgba(231, 76, 60, 0.3)' }}
+                          >
+                            Withdraw Bid
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
 
       {/* Bid Modal */}
       {showBidModal && (
@@ -285,97 +355,77 @@ function ExpertDashboard() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
-          zIndex: 1000
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px'
         }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '30px',
-            borderRadius: '8px',
-            maxWidth: '500px',
-            width: '90%'
-          }}>
-            <h2>Place Your Bid</h2>
-            <form onSubmit={handleBidSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div>
-                <label>Bid Amount (Your Service Fee) *</label>
+          <div className="cred-card glass" style={{ width: '100%', maxWidth: '500px', padding: '32px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff' }}>Place Your Bid</h2>
+              <button
+                onClick={() => setShowBidModal(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--cred-text-secondary)', cursor: 'pointer', fontSize: '20px' }}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <form onSubmit={handleBidSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ position: 'relative' }}>
+                <FaDollarSign style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
                 <input
                   type="number"
                   step="0.01"
                   value={bidForm.bidAmount}
                   onChange={(e) => setBidForm({ ...bidForm, bidAmount: e.target.value })}
+                  placeholder="Bid Amount *"
                   required
-                  style={{ width: '100%', padding: '8px' }}
+                  className="cred-input"
+                  style={{ paddingLeft: '50px', width: '100%' }}
                 />
               </div>
 
-              <div>
-                <label>Commission Percentage (Optional)</label>
+              <div style={{ position: 'relative' }}>
+                <FaPercent style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
                 <input
                   type="number"
                   step="0.01"
                   value={bidForm.commissionPercentage}
                   onChange={(e) => setBidForm({ ...bidForm, commissionPercentage: e.target.value })}
-                  style={{ width: '100%', padding: '8px' }}
+                  placeholder="Commission Percentage"
+                  className="cred-input"
+                  style={{ paddingLeft: '50px', width: '100%' }}
                 />
               </div>
 
-              <div>
-                <label>Your Proposal *</label>
-                <textarea
-                  value={bidForm.proposal}
-                  onChange={(e) => setBidForm({ ...bidForm, proposal: e.target.value })}
-                  required
-                  rows="4"
-                  placeholder="Explain how you will help sell this listing..."
-                  style={{ width: '100%', padding: '8px' }}
-                />
-              </div>
-
-              <div>
-                <label>Estimated Completion Days</label>
+              <div style={{ position: 'relative' }}>
+                <FaClock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
                 <input
                   type="number"
                   value={bidForm.estimatedCompletionDays}
                   onChange={(e) => setBidForm({ ...bidForm, estimatedCompletionDays: e.target.value })}
-                  style={{ width: '100%', padding: '8px' }}
+                  placeholder="Estimated Completion (days)"
+                  className="cred-input"
+                  style={{ paddingLeft: '50px', width: '100%' }}
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                <button
-                  type="submit"
-                  style={{
-                    flex: 1,
-                    padding: '10px',
-                    backgroundColor: '#28a745',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Submit Bid
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowBidModal(false)}
-                  style={{
-                    flex: 1,
-                    padding: '10px',
-                    backgroundColor: '#6c757d',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
+              <textarea
+                value={bidForm.proposal}
+                onChange={(e) => setBidForm({ ...bidForm, proposal: e.target.value })}
+                placeholder="Your proposal (describe how you'll help sell this listing) *"
+                required
+                rows="5"
+                className="cred-input"
+                style={{ resize: 'vertical', fontFamily: 'inherit' }}
+              />
+
+              <button type="submit" className="cred-btn" style={{ width: '100%' }}>
+                Submit Bid
+              </button>
             </form>
           </div>
         </div>

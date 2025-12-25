@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaUserTie, FaEnvelope, FaLock } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import '../styles/cred-theme.css';
+import '../styles/mobile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -42,63 +46,77 @@ function ExpertLogin() {
   };
 
   return (
-    <div className="expert-login-container" style={{ maxWidth: '400px', margin: '100px auto', padding: '20px' }}>
-      <h1>Expert Login</h1>
-      <p>Login to manage your bids and clients</p>
+    <div className="cred-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+      <div className="animate-fade-in-up" style={{ width: '100%', maxWidth: '480px' }}>
+        <BackButton />
+        
+        <div className="cred-card glass" style={{ padding: '48px 32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <FaUserTie style={{ fontSize: '48px', color: 'var(--cred-accent)', marginBottom: '16px' }} />
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '8px', color: '#fff' }}>
+              Expert Login
+            </h2>
+            <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px' }}>
+              Login to manage your bids and clients
+            </p>
+          </div>
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+          {error && (
+            <div className="error-message" style={{ marginBottom: '20px', padding: '12px', backgroundColor: 'rgba(231, 76, 60, 0.1)', border: '1px solid rgba(231, 76, 60, 0.3)', borderRadius: '12px', color: '#e74c3c', fontSize: '14px' }}>
+              {error}
+            </div>
+          )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '10px', marginTop: '5px' }}
-          />
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ position: 'relative' }}>
+              <FaEnvelope style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <FaLock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', zIndex: 1 }} />
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                required
+                className="cred-input"
+                style={{ paddingLeft: '50px', width: '100%' }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="cred-btn"
+              style={{ width: '100%', marginTop: '8px' }}
+            >
+              {loading ? 'Logging in...' : 'Login as Expert'}
+            </button>
+          </form>
+
+          <p style={{ textAlign: 'center', marginTop: '24px', color: 'var(--cred-text-secondary)', fontSize: '14px' }}>
+            Don't have an account?{' '}
+            <span
+              onClick={() => navigate('/expert/register')}
+              style={{ color: 'var(--cred-accent)', cursor: 'pointer', fontWeight: 600 }}
+            >
+              Register as Expert
+            </span>
+          </p>
         </div>
-
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '10px', marginTop: '5px' }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: '12px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            marginTop: '10px'
-          }}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-
-      <p style={{ marginTop: '20px' }}>
-        Don't have an account?{' '}
-        <span
-          onClick={() => navigate('/expert/register')}
-          style={{ color: '#007bff', cursor: 'pointer' }}
-        >
-          Register as Expert
-        </span>
-      </p>
+      </div>
     </div>
   );
 }

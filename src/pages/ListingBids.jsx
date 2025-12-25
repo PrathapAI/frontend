@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaArrowLeft, FaCheckCircle, FaTimesCircle, FaDollarSign, FaPercent, FaClock, FaUser } from 'react-icons/fa';
+import BackButton from '../components/BackButton';
+import '../styles/cred-theme.css';
+import '../styles/mobile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -12,6 +16,7 @@ function ListingBids() {
   const [loading, setLoading] = useState(true);
   const [selectedBid, setSelectedBid] = useState(null);
   const [reviewNotes, setReviewNotes] = useState('');
+  const [showRejectModal, setShowRejectModal] = useState(false);
 
   useEffect(() => {
     fetchBids();
@@ -25,13 +30,11 @@ function ListingBids() {
     }
 
     try {
-      // Fetch bids for this listing
       const response = await axios.get(`${API_URL}/api/experts/listings/${listingId}/bids`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBids(response.data.bids);
 
-      // Fetch listing details
       const listingRes = await axios.get(`${API_URL}/listings/${listingId}`);
       setListing(listingRes.data);
 
@@ -62,7 +65,7 @@ function ListingBids() {
       );
 
       alert('Bid accepted successfully! The expert will be notified.');
-      fetchBids(); // Refresh bids
+      fetchBids();
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to accept bid');
     }
@@ -70,9 +73,6 @@ function ListingBids() {
 
   const rejectBid = async (bidId) => {
     const token = localStorage.getItem('token');
-    if (!confirm('Are you sure you want to reject this bid?')) {
-      return;
-    }
 
     try {
       await axios.put(
@@ -86,218 +86,240 @@ function ListingBids() {
       alert('Bid rejected');
       setSelectedBid(null);
       setReviewNotes('');
+      setShowRejectModal(false);
       fetchBids();
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to reject bid');
     }
   };
 
+  const openRejectModal = (bid) => {
+    setSelectedBid(bid);
+    setShowRejectModal(true);
+  };
+
   if (loading) {
-    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading bids...</div>;
+    return (
+      <div className="cred-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center', color: 'var(--cred-text-secondary)' }}>Loading bids...</div>
+      </div>
+    );
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
-      <button
-        onClick={() => navigate('/mylistings')}
-        style={{
-          padding: '8px 16px',
-          marginBottom: '20px',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
-      >
-        ← Back to My Listings
-      </button>
+    <div className="cred-page" style={{ padding: '20px', minHeight: '100vh' }}>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <BackButton />
 
-      <h1>Expert Bids</h1>
-      {listing && (
-        <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', marginBottom: '30px' }}>
-          <h2>{listing.Title}</h2>
-          <p>{listing.Description}</p>
-          <p><strong>Listed Price:</strong> ${listing.ExpectedPrice}</p>
-        </div>
-      )}
+        {/* Listing Info */}
+        {listing && (
+          <div className="cred-card glass" style={{ padding: '24px', marginTop: '20px', marginBottom: '24px' }}>
+            <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '12px', color: '#fff' }}>
+              {listing.Title}
+            </h1>
+            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px' }}>Price</p>
+                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--cred-accent)' }}>${listing.Price}</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px' }}>Category</p>
+                <p style={{ fontSize: '1rem', fontWeight: 600, color: '#fff' }}>{listing.Category?.CategoryName}</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px' }}>Total Bids</p>
+                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff' }}>{bids.length}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
-      {bids.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-          <p>No bids received yet. Experts in your area will be notified about your listing.</p>
+        {/* Bids Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff' }}>
+            Expert Bids ({bids.length})
+          </h2>
         </div>
-      ) : (
-        <div>
-          <h2>Received Bids ({bids.length})</h2>
-          <div style={{ display: 'grid', gap: '20px', marginTop: '20px' }}>
+
+        {/* Bids List */}
+        {bids.length === 0 ? (
+          <div className="cred-card glass" style={{ padding: '60px 24px', textAlign: 'center' }}>
+            <p style={{ color: 'var(--cred-text-secondary)', fontSize: '16px' }}>
+              No bids received yet. Experts will be notified about your listing.
+            </p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {bids.map((bid) => (
-              <div
-                key={bid.BidID}
-                style={{
-                  border: '1px solid #ddd',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  backgroundColor: bid.Status === 'accepted' ? '#d4edda' : bid.Status === 'rejected' ? '#f8d7da' : 'white'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                  <div style={{ flex: 1 }}>
-                    <h3>
-                      {bid.Expert.FirstName} {bid.Expert.LastName}
-                      {bid.Expert.IsVerified && <span style={{ color: 'green', marginLeft: '10px' }}>✓ Verified</span>}
-                    </h3>
-                    <p><strong>Expertise:</strong> {bid.Expert.ExpertiseArea}</p>
-                    <p><strong>Experience:</strong> {bid.Expert.YearsOfExperience} years</p>
-                    <p><strong>Rating:</strong> {bid.Expert.Rating}/5.0 ({bid.Expert.SuccessfulSales} successful sales)</p>
-                    <p><strong>Location:</strong> {bid.Expert.Location?.village}, {bid.Expert.Location?.district}</p>
+              <div key={bid.BidID} className="cred-card glass" style={{ padding: '24px' }}>
+                {/* Expert Info */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px', flexWrap: 'wrap', gap: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--cred-accent), var(--cred-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 800, color: '#fff' }}>
+                      {bid.Expert?.firstName?.[0]}{bid.Expert?.lastName?.[0]}
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '4px', color: '#fff' }}>
+                        {bid.Expert?.firstName} {bid.Expert?.lastName}
+                        {bid.Expert?.isVerified && (
+                          <FaCheckCircle style={{ color: 'var(--cred-success)', marginLeft: '8px', fontSize: '14px', verticalAlign: 'middle' }} />
+                        )}
+                      </h3>
+                      <p style={{ fontSize: '14px', color: 'var(--cred-text-secondary)' }}>
+                        {bid.Expert?.expertiseArea} Expert • {bid.Expert?.yearsOfExperience || 0} years experience
+                      </p>
+                    </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#007bff' }}>${bid.BidAmount}</p>
-                    {bid.CommissionPercentage && (
-                      <p style={{ color: '#666' }}>+ {bid.CommissionPercentage}% commission</p>
-                    )}
-                  </div>
+                  <span style={{
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    backgroundColor: bid.Status === 'accepted' ? 'rgba(46, 204, 113, 0.2)' :
+                                   bid.Status === 'rejected' ? 'rgba(231, 76, 60, 0.2)' :
+                                   bid.Status === 'withdrawn' ? 'rgba(149, 165, 166, 0.2)' :
+                                   'rgba(255, 193, 7, 0.2)',
+                    color: bid.Status === 'accepted' ? 'var(--cred-success)' :
+                           bid.Status === 'rejected' ? '#e74c3c' :
+                           bid.Status === 'withdrawn' ? '#95a5a6' :
+                           '#f39c12'
+                  }}>
+                    {bid.Status.toUpperCase()}
+                  </span>
                 </div>
 
-                <div style={{ marginTop: '15px' }}>
-                  <h4>Proposal:</h4>
-                  <p style={{ backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '4px' }}>
-                    {bid.Proposal}
-                  </p>
-                </div>
-
-                {bid.EstimatedCompletionDays && (
-                  <p><strong>Estimated completion:</strong> {bid.EstimatedCompletionDays} days</p>
-                )}
-
-                <div style={{ marginTop: '10px' }}>
-                  <p>
-                    <strong>Status: </strong>
-                    <span style={{
-                      color: bid.Status === 'accepted' ? 'green' : bid.Status === 'rejected' ? 'red' : 'orange',
-                      fontWeight: 'bold'
-                    }}>
-                      {bid.Status.toUpperCase()}
-                    </span>
-                  </p>
-                  <p><strong>Submitted:</strong> {new Date(bid.CreatedAt).toLocaleString()}</p>
-                </div>
-
-                {bid.Expert.Bio && (
-                  <details style={{ marginTop: '10px' }}>
-                    <summary style={{ cursor: 'pointer', color: '#007bff' }}>View Expert Bio</summary>
-                    <p style={{ marginTop: '10px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
-                      {bid.Expert.Bio}
+                {/* Bid Details */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', marginBottom: '16px', padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}>
+                  <div>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      <FaDollarSign style={{ marginRight: '4px' }} /> Bid Amount
                     </p>
-                  </details>
+                    <p style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff' }}>${bid.BidAmount}</p>
+                  </div>
+                  {bid.CommissionPercentage && (
+                    <div>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <FaPercent style={{ marginRight: '4px' }} /> Commission
+                      </p>
+                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff' }}>{bid.CommissionPercentage}%</p>
+                    </div>
+                  )}
+                  {bid.EstimatedCompletionDays && (
+                    <div>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        <FaClock style={{ marginRight: '4px' }} /> Completion
+                      </p>
+                      <p style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff' }}>{bid.EstimatedCompletionDays} days</p>
+                    </div>
+                  )}
+                  <div>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--cred-text-tertiary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rating</p>
+                    <p style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff' }}>{bid.Expert?.rating || 0}/5.0</p>
+                  </div>
+                </div>
+
+                {/* Proposal */}
+                {bid.Proposal && (
+                  <div style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', borderLeft: '3px solid var(--cred-accent)' }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--cred-text-tertiary)', marginBottom: '8px', fontWeight: 600 }}>Proposal:</p>
+                    <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px', lineHeight: '1.6' }}>{bid.Proposal}</p>
+                  </div>
                 )}
 
+                {/* Expert Bio */}
+                {bid.Expert?.bio && (
+                  <div style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px' }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--cred-text-tertiary)', marginBottom: '8px', fontWeight: 600 }}>About Expert:</p>
+                    <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px', lineHeight: '1.6' }}>{bid.Expert.bio}</p>
+                  </div>
+                )}
+
+                {/* Review Notes (if rejected) */}
+                {bid.ReviewNotes && (
+                  <div style={{ marginBottom: '16px', padding: '16px', backgroundColor: 'rgba(231, 76, 60, 0.1)', borderRadius: '12px', borderLeft: '3px solid #e74c3c' }}>
+                    <p style={{ fontSize: '0.875rem', color: '#e74c3c', marginBottom: '8px', fontWeight: 600 }}>Rejection Reason:</p>
+                    <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px', lineHeight: '1.6' }}>{bid.ReviewNotes}</p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
                 {bid.Status === 'pending' && (
-                  <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                     <button
                       onClick={() => acceptBid(bid.BidID)}
-                      style={{
-                        flex: 1,
-                        padding: '10px 20px',
-                        backgroundColor: '#28a745',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold'
-                      }}
+                      className="cred-btn"
+                      style={{ backgroundColor: 'rgba(46, 204, 113, 0.2)', border: '1px solid rgba(46, 204, 113, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                     >
-                      Accept Bid
+                      <FaCheckCircle /> Accept Bid
                     </button>
                     <button
-                      onClick={() => setSelectedBid(bid.BidID)}
-                      style={{
-                        flex: 1,
-                        padding: '10px 20px',
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                      }}
+                      onClick={() => openRejectModal(bid)}
+                      className="cred-btn"
+                      style={{ backgroundColor: 'rgba(231, 76, 60, 0.2)', border: '1px solid rgba(231, 76, 60, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                     >
-                      Reject Bid
+                      <FaTimesCircle /> Reject Bid
                     </button>
-                  </div>
-                )}
-
-                {bid.ReviewNotes && (
-                  <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '4px' }}>
-                    <strong>Review Notes:</strong> {bid.ReviewNotes}
                   </div>
                 )}
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Reject Modal */}
-      {selectedBid && (
+      {showRejectModal && selectedBid && (
         <div style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
-          zIndex: 1000
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px'
         }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '30px',
-            borderRadius: '8px',
-            maxWidth: '500px',
-            width: '90%'
-          }}>
-            <h3>Reject Bid</h3>
-            <p>Provide optional feedback to the expert:</p>
+          <div className="cred-card glass" style={{ width: '100%', maxWidth: '500px', padding: '32px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff' }}>Reject Bid</h2>
+              <button
+                onClick={() => setShowRejectModal(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--cred-text-secondary)', cursor: 'pointer', fontSize: '20px' }}
+              >
+                <FaTimesCircle />
+              </button>
+            </div>
+
+            <p style={{ color: 'var(--cred-text-secondary)', fontSize: '14px', marginBottom: '20px' }}>
+              Provide a reason for rejecting this bid (optional):
+            </p>
+
             <textarea
               value={reviewNotes}
               onChange={(e) => setReviewNotes(e.target.value)}
+              placeholder="e.g., Price is too high, timeline doesn't work, etc."
               rows="4"
-              placeholder="Optional: Let the expert know why you're rejecting..."
-              style={{ width: '100%', padding: '10px', marginBottom: '15px' }}
+              className="cred-input"
+              style={{ resize: 'vertical', fontFamily: 'inherit', marginBottom: '20px' }}
             />
-            <div style={{ display: 'flex', gap: '10px' }}>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <button
-                onClick={() => rejectBid(selectedBid)}
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Confirm Reject
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedBid(null);
-                  setReviewNotes('');
-                }}
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  backgroundColor: '#6c757d',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
+                onClick={() => setShowRejectModal(false)}
+                className="cred-btn"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' }}
               >
                 Cancel
+              </button>
+              <button
+                onClick={() => rejectBid(selectedBid.BidID)}
+                className="cred-btn"
+                style={{ backgroundColor: 'rgba(231, 76, 60, 0.2)', border: '1px solid rgba(231, 76, 60, 0.3)' }}
+              >
+                Reject Bid
               </button>
             </div>
           </div>
