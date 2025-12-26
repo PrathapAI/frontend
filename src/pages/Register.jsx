@@ -23,6 +23,7 @@ function Register() {
     mandal: '',
     village: ''
   });
+  const [role, setRole] = useState('user'); // 'user', 'expert'
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
@@ -242,21 +243,36 @@ function Register() {
     try {
       const address = `${form.village}, ${form.mandal}, ${form.district}, ${form.state}`;
       
-      // Manually construct the payload to ensure correct values
-      const payload = {
-        username: form.username,
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        phone: form.phone,
-        address: address,
-        age: form.age ? Number(form.age) : 0, // Send 0 as default instead of null
-        gender: form.gender || '', // Send empty string as default instead of null
-      };
+      if (role === 'expert') {
+        // Expert registration
+        const expertPayload = {
+          username: form.username,
+          email: form.email,
+          password: form.password,
+          firstName: form.name.split(' ')[0],
+          lastName: form.name.split(' ').slice(1).join(' ') || form.name.split(' ')[0],
+          phoneNumber: form.phone,
+          expertiseArea: '', // Can be filled in profile later
+          locationId: 1, // Default location, can be updated later
+          yearsOfExperience: 0
+        };
 
-      console.log('Submitting registration data:', payload);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/experts/register`, expertPayload);
+      } else {
+        // Regular user registration  
+        const payload = {
+          username: form.username,
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          phone: form.phone,
+          address: address,
+          age: form.age ? Number(form.age) : 0,
+          gender: form.gender || '',
+        };
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, payload);
+        await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, payload);
+      }
       
       setSuccess(true);
       setTimeout(() => {
@@ -319,6 +335,24 @@ function Register() {
           </div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Role Selection */}
+            <div style={{ position: 'relative' }}>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="cred-input"
+                style={{ 
+                  paddingLeft: '20px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  color: role === 'user' ? '#fff' : 'var(--cred-accent)'
+                }}
+              >
+                <option value="user">👤 register as user (buyer/seller)</option>
+                <option value="expert">🎯 register as expert</option>
+              </select>
+            </div>
+
             <div style={{ position: 'relative' }}>
               <FaUser style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', fontSize: '14px' }} />
               <input

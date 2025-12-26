@@ -9,6 +9,7 @@ function Login() {
   // Sync with Android back button
   useAndroidBackButton();
   const [form, setForm] = useState({ phone: '', password: '' });
+  const [role, setRole] = useState('user'); // 'user', 'expert'
   const [error, setError] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotPasswordStep, setForgotPasswordStep] = useState(1); // 1: enter email, 2: verify OTP, 3: reset password
@@ -30,12 +31,25 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const res = await API.post('/auth/login', { phone: form.phone, password: form.password });
-      if (res.data.token) {
-        localStorage.setItem('token', res.data.token);
-        navigate('/');
+      if (role === 'expert') {
+        // Expert login using email instead of phone
+        const res = await API.post('/api/experts/login', { email: form.phone, password: form.password });
+        if (res.data.token) {
+          localStorage.setItem('expertToken', res.data.token);
+          localStorage.setItem('expertData', JSON.stringify(res.data.expert));
+          navigate('/expert/dashboard');
+        } else {
+          setError('No token received.');
+        }
       } else {
-        setError('No token received.');
+        // Regular user login
+        const res = await API.post('/auth/login', { phone: form.phone, password: form.password });
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token);
+          navigate('/');
+        } else {
+          setError('No token received.');
+        }
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
@@ -294,11 +308,29 @@ function Login() {
           </div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* Role Selection */}
+            <div style={{ position: 'relative' }}>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="cred-input"
+                style={{ 
+                  paddingLeft: '20px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  color: role === 'user' ? '#fff' : 'var(--cred-accent)'
+                }}
+              >
+                <option value="user">👤 user (buyer/seller)</option>
+                <option value="expert">🎯 expert</option>
+              </select>
+            </div>
+
             <div style={{ position: 'relative' }}>
               {!form.phone && <FaPhone style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', opacity: '0.3', pointerEvents: 'none' }} />}
               <input
                 type="tel"
-                placeholder="phone number"
+                placeholder={role === 'expert' ? 'email address' : 'phone number'}
                 value={form.phone}
                 onChange={e => setForm({ ...form, phone: e.target.value })}
                 className="cred-input"

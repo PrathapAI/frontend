@@ -245,7 +245,7 @@ function Home() {
           gap: '12px'
         }}>
           <button
-            onClick={() => window.location.href = '/expert/login'}
+            onClick={() => window.location.href = '/login'}
             style={{
               padding: '12px 24px',
               background: 'var(--cred-accent)',
@@ -274,7 +274,7 @@ function Home() {
             <FaUserTie /> expert login
           </button>
           <button
-            onClick={() => window.location.href = '/expert/register'}
+            onClick={() => window.location.href = '/register'}
             style={{
               padding: '12px 24px',
               background: 'transparent',
