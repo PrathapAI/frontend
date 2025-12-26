@@ -32,8 +32,8 @@ function Login() {
     setError('');
     try {
       if (role === 'expert') {
-        // Expert login using email instead of phone
-        const res = await API.post('/api/experts/login', { email: form.phone, password: form.password });
+        // Expert login using phone number
+        const res = await API.post('/api/experts/login', { phoneNumber: form.phone, password: form.password });
         if (res.data.token) {
           localStorage.setItem('expertToken', res.data.token);
           localStorage.setItem('expertData', JSON.stringify(res.data.expert));

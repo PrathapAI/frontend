@@ -244,63 +244,7 @@ function Home() {
           justifyContent: 'center',
           gap: '12px'
         }}>
-          <button
-            onClick={() => window.location.href = '/login'}
-            style={{
-              padding: '12px 24px',
-              background: 'var(--cred-accent)',
-              color: '#000',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 12px rgba(0, 208, 156, 0.3)',
-              transition: 'all 0.3s',
-              textTransform: 'lowercase'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 208, 156, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 208, 156, 0.3)';
-            }}
-          >
-            <FaUserTie /> expert login
-          </button>
-          <button
-            onClick={() => window.location.href = '/register'}
-            style={{
-              padding: '12px 24px',
-              background: 'transparent',
-              color: 'var(--cred-accent)',
-              border: '2px solid var(--cred-accent)',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.3s',
-              textTransform: 'lowercase'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 208, 156, 0.1)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            register as expert
-          </button>
+
         </div>
       </div>
 

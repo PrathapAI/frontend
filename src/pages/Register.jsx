@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import axios from 'axios';
-import { FaUserPlus, FaUser, FaEnvelope, FaPhone, FaLock, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaUserPlus, FaUser, FaEnvelope, FaPhone, FaLock, FaMapMarkerAlt, FaBriefcase } from 'react-icons/fa';
 import BackButton from '../components/BackButton';
 import useAndroidBackButton from '../hooks/useAndroidBackButton';
 
@@ -21,7 +21,15 @@ function Register() {
     state: '',
     district: '',
     mandal: '',
-    village: ''
+    village: '',
+    // Expert-specific fields
+    firstName: '',
+    lastName: '',
+    expertiseArea: 'Real Estate',
+    yearsOfExperience: '',
+    bio: '',
+    commissionRate: '',
+    minimumBidAmount: ''
   });
   const [role, setRole] = useState('user'); // 'user', 'expert'
   const [error, setError] = useState('');
@@ -211,10 +219,24 @@ function Register() {
     e.preventDefault();
     setError('');
 
-    // Validation
-    if (!form.username || !form.name || !form.email || !form.password || !form.phone || !form.state || !form.district || !form.mandal || !form.village) {
-      setError('all fields are required');
+    // Basic validation for all users
+    if (!form.username || !form.name || !form.email || !form.password || !form.phone) {
+      setError('please fill all required fields');
       return;
+    }
+
+    // Role-specific validation
+    if (role === 'expert') {
+      if (!form.yearsOfExperience || !form.bio) {
+        setError('please fill all expert fields (years of experience and bio are required)');
+        return;
+      }
+    } else {
+      // Regular user requires location
+      if (!form.state || !form.district || !form.mandal || !form.village) {
+        setError('please select your location');
+        return;
+      }
     }
 
     if (!otpVerified) {
@@ -245,16 +267,30 @@ function Register() {
       
       if (role === 'expert') {
         // Expert registration
+        const firstName = form.name.split(' ')[0];
+        const lastName = form.name.split(' ').slice(1).join(' ') || form.name.split(' ')[0];
+        
+        // Find location ID from selected location
+        const selectedLocation = locations.find(loc => 
+          loc.state === form.state && 
+          loc.district === form.district && 
+          loc.mandal === form.mandal && 
+          loc.village === form.village
+        );
+        
         const expertPayload = {
           username: form.username,
           email: form.email,
           password: form.password,
-          firstName: form.name.split(' ')[0],
-          lastName: form.name.split(' ').slice(1).join(' ') || form.name.split(' ')[0],
+          firstName: firstName,
+          lastName: lastName,
           phoneNumber: form.phone,
-          expertiseArea: '', // Can be filled in profile later
-          locationId: 1, // Default location, can be updated later
-          yearsOfExperience: 0
+          expertiseArea: form.expertiseArea || 'Real Estate',
+          locationID: selectedLocation ? selectedLocation.id : 1,
+          yearsOfExperience: form.yearsOfExperience ? parseInt(form.yearsOfExperience) : 0,
+          bio: form.bio || '',
+          commissionRate: form.commissionRate ? parseFloat(form.commissionRate) : null,
+          minimumBidAmount: form.minimumBidAmount ? parseFloat(form.minimumBidAmount) : null
         };
 
         await axios.post(`${import.meta.env.VITE_API_URL}/api/experts/register`, expertPayload);
@@ -524,113 +560,198 @@ function Register() {
               />
             </div>
 
-            <div style={{ position: 'relative' }}>
-              <input
-                type="number"
-                placeholder="age"
-                value={form.age}
-                onChange={e => setForm({ ...form, age: e.target.value })}
-                className="cred-input"
-                min="1"
-                max="120"
-              />
-            </div>
+            {/* User-specific fields (age, gender, location) */}
+            {role === 'user' && (
+              <>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="number"
+                    placeholder="age"
+                    value={form.age}
+                    onChange={e => setForm({ ...form, age: e.target.value })}
+                    className="cred-input"
+                    min="1"
+                    max="120"
+                  />
+                </div>
 
-            <select 
-              className="cred-input" 
-              value={form.gender} 
-              onChange={e => setForm({ ...form, gender: e.target.value })}
-            >
-              <option value="">select gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+                <select 
+                  className="cred-input" 
+                  value={form.gender} 
+                  onChange={e => setForm({ ...form, gender: e.target.value })}
+                >
+                  <option value="">select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
 
-            <select 
-              className="cred-input" 
-              value={form.state} 
-              onChange={e => setForm({ ...form, state: e.target.value })}
-            >
-              <option value="">select state</option>
-              {states.map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+                <select 
+                  className="cred-input" 
+                  value={form.state} 
+                  onChange={e => setForm({ ...form, state: e.target.value })}
+                >
+                  <option value="">select state</option>
+                  {states.map(s => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
 
-            <select 
-              className="cred-input" 
-              value={form.district} 
-              onChange={e => setForm({ ...form, district: e.target.value })}
-            >
-              <option value="">select district</option>
-              {districts.map(d => (
-                <option key={d} value={d}>{d}</option>
-              ))}
-            </select>
+                <select 
+                  className="cred-input" 
+                  value={form.district} 
+                  onChange={e => setForm({ ...form, district: e.target.value })}
+                >
+                  <option value="">select district</option>
+                  {districts.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
 
-            <select 
-              className="cred-input" 
-              value={form.mandal} 
-              onChange={e => setForm({ ...form, mandal: e.target.value })}
-            >
-              <option value="">select mandal</option>
-              {mandals.map(m => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-            </select>
-            {form.state && form.district && (
-              <button 
-                type="button"
-                onClick={() => { setNewMandalName(''); setShowNewMandalModal(true); }} 
-                style={{ 
-                  width: '100%',
-                  padding: '12px',
-                  background: 'var(--cred-accent)', 
-                  color: '#000',
-                  border: 'none',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  textTransform: 'lowercase',
-                  marginTop: '-12px',
-                  marginBottom: '12px'
-                }}
-              >
-                + add new mandal
-              </button>
+                <select 
+                  className="cred-input" 
+                  value={form.mandal} 
+                  onChange={e => setForm({ ...form, mandal: e.target.value })}
+                >
+                  <option value="">select mandal</option>
+                  {mandals.map(m => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+                {form.state && form.district && (
+                  <button 
+                    type="button"
+                    onClick={() => { setNewMandalName(''); setShowNewMandalModal(true); }} 
+                    style={{ 
+                      width: '100%',
+                      padding: '12px',
+                      background: 'var(--cred-accent)', 
+                      color: '#000',
+                      border: 'none',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      textTransform: 'lowercase',
+                      marginTop: '-12px',
+                      marginBottom: '12px'
+                    }}
+                  >
+                    + add new mandal
+                  </button>
+                )}
+
+                <select 
+                  className="cred-input" 
+                  value={form.village} 
+                  onChange={e => setForm({ ...form, village: e.target.value })}
+                >
+                  <option value="">select village</option>
+                  {villages.map(v => (
+                    <option key={v} value={v}>{v}</option>
+                  ))}
+                </select>
+                {form.state && form.district && form.mandal && (
+                  <button 
+                    type="button"
+                    onClick={() => { setNewVillageName(''); setShowNewVillageModal(true); }} 
+                    style={{ 
+                      width: '100%',
+                      padding: '12px',
+                      background: 'var(--cred-accent)', 
+                      color: '#000',
+                      border: 'none',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      textTransform: 'lowercase'
+                    }}
+                  >
+                    + add new village
+                  </button>
+                )}
+              </>
             )}
 
-            <select 
-              className="cred-input" 
-              value={form.village} 
-              onChange={e => setForm({ ...form, village: e.target.value })}
-            >
-              <option value="">select village</option>
-              {villages.map(v => (
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
-            {form.state && form.district && form.mandal && (
-              <button 
-                type="button"
-                onClick={() => { setNewVillageName(''); setShowNewVillageModal(true); }} 
-                style={{ 
-                  width: '100%',
-                  padding: '12px',
-                  background: 'var(--cred-accent)', 
-                  color: '#000',
-                  border: 'none',
+            {/* Expert-specific fields */}
+            {role === 'expert' && (
+              <>
+                <div style={{ 
+                  padding: '16px', 
+                  background: 'rgba(0, 208, 156, 0.1)', 
                   borderRadius: '12px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  textTransform: 'lowercase'
-                }}
-              >
-                + add new village
-              </button>
+                  border: '1px solid var(--cred-accent)',
+                  marginTop: '8px'
+                }}>
+                  <h4 style={{ 
+                    margin: '0 0 12px 0', 
+                    color: '#fff', 
+                    fontSize: '14px', 
+                    fontWeight: '700',
+                    textTransform: 'lowercase'
+                  }}>
+                    🎯 expert information
+                  </h4>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ position: 'relative' }}>
+                      <FaBriefcase style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--cred-text-tertiary)', fontSize: '14px' }} />
+                      <select
+                        name="expertiseArea"
+                        value={form.expertiseArea}
+                        onChange={e => setForm({ ...form, expertiseArea: e.target.value })}
+                        className="cred-input"
+                        style={{ paddingLeft: '50px', appearance: 'none' }}
+                      >
+                        <option value="Real Estate">Real Estate</option>
+                        <option value="Marriage Bureau">Marriage Bureau</option>
+                        <option value="Job Assistance">Job Assistance</option>
+                      </select>
+                    </div>
+
+                    <input
+                      type="number"
+                      name="yearsOfExperience"
+                      value={form.yearsOfExperience}
+                      onChange={e => setForm({ ...form, yearsOfExperience: e.target.value })}
+                      placeholder="years of experience *"
+                      className="cred-input"
+                    />
+
+                    <textarea
+                      name="bio"
+                      value={form.bio}
+                      onChange={e => setForm({ ...form, bio: e.target.value })}
+                      rows="3"
+                      placeholder="bio / about yourself (tell clients about your expertise) *"
+                      className="cred-input"
+                      style={{ resize: 'vertical', fontFamily: 'inherit', minHeight: '80px' }}
+                    />
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="commissionRate"
+                        value={form.commissionRate}
+                        onChange={e => setForm({ ...form, commissionRate: e.target.value })}
+                        placeholder="commission rate (%)"
+                        className="cred-input"
+                      />
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="minimumBidAmount"
+                        value={form.minimumBidAmount}
+                        onChange={e => setForm({ ...form, minimumBidAmount: e.target.value })}
+                        placeholder="min bid amount"
+                        className="cred-input"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
 
             <div style={{ position: 'relative' }}>
