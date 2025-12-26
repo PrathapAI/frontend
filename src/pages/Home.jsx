@@ -271,7 +271,7 @@ function Home() {
               e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 208, 156, 0.3)';
             }}
           >
-            <FaUserTie /> become an expert
+            <FaUserTie /> expert login
           </button>
           <button
             onClick={() => window.location.href = '/expert/register'}
