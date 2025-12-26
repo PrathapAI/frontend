@@ -384,8 +384,8 @@ function Register() {
                   color: role === 'user' ? '#fff' : 'var(--cred-accent)'
                 }}
               >
-                <option value="user" style={{ color: '#000', background: '#fff' }}>👤 register as user (buyer/seller)</option>
-                <option value="expert" style={{ color: '#000', background: '#fff' }}>🎯 register as expert</option>
+                <option value="user" style={{ color: '#000 !important', background: '#fff !important', fontWeight: '600' }}>👤 register as user (buyer/seller)</option>
+                <option value="expert" style={{ color: '#000 !important', background: '#fff !important', fontWeight: '600' }}>🎯 register as expert</option>
               </select>
             </div>
 

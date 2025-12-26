@@ -220,8 +220,18 @@ h3 {
 }
 
 .cred-input option {
-  background: #fff;
-  color: #000;
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.cred-input select option {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+select.cred-input option {
+  background: #fff !important;
+  color: #000 !important;
 }
 
 /* Page Container */
