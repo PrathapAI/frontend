@@ -226,9 +226,9 @@ function Register() {
     }
 
     // Role-specific validation
-    if (role === 'expert') {
+    if (role === 'expert' || role === 'marriage') {
       if (!form.yearsOfExperience || !form.bio) {
-        setError('please fill all expert fields (years of experience and bio are required)');
+        setError('please fill all required fields (years of experience and bio are required)');
         return;
       }
     } else {
@@ -294,6 +294,35 @@ function Register() {
         };
 
         await axios.post(`${import.meta.env.VITE_API_URL}/api/experts/register`, expertPayload);
+      } else if (role === 'marriage') {
+        // Marriage bureau registration
+        const firstName = form.name.split(' ')[0];
+        const lastName = form.name.split(' ').slice(1).join(' ') || form.name.split(' ')[0];
+        
+        // Find location ID from selected location
+        const selectedLocation = locations.find(loc => 
+          loc.state === form.state && 
+          loc.district === form.district && 
+          loc.mandal === form.mandal && 
+          loc.village === form.village
+        );
+        
+        const marriagePayload = {
+          username: form.username,
+          email: form.email,
+          password: form.password,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: form.phone,
+          expertiseArea: 'Marriage Bureau',
+          locationID: selectedLocation ? selectedLocation.id : 1,
+          yearsOfExperience: form.yearsOfExperience ? parseInt(form.yearsOfExperience) : 0,
+          bio: form.bio || '',
+          commissionRate: form.commissionRate ? parseFloat(form.commissionRate) : null,
+          minimumBidAmount: form.minimumBidAmount ? parseFloat(form.minimumBidAmount) : null
+        };
+
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/experts/register`, marriagePayload);
       } else {
         // Regular user registration  
         const payload = {
@@ -381,12 +410,13 @@ function Register() {
                   paddingLeft: '20px',
                   cursor: 'pointer',
                   fontWeight: '600',
-                  color: role === 'user' ? '#fff' : 'var(--cred-accent)'
+                  color: '#000'
                 }}
               >
                 <option value="" disabled>select account type</option>
                 <option value="user">👤 register as user (buyer/seller)</option>
                 <option value="expert">🎯 register as expert</option>
+                <option value="marriage">💑 register as marriage bureau</option>
               </select>
             </div>
 
@@ -707,7 +737,6 @@ function Register() {
                       >
                         <option value="Real Estate">Real Estate</option>
                         <option value="Marriage Bureau">Marriage Bureau</option>
-                        <option value="Job Assistance">Job Assistance</option>
                       </select>
                     </div>
 
@@ -747,6 +776,71 @@ function Register() {
                         value={form.minimumBidAmount}
                         onChange={e => setForm({ ...form, minimumBidAmount: e.target.value })}
                         placeholder="min bid amount"
+                        className="cred-input"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Marriage bureau-specific fields */}
+            {role === 'marriage' && (
+              <>
+                <div style={{ 
+                  padding: '16px', 
+                  background: 'rgba(0, 208, 156, 0.1)', 
+                  borderRadius: '12px',
+                  border: '1px solid var(--cred-accent)',
+                  marginTop: '8px'
+                }}>
+                  <h4 style={{ 
+                    margin: '0 0 12px 0', 
+                    color: '#fff', 
+                    fontSize: '14px', 
+                    fontWeight: '700',
+                    textTransform: 'lowercase'
+                  }}>
+                    💑 marriage bureau information
+                  </h4>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <input
+                      type="number"
+                      name="yearsOfExperience"
+                      value={form.yearsOfExperience}
+                      onChange={e => setForm({ ...form, yearsOfExperience: e.target.value })}
+                      placeholder="years of experience *"
+                      className="cred-input"
+                    />
+
+                    <textarea
+                      name="bio"
+                      value={form.bio}
+                      onChange={e => setForm({ ...form, bio: e.target.value })}
+                      rows="3"
+                      placeholder="about your marriage bureau services *"
+                      className="cred-input"
+                      style={{ resize: 'vertical', fontFamily: 'inherit', minHeight: '80px' }}
+                    />
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="commissionRate"
+                        value={form.commissionRate}
+                        onChange={e => setForm({ ...form, commissionRate: e.target.value })}
+                        placeholder="service fee (%)"
+                        className="cred-input"
+                      />
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="minimumBidAmount"
+                        value={form.minimumBidAmount}
+                        onChange={e => setForm({ ...form, minimumBidAmount: e.target.value })}
+                        placeholder="minimum charges"
                         className="cred-input"
                       />
                     </div>

@@ -41,6 +41,16 @@ function Login() {
         } else {
           setError('No token received.');
         }
+      } else if (role === 'marriage') {
+        // Marriage bureau login
+        const res = await API.post('/api/experts/login', { phoneNumber: form.phone, password: form.password });
+        if (res.data.token) {
+          localStorage.setItem('expertToken', res.data.token);
+          localStorage.setItem('expertData', JSON.stringify(res.data.expert));
+          navigate('/expert/dashboard');
+        } else {
+          setError('No token received.');
+        }
       } else {
         // Regular user login
         const res = await API.post('/auth/login', { phone: form.phone, password: form.password });
@@ -318,12 +328,13 @@ function Login() {
                   paddingLeft: '20px',
                   cursor: 'pointer',
                   fontWeight: '600',
-                  color: role === 'user' ? '#fff' : 'var(--cred-accent)'
+                  color: '#000'
                 }}
               >
                 <option value="" disabled>select login type</option>
                 <option value="user">👤 user (buyer/seller)</option>
                 <option value="expert">🎯 expert</option>
+                <option value="marriage">💑 marriage bureau</option>
               </select>
             </div>
 

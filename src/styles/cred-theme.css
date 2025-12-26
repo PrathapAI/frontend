@@ -202,7 +202,7 @@ h3 {
   border-radius: 16px;
   padding: 16px 20px;
   font-size: 16px;
-  color: #000;
+  color: #000 !important;
   width: 100%;
   transition: all 0.3s ease;
   font-family: inherit;
@@ -216,7 +216,7 @@ h3 {
 }
 
 .cred-input::placeholder {
-  color: #777;
+  color: #000 !important;
 }
 
 .cred-input option {
