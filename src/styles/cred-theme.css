@@ -222,17 +222,39 @@ h3 {
 .cred-input option {
   background: #fff !important;
   color: #000 !important;
+  font-weight: 600 !important;
 }
 
 .cred-input select option {
   background: #fff !important;
   color: #000 !important;
+  font-weight: 600 !important;
 }
 
 select.cred-input option {
   background: #fff !important;
   color: #000 !important;
+  font-weight: 600 !important;
 }
+
+/* Force black text on all option elements within forms */
+select option {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+option {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* Specifically target the role selection dropdowns */
+.cred-input[value="user"] option,
+.cred-input[value="expert"] option {
+  background: #fff !important;
+  color: #000 !important;
+}
+
 
 /* Page Container */
 .cred-page {
