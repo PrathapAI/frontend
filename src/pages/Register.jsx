@@ -31,7 +31,7 @@ function Register() {
     commissionRate: '',
     minimumBidAmount: ''
   });
-  const [role, setRole] = useState('user'); // 'user', 'expert'
+  const [role, setRole] = useState(''); // '', 'user', 'expert'
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
@@ -384,6 +384,7 @@ function Register() {
                   color: role === 'user' ? '#fff' : 'var(--cred-accent)'
                 }}
               >
+                <option value="" disabled>select account type</option>
                 <option value="user">👤 register as user (buyer/seller)</option>
                 <option value="expert">🎯 register as expert</option>
               </select>

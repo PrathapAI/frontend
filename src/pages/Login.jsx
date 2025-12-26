@@ -9,7 +9,7 @@ function Login() {
   // Sync with Android back button
   useAndroidBackButton();
   const [form, setForm] = useState({ phone: '', password: '' });
-  const [role, setRole] = useState('user'); // 'user', 'expert'
+  const [role, setRole] = useState(''); // '', 'user', 'expert'
   const [error, setError] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotPasswordStep, setForgotPasswordStep] = useState(1); // 1: enter email, 2: verify OTP, 3: reset password
@@ -321,6 +321,7 @@ function Login() {
                   color: role === 'user' ? '#fff' : 'var(--cred-accent)'
                 }}
               >
+                <option value="" disabled>select login type</option>
                 <option value="user">👤 user (buyer/seller)</option>
                 <option value="expert">🎯 expert</option>
               </select>
