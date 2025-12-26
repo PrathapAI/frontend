@@ -368,6 +368,15 @@ function Navbar() {
               <Link to="/about" onClick={closeMobileMenu} style={mobileMenuLinkStyle}>
                 About
               </Link>
+              {userRole === 'expert' && (
+                <Link to="/expert-dashboard" onClick={closeMobileMenu} style={{
+                  ...mobileMenuLinkStyle,
+                  background: 'rgba(0, 208, 156, 0.2)',
+                  borderLeft: '4px solid var(--cred-accent)'
+                }}>
+                  <FaUserShield /> Expert Dashboard
+                </Link>
+              )}
               {userRole === 'admin' && (
                 <Link to="/admin-dashboard" onClick={closeMobileMenu} style={{
                   ...mobileMenuLinkStyle,
