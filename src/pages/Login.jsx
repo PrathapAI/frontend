@@ -321,8 +321,8 @@ function Login() {
                   color: role === 'user' ? '#fff' : 'var(--cred-accent)'
                 }}
               >
-                <option value="user">👤 user (buyer/seller)</option>
-                <option value="expert">🎯 expert</option>
+                <option value="user" style={{ color: '#000', background: '#fff' }}>👤 user (buyer/seller)</option>
+                <option value="expert" style={{ color: '#000', background: '#fff' }}>🎯 expert</option>
               </select>
             </div>
 
