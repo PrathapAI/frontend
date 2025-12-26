@@ -6,7 +6,7 @@ import ListingCard from '../components/ListingCard';
 import '../home-theme.css';
 import '../form-theme.css';
 import '../home-sidebar.css';
-import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter, FaSlidersH, FaBars } from 'react-icons/fa';
+import { FaSearch, FaChevronDown, FaChevronUp, FaTimes, FaFilter, FaSlidersH, FaBars, FaUserTie } from 'react-icons/fa';
 
 function Home() {
   const [listings, setListings] = useState([]);
@@ -236,6 +236,72 @@ function Home() {
         }}>
           {getBannerText()}
         </h1>
+        
+        {/* Expert CTA Button */}
+        <div style={{
+          marginTop: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '12px'
+        }}>
+          <button
+            onClick={() => window.location.href = '/expert/login'}
+            style={{
+              padding: '12px 24px',
+              background: 'var(--cred-accent)',
+              color: '#000',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 12px rgba(0, 208, 156, 0.3)',
+              transition: 'all 0.3s',
+              textTransform: 'lowercase'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 208, 156, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 208, 156, 0.3)';
+            }}
+          >
+            <FaUserTie /> become an expert
+          </button>
+          <button
+            onClick={() => window.location.href = '/expert/register'}
+            style={{
+              padding: '12px 24px',
+              background: 'transparent',
+              color: 'var(--cred-accent)',
+              border: '2px solid var(--cred-accent)',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.3s',
+              textTransform: 'lowercase'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 208, 156, 0.1)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            register as expert
+          </button>
+        </div>
       </div>
 
       {/* Horizontal Scrolling Category Menu - Flipkart Style */}
