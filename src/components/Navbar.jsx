@@ -13,7 +13,21 @@ function Navbar() {
   useEffect(() => {
     const checkUser = () => {
       const token = localStorage.getItem('token');
-      if (token) {
+      const expertToken = localStorage.getItem('expertToken');
+      const expertData = localStorage.getItem('expertData');
+      
+      if (expertToken && expertData) {
+        // Expert is logged in
+        try {
+          const expert = JSON.parse(expertData);
+          setUser(expert.Email);
+          setUserRole('expert');
+        } catch {
+          setUser(null);
+          setUserRole(null);
+        }
+      } else if (token) {
+        // Regular user is logged in
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
           setUser(payload.email);
@@ -73,8 +87,15 @@ function Navbar() {
   }, [mobileMenuOpen]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    const isExpert = localStorage.getItem('expertToken');
+    if (isExpert) {
+      localStorage.removeItem('expertToken');
+      localStorage.removeItem('expertData');
+    } else {
+      localStorage.removeItem('token');
+    }
     setUser(null);
+    setUserRole(null);
     setMobileMenuOpen(false);
     navigate('/');
   };
@@ -369,7 +390,7 @@ function Navbar() {
                 About
               </Link>
               {userRole === 'expert' && (
-                <Link to="/expert-dashboard" onClick={closeMobileMenu} style={{
+                <Link to="/expert/dashboard" onClick={closeMobileMenu} style={{
                   ...mobileMenuLinkStyle,
                   background: 'rgba(0, 208, 156, 0.2)',
                   borderLeft: '4px solid var(--cred-accent)'
